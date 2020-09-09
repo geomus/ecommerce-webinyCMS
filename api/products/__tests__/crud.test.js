@@ -118,7 +118,7 @@ describe("CRUD Test", () => {
                             message: "Validation failed.",
                             data: {
                                 invalidFields: {
-                                    title: "Value requires at least 3 characters."
+                                    name: "Value requires at least 3 characters."
                                 }
                             }
                         }

@@ -3,17 +3,17 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"@webiny/cwp-template-full": "^4.10.0",
 		"@webiny/aws-layers": "^4.10.0",
 		"@webiny/cli": "^4.10.0",
 		"@webiny/cli-plugin-deploy-components": "^4.10.0",
 		"@webiny/cli-plugin-scaffold": "^4.10.0",
+		"@webiny/cli-plugin-scaffold-admin-app-module": "^4.10.0",
 		"@webiny/cli-plugin-scaffold-graphql-service": "^4.10.0",
 		"@webiny/cli-plugin-scaffold-lambda": "^4.10.0",
 		"@webiny/cli-plugin-scaffold-node-package": "^4.10.0",
-		"@webiny/cli-plugin-scaffold-react-package": "^4.10.0",
-		"@webiny/cli-plugin-scaffold-admin-app-module": "^4.10.0",
 		"@webiny/cli-plugin-scaffold-react-app": "^4.10.0",
+		"@webiny/cli-plugin-scaffold-react-package": "^4.10.0",
+		"@webiny/cwp-template-full": "^4.10.0",
 		"@webiny/project-utils": "^4.10.0",
 		"@webiny/serverless-api-gateway": "^4.10.0",
 		"@webiny/serverless-aws-api-gateway": "^4.10.0",
@@ -36,6 +36,7 @@
 		"@types/react-dom": "^16.9.4",
 		"@typescript-eslint/eslint-plugin": "^2.12.0",
 		"@typescript-eslint/parser": "^2.12.0",
+		"babel-jest": "^26.3.0",
 		"babel-plugin-dynamic-import-node": "^2.3.3",
 		"babel-plugin-lodash": "^3.3.4",
 		"eslint": "^6.8.0",
@@ -49,8 +50,8 @@
 		"eslint-plugin-standard": "^4.0.1",
 		"jest": "^26.1.0",
 		"merge": "^1.2.1",
-		"typescript": "3.7.4",
-		"ts-jest": "^26.1.1"
+		"ts-jest": "^26.1.1",
+		"typescript": "3.7.4"
 	},
 	"workspaces": {
 		"packages": [
