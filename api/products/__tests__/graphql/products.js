@@ -14,9 +14,9 @@ export const CREATE_PRODUCT = /* GraphQL */ `
             createProduct(data: $data) {
                 data {
                     id
+                    name
                     title
                     description
-                    isNice
                 }
                 error ${ERROR_FIELDS}
             }
@@ -37,9 +37,9 @@ export const LIST_PRODUCTS = /* GraphQL */ `
             listProducts(where: $where, sort: $sort, limit: $limit, after: $after, before: $before) {
                 data {
                     id
+                    name
                     title
                     description
-                    isNice
                 }
                 error ${ERROR_FIELDS}
 

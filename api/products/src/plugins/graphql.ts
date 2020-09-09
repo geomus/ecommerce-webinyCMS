@@ -50,28 +50,44 @@ const plugin: GraphQLSchemaPlugin = {
 
             type Product {
                 id: ID
-                title: String
+                name : String
+                slug: String
                 description: String
-                isNice: Boolean
+                price : Float
+                images : [String]
+                tags : [String]
+                isPublished: Boolean
+                isFeatured: Boolean
                 createdOn: DateTime
             }
 
             input ProductInput {
                 id: ID
-                title: String!
+                name : String!
+                slug: String
                 description: String
-                isNice: Boolean
+                price : Float
+                images : [String]
+                tags : [String]
+                isPublished: Boolean
+                isFeatured: Boolean
+                createdOn: DateTime
             }
 
             input ProductListWhere {
-                title: String
-                isNice: Boolean
+                name: String
+                isPublished: Boolean
             }
 
             input ProductListSort {
-                title: Int
-                isNice: Boolean
+                name: Int
+                isPublished: Boolean
                 createdOn: Int
+            }
+
+            input ProductListFilter {
+                name: String
+                isPublished: Boolean
             }
 
             type ProductResponse {
@@ -90,6 +106,7 @@ const plugin: GraphQLSchemaPlugin = {
 
                 listProducts(
                     where: ProductListWhere
+                    filter : ProductListFilter
                     sort: ProductListSort
                     limit: Int
                     after: String
