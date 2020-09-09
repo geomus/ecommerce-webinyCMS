@@ -18,7 +18,8 @@ const apolloGatewayServices = {
     LAMBDA_SERVICE_FILES: "${filesGraphQL.name}",
     LAMBDA_SERVICE_PAGE_BUILDER: "${pageBuilderGraphQL.name}",
     LAMBDA_SERVICE_FORM_BUILDER: "${formBuilderGraphQL.name}",
-    LAMBDA_SERVICE_HEADLESS_CMS: "${cmsGraphQL.name}"
+    LAMBDA_SERVICE_HEADLESS_CMS: "${cmsGraphQL.name}",
+    LAMBDA_SERVICE_API_PRODUCTS: "${apiProducts.name}"
 };
 
 module.exports = () => ({
@@ -66,7 +67,8 @@ module.exports = () => ({
                     region: process.env.AWS_REGION,
                     description: "Handles interaction with MongoDB",
                     code: "./databaseProxy/build",
-                    concurrencyLimit: 0, // No concurrency limit.
+                    concurrencyLimit: 0,
+                    // No concurrency limit.
                     handler: "handler.handler",
                     memory: 512,
                     env: {
@@ -373,10 +375,7 @@ module.exports = () => ({
                     code: "./formBuilder/build",
                     handler: "handler.handler",
                     memory: 512,
-                    env: {
-                        ...apolloServiceEnv,
-                        I18N_LOCALES_FUNCTION: "${i18nLocales.name}"
-                    }
+                    env: { ...apolloServiceEnv, I18N_LOCALES_FUNCTION: "${i18nLocales.name}" }
                 }
             }
         },
@@ -517,6 +516,25 @@ module.exports = () => ({
                         }
                     }
                 ]
+            }
+        },
+        apiProducts: {
+            watch: ["./products/build"],
+            build: {
+                root: "./products",
+                script: "yarn build"
+            },
+            deploy: {
+                component: "@webiny/serverless-function",
+                inputs: {
+                    role: "${lambdaRole.arn}",
+                    region: process.env.AWS_REGION,
+                    description: "GraphQL API",
+                    code: "./products/build",
+                    handler: "handler.handler",
+                    memory: 512,
+                    env: apolloServiceEnv
+                }
             }
         }
     }
