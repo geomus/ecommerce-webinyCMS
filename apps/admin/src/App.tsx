@@ -1,6 +1,7 @@
 import adminTemplate from "@webiny/app-template-admin-full";
 import "./App.scss";
 import ProductDetail from './ProductDetail';
+import ListProducts from './ListProducts';
 import ProductSearch from './ProductSearch';
 
 export default adminTemplate({
@@ -11,6 +12,7 @@ export default adminTemplate({
     },
     plugins: [
         ProductDetail(),
-        ProductSearch()
+        ProductSearch(),
+        ListProducts()
     ]
 });
