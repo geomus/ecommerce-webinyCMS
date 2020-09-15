@@ -15,7 +15,7 @@ export default ({ createBase }) =>
             slug: string(),
             description: string({ validation: validation.create("maxLength:500") }),
             price: number(),
-            images: string({ list:true , validation: validation.create("minLength:5") }),
+            images: string({ list:true}),
             tags: string({ list:true }),
             isPublished: boolean({ value: true }), // ¿Està publicado?
             isFeatured: boolean({ value: false }), // ¿Està destacado?
