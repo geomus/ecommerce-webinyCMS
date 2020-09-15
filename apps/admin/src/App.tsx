@@ -1,6 +1,7 @@
 import adminTemplate from "@webiny/app-template-admin-full";
 import "./App.scss";
-import detailProduct from './DetailProduct';
+import ProductDetail from './ProductDetail';
+import ProductSearch from './ProductSearch';
 
 export default adminTemplate({
     cognito: {
@@ -9,6 +10,7 @@ export default adminTemplate({
         userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID
     },
     plugins: [
-        detailProduct()
+        ProductDetail(),
+        ProductSearch()
     ]
 });

@@ -1,11 +1,18 @@
 import React from 'react';
+import './ProductDetail.scss'
 
 const ProductDetail = () => {
     return (
-        <div>
-            <div className="wrap row small-up-1">
+        <div className="product-container">
+
+            <div className="product-image">
+                imagen del producto
+            <img src="https://storage.googleapis.com/madebygoog/v1/phone/phone_hero-module_hero-image_1440_2x.png" alt="Product" />
+            </div>
+
+            <div className="product-detail">
                 <h1>Smartphone Google Pixel 32 GB-Negro</h1>
-                <div className="row small-up-1 datosprod">
+                <div className="product-detail-list">
                     <ul>
                         <li>Marca Google</li>
                         <li>Mas productos Google</li>
@@ -15,12 +22,6 @@ const ProductDetail = () => {
                 </div>
             </div>
 
-            <div className="wrap row small-up-1 medium-up-3">
-                <div className="column purple">
-                    imagen del producto
-            <img src="https://storage.googleapis.com/madebygoog/v1/phone/phone_hero-module_hero-image_1440_2x.png" alt="" />
-                </div>
-            </div>
         </div>
     );
 }

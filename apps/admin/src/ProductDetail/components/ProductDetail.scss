@@ -1,0 +1,29 @@
+.product-container {
+    .product-detail {
+        flex-direction: column;
+        width: 100%;
+    }
+    .product-image {
+        width: 100%;
+        img {
+            width: 100%;
+            object-fit: contain;
+        }
+    }
+}
+
+@media(min-width : 600px) {
+
+}
+
+@media(min-width : 1200px) {
+    .product-container {
+        display: flex;
+        .product-detail {
+            width: 50%;
+        }
+        .product-image {
+            width: 50%;
+        }
+    }
+}
