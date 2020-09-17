@@ -35,7 +35,6 @@ export default () => {
                 }
             },
             settings: ["pb-editor-page-element-settings-delete"],
-            onCreate: "open-settings",
             create(options) {
                 return {
                     type: "list-products",

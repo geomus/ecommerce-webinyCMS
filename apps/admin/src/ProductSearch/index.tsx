@@ -24,7 +24,7 @@ export default () => {
             type: "pb-editor-page-element",
             elementType: "product-search",
             toolbar: {
-                title: "Product Detail",
+                title: "Product Search",
                 group: "pb-editor-element-group-media", // Ver otros grupos
                 preview() {
                     return (
