@@ -3,7 +3,6 @@ import "./App.scss";
 import ProductDetail from './ProductDetail';
 import ListProducts from './ListProducts';
 import ProductSearch from './ProductSearch';
-import HolaMundo from './HolaMundo';
 
 export default adminTemplate({
     cognito: {
@@ -14,7 +13,6 @@ export default adminTemplate({
     plugins: [
         ProductDetail(),
         ProductSearch(),
-        ListProducts(),
-        HolaMundo()
+        ListProducts()
     ]
 });

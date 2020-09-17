@@ -37,26 +37,14 @@ export default () => {
             settings: ["pb-editor-page-element-settings-delete"],
             onCreate: "open-settings",
             create(options) {
-                /*
-                    Create function is here to create the initial data
-                    for the page element, which then is utilized in the
-                    IFrameEditor component and in the settings dialog.
-                */
                 return {
                     type: "list-products",
                     elements: [],
-                    data: {},
+                    data: { },
                     ...options
                 };
             },
             render(props) {
-                /*
-                    Every render function receives the page element's
-                    data assigned to the "element.data" property in
-                    the received props. In here we will store the
-                    "iframe.url" which will be provided via the page
-                    element's settings dialog.
-                */
                 return <ProductsListEditor {...props} />;
             }
         } as PbEditorPageElementPlugin,

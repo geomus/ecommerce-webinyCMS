@@ -4,6 +4,13 @@ import "regenerator-runtime/runtime";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import { ApolloProvider } from '@apollo/client'
+import client from './graphql/conection'
 
 const render = module.hot ? ReactDOM.render : ReactDOM.hydrate;
-render(<App />, document.getElementById("root"));
+render(
+    <ApolloProvider client={client}>
+        <App />
+    </ApolloProvider>,
+    document.getElementById("root")
+);
