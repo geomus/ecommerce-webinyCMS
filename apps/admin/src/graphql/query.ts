@@ -29,3 +29,18 @@ export const product = gql`
         }
     }
 `;
+
+export const productsFilter = gql`
+    query listProducts($name: String) {
+        products {
+            listProducts(where: { name: $name, isPublished: true }) {
+                data {
+                    id
+                    name
+                    price
+                    images
+                }
+            }
+        }
+    }
+`;
