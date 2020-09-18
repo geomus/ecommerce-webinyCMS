@@ -1,17 +1,35 @@
-.product-search-form {
-    padding: 0 2rem;
-    .form-group {
-        display: flex;
-        #searchField {
-            width: 100%;
-        }
+* {
+    box-sizing: border-box;  padding: 0;  margin: 0;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    input {
+        margin: 0 1rem;
+    width: 100%;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: 1rem;
     }
 }
-
-@media(min-width : 600px) {
-
+.product {
+    width: 25%;
+    flex-direction: column;
+    padding: 1rem;
+    margin: 0,3rem;
+    display: flex;
+    transition: box-shadow .3s;
+    border-radius:10px;
+    border: 1px solid #ccc;
 }
-
-@media(min-width : 1200px) {
-
+.product:hover {
+    box-shadow: 0 0 11px rgba(33,33,33,.2);
+}
+.product img {
+    width: 100%;
+    object-fit: cover;
+}
+.btn{
+    align-self: flex-end;
 }
