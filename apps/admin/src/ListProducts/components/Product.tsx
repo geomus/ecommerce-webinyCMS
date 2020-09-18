@@ -8,6 +8,7 @@ export default function Product({id, images, name, price}) {
         <Image className="img" alt="product img" src={images} />
         <h2>{name}</h2>
         <h3 style={{ color: "#D51E42" }}>$ {price}</h3>
+        <a href="http://localhost:3000/wonder-slug/product-detail" target="_blank" rel="noopener noreferrer">Ver..</a>
         <button className="btn" type="button"><ShopCart /></button>
      </div>
     )
