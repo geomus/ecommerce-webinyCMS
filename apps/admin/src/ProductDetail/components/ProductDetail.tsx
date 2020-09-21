@@ -3,6 +3,8 @@ import './ProductDetail.scss'
 import { useQuery } from "@apollo/client";
 import { product } from '../../graphql/query'
 
+
+const ProductDetail = () => {
 const params = new URLSearchParams(window.location.search)
 const id = params.get('id')
 
