@@ -8,6 +8,7 @@ import { ApolloProvider } from '@apollo/client'
 import client from './graphql/conection'
 
 
+
 const App = createApp();
 
 const render = module.hot ? ReactDOM.render : ReactDOM.hydrate;

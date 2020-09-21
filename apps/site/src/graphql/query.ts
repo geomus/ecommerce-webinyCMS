@@ -16,9 +16,9 @@ export const products = gql`
 `;
 
 export const product = gql`
-    {
+    query getProduct($id: ID!) {
         products {
-            getProduct(id: "5f621794c8ca3d0007ec4565") {
+            getProduct(id: $id) {
                 data {
                     id
                     name

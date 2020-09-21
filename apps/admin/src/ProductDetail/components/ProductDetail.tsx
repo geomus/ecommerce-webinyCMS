@@ -3,9 +3,10 @@ import './ProductDetail.scss'
 import { useQuery } from "@apollo/client";
 import { product } from '../../graphql/query'
 
-const ProductDetail = () => {
-    const { loading, error, data } = useQuery(product);
+const params = new URLSearchParams(window.location.search)
+const id = params.get('id')
 
+const { loading, error, data } = useQuery(product, { variables: { id } });
     if (loading) {
         return (
             <h1> Cargando </h1>
