@@ -6,8 +6,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Typography from '@material-ui/core/Typography';
-import { ReactComponent as ShopCart } from "@icons/material/svg/cart-plus.svg";
 
 const useStyles = makeStyles({
     root: {
@@ -34,7 +34,7 @@ export default function Product({ id, images, name, price }) {
                     title="Contemplative Reptile"
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant="h5" component="h2" color="textSecondary">
                         {name}
                     </Typography>
                     <Typography variant="body1" color="textSecondary" component="p">
@@ -44,9 +44,13 @@ export default function Product({ id, images, name, price }) {
                 </a>
             </CardActionArea>
             <CardActions>
-                <Button startIcon={<ShopCart />} variant="outlined" color="default" size="small">
-                    ADD TO CART
-                </Button>
+            <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<ShoppingCartIcon />}
+                    >
+                        ADD TO CART
+                    </Button>
             </CardActions>
         </Card>
     );
