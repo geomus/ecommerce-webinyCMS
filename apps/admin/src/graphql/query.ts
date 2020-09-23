@@ -13,7 +13,7 @@ export const products = gql`
             }
         }
     }
-`;
+`
 
 export const product = gql`
     {
@@ -28,7 +28,7 @@ export const product = gql`
             }
         }
     }
-`;
+`
 
 export const productsFilter = gql`
     query listProducts($name: String) {
@@ -43,4 +43,4 @@ export const productsFilter = gql`
             }
         }
     }
-`;
+`

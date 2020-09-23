@@ -16,6 +16,9 @@ const useStyles = makeStyles({
     media: {
         height: 140,
     },
+    white: {
+        color: "white",
+    }
 });
 
 export default function Product({ id, images, name, price }) {
@@ -24,6 +27,7 @@ export default function Product({ id, images, name, price }) {
     return (
         <Card className={classes.root} key={id}>
             <CardActionArea>
+                <a href={`/wonder-slug/product-detail?${id}`}>
                 <CardMedia
                     className={classes.media}
                     image={images}
@@ -34,19 +38,14 @@ export default function Product({ id, images, name, price }) {
                         {name}
                     </Typography>
                     <Typography variant="body1" color="textSecondary" component="p">
-                        {price}
+                        ${price}
                     </Typography>
                 </CardContent>
+                </a>
             </CardActionArea>
             <CardActions>
-                <form action="/wonder-slug/product-detail" method="get">
-                    <input type="hidden" name="id" value={id} />
-                    <Button size="small" color="primary" type="submit">
-                        Ver Mas
-                </Button>
-                </form>
-                <Button size="small" color="primary">
-                    <ShopCart />
+                <Button startIcon={<ShopCart />} variant="outlined" color="default" size="small">
+                    ADD TO CART
                 </Button>
             </CardActions>
         </Card>
