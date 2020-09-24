@@ -3,9 +3,11 @@ import "./App.scss";
 import ProductDetail from './ProductDetail';
 import ListProducts from './ListProducts';
 import ProductSearch from './ProductSearch';
+import ButtonCartHome from './ButtonCartHome';
+import Cart from './Cart';
 
 export default (params: SiteAppOptions = {}) => {
     const plugins = params.plugins || [];
-    plugins.push(ProductDetail(), ProductSearch(), ListProducts());
+    plugins.push(ProductDetail(), ProductSearch(), ListProducts(), ButtonCartHome(), Cart());
     return createSite({ ...params, plugins });
 };

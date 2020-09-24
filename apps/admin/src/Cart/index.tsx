@@ -4,9 +4,9 @@ import {
     PbEditorPageElementPlugin,
     PbRenderElementPlugin
 } from "@webiny/app-page-builder/types";
-import { ReactComponent as SearchIcon } from "./search-solid.svg";
-import ProductSearchRender from "./ProductSearchRender";
-import ProductSearchEditor from "./ProductSearchEditor";
+import StorefrontIcon from '@material-ui/icons/Storefront';
+import CartRender from "./CartRender";
+import CartEditor from "./CartEditor";
 
 const PreviewBox = styled("div")({
     textAlign: "center",
@@ -20,16 +20,16 @@ const PreviewBox = styled("div")({
 export default () => {
     return [
         {
-            name: "pb-editor-page-element-button-cart-home",
+            name: "pb-editor-page-element-cart",
             type: "pb-editor-page-element",
-            elementType: "button-cart-home",
+            elementType: "cart",
             toolbar: {
-                title: "Button Cart",
+                title: "Cart List",
                 group: "pb-editor-element-group-media", // Ver otros grupos
                 preview() {
                     return (
                         <PreviewBox>
-                            <SearchIcon />
+                            <StorefrontIcon />
                         </PreviewBox>
                     );
                 }
@@ -42,7 +42,7 @@ export default () => {
                     IFrameEditor component and in the settings dialog.
                 */
                 return {
-                    type: "button-cart-home",
+                    type: "cart",
                     elements: [],
                     data: {},
                     ...options
@@ -56,15 +56,15 @@ export default () => {
                     "iframe.url" which will be provided via the page
                     element's settings dialog.
                 */
-                return <ProductSearchEditor {...props} />;
+                return <CartEditor {...props} />;
             }
         } as PbEditorPageElementPlugin,
         {
-            name: "pb-render-page-element-button-cart-home",
+            name: "pb-render-page-element-cart",
             type: "pb-render-page-element",
-            elementType: "button-cart-home",
+            elementType: "cart",
             render({ element }) {
-                return <ProductSearchRender element={element} />;
+                return <CartRender element={element} />;
             }
         } as PbRenderElementPlugin
     ];

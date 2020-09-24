@@ -4,9 +4,9 @@ import {
     PbEditorPageElementPlugin,
     PbRenderElementPlugin
 } from "@webiny/app-page-builder/types";
-import { ReactComponent as SearchIcon } from "./search-solid.svg";
-import ProductSearchRender from "./ProductSearchRender";
-import ProductSearchEditor from "./ProductSearchEditor";
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ButtonCartHomeRender from "./ButtonCartHomeRender";
+import ButtonCartHomeEditor from "./ButtonCartHomeEditor";
 
 const PreviewBox = styled("div")({
     textAlign: "center",
@@ -29,7 +29,7 @@ export default () => {
                 preview() {
                     return (
                         <PreviewBox>
-                            <SearchIcon />
+                            <ShoppingCartIcon />
                         </PreviewBox>
                     );
                 }
@@ -56,7 +56,7 @@ export default () => {
                     "iframe.url" which will be provided via the page
                     element's settings dialog.
                 */
-                return <ProductSearchEditor {...props} />;
+                return <ButtonCartHomeEditor {...props} />;
             }
         } as PbEditorPageElementPlugin,
         {
@@ -64,7 +64,7 @@ export default () => {
             type: "pb-render-page-element",
             elementType: "button-cart-home",
             render({ element }) {
-                return <ProductSearchRender element={element} />;
+                return <ButtonCartHomeRender element={element} />;
             }
         } as PbRenderElementPlugin
     ];

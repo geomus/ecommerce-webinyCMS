@@ -3,6 +3,8 @@ import "./App.scss";
 import ProductDetail from './ProductDetail';
 import ListProducts from './ListProducts';
 import ProductSearch from './ProductSearch';
+import ButtonCartHome from './ButtonCartHome';
+import Cart from './Cart';
 
 export default adminTemplate({
     cognito: {
@@ -13,6 +15,8 @@ export default adminTemplate({
     plugins: [
         ProductDetail(),
         ProductSearch(),
-        ListProducts()
+        ListProducts(),
+        ButtonCartHome(),
+        Cart()
     ]
 });

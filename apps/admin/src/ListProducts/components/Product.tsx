@@ -8,16 +8,29 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+
 
 const useStyles = makeStyles({
     root: {
-        maxWidth: 345,
+        textAlign: "center",
+        transition: "all 0.1s",
+        '&:hover': {
+            transform: "scale(1.05) translateY(-20px)",
+            textDecoration: "none",
+            boxShadow:" 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
+            zIndex:1000
+        },
     },
     media: {
-        height: 140,
+        backgroundSize: "contain",
+        height: 200,
     },
     white: {
         color: "white",
+    },
+    btnCenter: {
+        margin: "auto",
     }
 });
 
@@ -25,33 +38,34 @@ export default function Product({ id, images, name, price }) {
     const classes = useStyles();
 
     return (
-        <Card className={classes.root} key={id}>
-            <CardActionArea>
-                <a href={`/wonder-slug/product-detail?${id}`}>
-                <CardMedia
-                    className={classes.media}
-                    image={images}
-                    title="Contemplative Reptile"
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2" color="textSecondary">
-                        {name}
-                    </Typography>
-                    <Typography variant="body1" color="textSecondary" component="p">
-                        ${price}
-                    </Typography>
-                </CardContent>
-                </a>
-            </CardActionArea>
-            <CardActions>
-            <Button
+        <Grid item xs={12} sm={6} md={3}>
+            <Card className={classes.root} key={id} elevation={5}>
+                <CardActionArea href={`/wonder-slug/product-detail?id=${id}`}>
+                        <CardMedia
+                            className={classes.media}
+                            image={images}
+                            title="Contemplative Reptile"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="body1" color="textSecondary">
+                                {name}
+                            </Typography>
+                            <Typography gutterBottom variant="h6" color="textSecondary">
+                                ${price}
+                            </Typography>
+                        </CardContent>
+                </CardActionArea>
+                <CardActions>
+                    <Button
+                        className={classes.btnCenter}
                         variant="contained"
                         color="primary"
                         startIcon={<ShoppingCartIcon />}
                     >
                         ADD TO CART
                     </Button>
-            </CardActions>
-        </Card>
+                </CardActions>
+            </Card>
+        </Grid>
     );
 }
