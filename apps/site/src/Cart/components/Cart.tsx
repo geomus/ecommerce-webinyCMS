@@ -10,7 +10,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-const TAX_RATE = 0.21;
+// const TAX = 0.21;
 
 const useStyles = makeStyles({
     table: {
@@ -21,32 +21,31 @@ const useStyles = makeStyles({
     }
 });
 
-function ccyFormat(num) {
+function formatNumToDecimal(num) {
     return `${num.toFixed(2)}`;
 }
 
-function priceRow(qty, unit) {
-    return qty * unit;
-}
-
 function createRow(img, desc, qty, unit) {
-    const price = priceRow(qty, unit);
+    const price = qty * unit;
     return { img, desc, qty, unit, price };
 }
 
-function subtotal(items) {
+function totalCalculator(items) {
     return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
 }
 
+// rows = get Items de local Storage (parseado) 
+// Recorrer el array y pasarle la funcion createRow() con parametros. Ejemplo product.images, product.name, etc..
 const rows = [
     createRow('https://picsum.photos/100', 'Zapatillas Adidas', 1, 7000),
     createRow('https://picsum.photos/100', 'Auriculares JBL', 2, 2500),
     createRow('https://picsum.photos/100', 'Teclado Logitech Inalambrico', 3, 4600),
 ];
+//
 
-const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+const cartTotal = totalCalculator(rows);
+// const cartTax = TAX * cartTotalNeto;
+// const cartTotal = cartTax + cartTotalNeto;
 
 export default function SpanningTable() {
     const classes = useStyles();
@@ -78,13 +77,10 @@ export default function SpanningTable() {
                                     label="Qty."
                                     variant="outlined"
                                     type="number"
-                                    size="small"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}/>
+                                    size="small"/>
                             </TableCell>
                             <TableCell align="right">${row.unit}</TableCell>
-                            <TableCell align="right">${ccyFormat(row.price)}</TableCell>
+                            <TableCell align="right">${formatNumToDecimal(row.price)}</TableCell>
                             <TableCell align="right">
                                 <Button>
                                     <HighlightOffIcon />
@@ -94,18 +90,8 @@ export default function SpanningTable() {
                     ))}
 
                     <TableRow>
-                        <TableCell rowSpan={3} />
-                        <TableCell colSpan={2}>Total Neto</TableCell>
-                        <TableCell align="right">${ccyFormat(invoiceSubtotal)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Tax</TableCell>
-                        <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)} %`}</TableCell>
-                        <TableCell align="right">${ccyFormat(invoiceTaxes)}</TableCell>
-                    </TableRow>
-                    <TableRow>
                         <TableCell colSpan={2}>Total</TableCell>
-                        <TableCell align="right">${ccyFormat(invoiceTotal)}</TableCell>
+                        <TableCell align="right">${formatNumToDecimal(cartTotal)}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

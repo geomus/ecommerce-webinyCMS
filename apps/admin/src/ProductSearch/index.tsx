@@ -20,12 +20,12 @@ const PreviewBox = styled("div")({
 export default () => {
     return [
         {
-            name: "pb-editor-page-element-button-cart-home",
+            name: "pb-editor-page-element-product-search",
             type: "pb-editor-page-element",
-            elementType: "button-cart-home",
+            elementType: "product-search",
             toolbar: {
-                title: "Button Cart",
-                group: "pb-editor-element-group-media", // Ver otros grupos
+                title: "Product Search",
+                group: "pb-editor-element-ecommerce", // Ver otros grupos
                 preview() {
                     return (
                         <PreviewBox>

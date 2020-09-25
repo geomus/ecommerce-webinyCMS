@@ -25,7 +25,7 @@ export default () => {
             elementType: "button-cart-home",
             toolbar: {
                 title: "Button Cart",
-                group: "pb-editor-element-group-media", // Ver otros grupos
+                group: "pb-editor-element-ecommerce", // Ver otros grupos
                 preview() {
                     return (
                         <PreviewBox>

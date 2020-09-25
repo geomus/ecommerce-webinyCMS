@@ -4,9 +4,9 @@ import {
     PbEditorPageElementPlugin,
     PbRenderElementPlugin
 } from "@webiny/app-page-builder/types";
-import { ReactComponent as DetailIcon } from "./file-code-regular.svg";
-import ProductDetailRender from "./ProductDetailRender";
-import ProductDetailEditor from "./ProductDetailEditor";
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
+import FormCheckoutRender from "./FormCheckoutRender";
+import FormCheckoutEditor from "./FormCheckoutEditor";
 
 const PreviewBox = styled("div")({
     textAlign: "center",
@@ -20,16 +20,16 @@ const PreviewBox = styled("div")({
 export default () => {
     return [
         {
-            name: "pb-editor-page-element-product-detail",
+            name: "pb-editor-page-element-form-checkout",
             type: "pb-editor-page-element",
-            elementType: "product-detail",
+            elementType: "form-checkout",
             toolbar: {
-                title: "Product Detail",
+                title: "Form Checkout",
                 group: "pb-editor-element-ecommerce", // Ver otros grupos
                 preview() {
                     return (
                         <PreviewBox>
-                            <DetailIcon />
+                            <LocalShippingIcon />
                         </PreviewBox>
                     );
                 }
@@ -42,7 +42,7 @@ export default () => {
                     IFrameEditor component and in the settings dialog.
                 */
                 return {
-                    type: "product-detail",
+                    type: "form-checkout",
                     elements: [],
                     data: {},
                     ...options
@@ -56,15 +56,15 @@ export default () => {
                     "iframe.url" which will be provided via the page
                     element's settings dialog.
                 */
-                return <ProductDetailEditor {...props} />;
+                return <FormCheckoutEditor {...props} />;
             }
         } as PbEditorPageElementPlugin,
         {
-            name: "pb-render-page-element-product-detail",
+            name: "pb-render-page-element-form-checkout",
             type: "pb-render-page-element",
-            elementType: "product-detail",
+            elementType: "form-checkout",
             render({ element }) {
-                return <ProductDetailRender element={element} />;
+                return <FormCheckoutRender element={element} />;
             }
         } as PbRenderElementPlugin
     ];

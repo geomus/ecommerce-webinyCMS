@@ -53,12 +53,12 @@ const ProductDetail = () => {
                     <Typography variant="body1" gutterBottom>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod, autem! Voluptates expedita soluta a nobis temporibus rerum vero ab quibusdam error pariatur hic odio obcaecati doloremque, saepe quisquam sunt fugiat?
                     </Typography>
-                    <p>
+                    <div>
                         <Chip variant="outlined" color="primary" label="Tag1" component="a" href="#chip" clickable />
                         <Chip variant="outlined" color="primary" label="Tag2" component="a" href="#chip" clickable />
                         <Chip variant="outlined" color="primary" label="Tag3" component="a" href="#chip" clickable />
                         <Chip variant="outlined" color="primary" label="Tag4" component="a" href="#chip" clickable />
-                    </p>
+                    </div>
                     <Button
                         variant="contained"
                         color="primary"

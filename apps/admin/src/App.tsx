@@ -2,9 +2,10 @@ import adminTemplate from "@webiny/app-template-admin-full";
 import "./App.scss";
 import ProductDetail from './ProductDetail';
 import ListProducts from './ListProducts';
-import ProductSearch from './ProductSearch';
 import ButtonCartHome from './ButtonCartHome';
 import Cart from './Cart';
+import FormCheckout from './FormCheckout';
+import PBGroupEcommerce from './plugins/PBGroupEcommerce';
 
 export default adminTemplate({
     cognito: {
@@ -14,9 +15,10 @@ export default adminTemplate({
     },
     plugins: [
         ProductDetail(),
-        ProductSearch(),
         ListProducts(),
         ButtonCartHome(),
-        Cart()
+        Cart(),
+        FormCheckout(),
+        PBGroupEcommerce
     ]
 });

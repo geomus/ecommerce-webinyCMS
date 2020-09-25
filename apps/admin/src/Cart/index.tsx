@@ -25,7 +25,7 @@ export default () => {
             elementType: "cart",
             toolbar: {
                 title: "Cart List",
-                group: "pb-editor-element-group-media", // Ver otros grupos
+                group: "pb-editor-element-ecommerce", // Ver otros grupos
                 preview() {
                     return (
                         <PreviewBox>
