@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,45 +9,64 @@ import TableRow from '@material-ui/core/TableRow';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-
-// const TAX = 0.21;
+import { Typography } from "@material-ui/core"
 
 const useStyles = makeStyles({
     table: {
-        minWidth: "100%",
+        maxWidth: "80%",
     },
     cellQty: {
         width: 120
+    },
+    cellImgProduct: {
+        width: "20%"
+    },
+    imgProduct: {
+        width: "100%"
     }
 });
 
-function formatNumToDecimal(num) {
-    return `${num.toFixed(2)}`;
-}
 
-function createRow(img, desc, qty, unit) {
-    const price = qty * unit;
-    return { img, desc, qty, unit, price };
-}
-
-function totalCalculator(items) {
-    return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
-}
-
-// Recorrer el array y pasarle la funcion createRow() con parametros. Ejemplo product.images, product.name, etc..
-const rows = [
-    createRow('https://picsum.photos/100', 'Zapatillas Adidas', 1, 7000),
-    createRow('https://picsum.photos/100', 'Auriculares JBL', 2, 2500),
-    createRow('https://picsum.photos/100', 'Teclado Logitech Inalambrico', 3, 4600),
-];
-//
-
-const cartTotal = totalCalculator(rows);
-// const cartTax = TAX * cartTotalNeto;
-// const cartTotal = cartTax + cartTotalNeto;
+const localCart = JSON.parse(localStorage.getItem("cart")) ?? [];
 
 export default function SpanningTable() {
     const classes = useStyles();
+
+    const [cart, setCart] = useState(localCart)
+
+    
+    const emptyCart = () => {
+        localStorage.setItem("cart", JSON.stringify([]))
+        return setCart([])
+    }
+
+    const updateQtyItem = (e) => {
+        const id = e.currentTarget.id
+        const newQty = e.target.value
+       
+        const cartModified = cart.map(item => {
+            if (item.id === id) {
+                item.quantity = newQty
+            }
+            return item
+        })  
+
+        localStorage.setItem("cart", JSON.stringify(cartModified))
+        return setCart(cartModified)
+    }
+
+    const deleteItemCart = (e) => {
+        const id = e.currentTarget.id
+        const cartFiltered = cart.filter(item => item.id !== id)
+        localStorage.setItem("cart", JSON.stringify(cartFiltered))
+        return setCart(cartFiltered)
+    }
+
+    function totalCalculator(items) {
+        return items.map((item) => item.price * item.quantity).reduce((sum, i) => sum + i, 0);
+    }
+
+    const totalCart = totalCalculator(cart)
 
     return (
         <TableContainer>
@@ -63,25 +82,27 @@ export default function SpanningTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.desc}>
-                            <TableCell>
-                                <img src={row.img} alt="Foto producto" />
+                    {cart.map((row) => (
+                        <TableRow key={row.id}>
+                            <TableCell className={classes.cellImgProduct}>
+                                <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
-                            <TableCell>{row.desc}</TableCell>
+                            <TableCell>{row.name}</TableCell>
                             <TableCell align="right" className={classes.cellQty}>
                                 <TextField
-                                    id="standard-number"
-                                    value={row.qty}
+                                    id={row.id}
+                                    value={row.quantity}
                                     label="Qty."
                                     variant="outlined"
                                     type="number"
-                                    size="small"/>
+                                    size="small"
+                                    onChange={updateQtyItem}
+                                />
                             </TableCell>
-                            <TableCell align="right">${row.unit}</TableCell>
-                            <TableCell align="right">${formatNumToDecimal(row.price)}</TableCell>
+                            <TableCell align="right">${row.price}</TableCell>
+                            <TableCell align="right">${row.quantity * row.price}</TableCell>
                             <TableCell align="right">
-                                <Button>
+                                <Button value={row.id} id={row.id} onClick={deleteItemCart}>
                                     <HighlightOffIcon />
                                 </Button>
                             </TableCell>
@@ -89,8 +110,21 @@ export default function SpanningTable() {
                     ))}
 
                     <TableRow>
-                        <TableCell colSpan={2}>TOTAL</TableCell>
-                        <TableCell align="right">${formatNumToDecimal(cartTotal)}</TableCell>
+                        <TableCell colSpan={4}>
+                            <Typography variant="body1">
+                                TOTAL CART
+                            </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                            <Typography variant="body1">
+                                ${totalCart}
+                            </Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                            <Button variant="contained" color="secondary" onClick={emptyCart}>
+                                VACIAR
+                            </Button>
+                        </TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

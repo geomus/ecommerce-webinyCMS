@@ -1,8 +1,9 @@
-import React from 'react';
-
+import React, {useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Button from '@material-ui/core/Button';
+import { CartContext } from "../../utils/context";
+
 
 const useStyles = makeStyles({
     btnCenter: {
@@ -18,18 +19,7 @@ export default function ShopCartButton(props) {
         quantity: 1
     }
 
-    const addToCart = (prod) => {
-        const localCart = JSON.parse(localStorage.getItem("cart")) ?? [];   
-
-        const { id } = prod
-        const existingProd = localCart.find(cartProd => cartProd.id == id);
-        if (existingProd) {
-            existingProd.quantity += prod.quantity
-        } else {
-            localCart.push(prod)
-        }
-
-        localStorage.setItem("cart", JSON.stringify(localCart)) }
+    const { addToCart } = useContext(CartContext);
 
         return (
             <React.Fragment >
