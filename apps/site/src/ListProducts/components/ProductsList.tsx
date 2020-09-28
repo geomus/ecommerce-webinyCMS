@@ -5,6 +5,7 @@ import { products } from '../../graphql/query'
 import Grid from '@material-ui/core/Grid';
 
 const ProductsList = () => {
+
    const { loading, error, data } = useQuery(products);
 
    if (loading) {
@@ -22,8 +23,8 @@ const ProductsList = () => {
    return (
       <Grid container spacing={2}>
          {
-            data.products.listProducts.data.map((info) => (
-                  <Product key={info.id} {...info} />
+            data.products.listProducts.data.map((prod) => (
+               <Product key={prod.id} {...prod} />
             ))
          }
       </Grid>
@@ -31,4 +32,3 @@ const ProductsList = () => {
 }
 
 export default ProductsList;
-
