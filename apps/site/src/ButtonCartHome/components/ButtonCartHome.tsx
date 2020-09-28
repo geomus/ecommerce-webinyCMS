@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Cart from '../../Cart/components/Cart'
 import { makeStyles } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Fab from '@material-ui/core/Fab';
 import Badge from '@material-ui/core/Badge';
+import Drawer from "@material-ui/core/Drawer";
 
 const useStyles = makeStyles({
     float: {
@@ -14,16 +16,51 @@ const useStyles = makeStyles({
 })
 
 
-const ButtonCartHome = () => {
-    const classes = useStyles()
+export default function ButtonCartHome (){
+    const classes = useStyles();
+
+    const [show, setShow] = useState({
+        right: false
+    });
+
+    const toggleDrawer = (anchor: "right", open: boolean) => (
+        event: React.KeyboardEvent | React.MouseEvent
+        ) => {
+        if (
+            event.type === "keydown" &&
+            ((event as React.KeyboardEvent).key === "Tab" ||
+            (event as React.KeyboardEvent).key === "Shift")
+        ) {
+        return;
+        }
+        setShow({ ...show, [anchor]: open });
+    };
+
+    const cart = (anchor) => (
+        <div
+            role="presentation"
+            onClick={toggleDrawer(anchor, false)}
+            onKeyDown={toggleDrawer(anchor, false)}
+        >
+            <Cart />
+        </div>
+    );
 
     return (
-        <Badge className={classes.float} color="primary" badgeContent="1">
-            <Fab color="secondary" aria-label="Cart" href="/wonder-slug/cart">
-                <ShoppingCartIcon />
-            </Fab>
-        </Badge>
+
+        <React.Fragment>
+            <Badge className={classes.float} color="primary" badgeContent="1" onClick={toggleDrawer("right", true)}>
+                <Fab color="secondary" aria-label="Cart" href="">
+                    <ShoppingCartIcon />
+                </Fab>
+            </Badge>
+            <Drawer
+                anchor="right"
+                open={show["right"]}
+                onClose={toggleDrawer("right", false)}
+            >
+                {cart("right")}
+            </Drawer>
+        </React.Fragment>
     );
 }
-
-export default ButtonCartHome;
