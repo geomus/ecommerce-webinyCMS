@@ -1,8 +1,7 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { mercadopago } from "mercadopago";
 import { Product } from "api/products";
 import { MercadopagoItem } from "./mercadopago-types";
-
-
 
 interface CheckoutItem {
     id: string;
@@ -21,12 +20,10 @@ interface MercadopagoBackurls {
 
 interface MercadopagoPreference {
     items: MercadopagoItem[];
-    payment_methods: MercadpagoPaymentMethods;
+    payment_methods?: MercadpagoPaymentMethods;
     back_urls: MercadopagoBackurls;
     auto_return: string;
 }
-
-
 
 export async function generatePrefence(checkoutItems: Array<CheckoutItem>, accessToken: string) {
     mercadopago.configure({
@@ -44,7 +41,12 @@ export async function generatePrefence(checkoutItems: Array<CheckoutItem>, acces
                 unit_price: product.price
             };
         }),
-
+        back_urls: {
+            success: "",
+            failure: "",
+            pending: ""
+        },
+        auto_return:'approved'
     };
 
     return (await mercadopago.preferences.create(preference)).body;
