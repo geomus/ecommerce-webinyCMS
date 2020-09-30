@@ -1,10 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { TextField } from '@material-ui/core';
-import { MenuItem } from '@material-ui/core';
 import { Grid } from '@material-ui/core'
 import { Button } from '@material-ui/core'
 import PaymentIcon from '@material-ui/icons/Payment';
+import Payments from './Payments';
+import Shippings from './Shippings';
 
 const useStyles = makeStyles({
     root: {
@@ -13,14 +14,19 @@ const useStyles = makeStyles({
     }
 })
 
-const shippingMethods = ['Retiro por local', 'Envio a domicilio', 'Acuerdo con el vendedor']
-const paymentMethods = ['Efectivo', 'Transferencia bancaria', 'Mercado Pago']
 
 export default function FormCheckout() {
     const classes = useStyles()
 
+
+    const onSubmit = (data) => {
+        data.preventDefault()
+        console.log(data);
+    }
+
+
     return (
-        <form className={classes.root} method="post" >
+        <form className={classes.root} onSubmit={onSubmit}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                     <TextField fullWidth required id="firstName" name="firstName" label="Nombre" />
@@ -43,35 +49,20 @@ export default function FormCheckout() {
                 <Grid item xs={12} md={4}>
                     <TextField fullWidth required id="zipCode" name="zipCode" label="C.P." />
                 </Grid>
-                <Grid item xs={12}>
-                    <TextField fullWidth select required id="shippingMethod" name="shippingMethod" label="Métodos de Envío">
-                        {
-                            shippingMethods.map((item, i) => {
-                                <MenuItem key={i} value={item}>
-                                    {item}
-                                </MenuItem>
-                            })
-                        }
-                    </TextField>
+                <Grid item xs={6}>
+                    <Payments />
                 </Grid>
-                <Grid item xs={12}>
-                    <TextField fullWidth select required id="paymentMethod" name="paymentMethod" label="Métodos de Pago">
-                        {
-                            paymentMethods.map((method, i) => {
-                                <MenuItem key={i} value={method}>
-                                    {method}
-                                </MenuItem>
-                            })
-                        }
-                    </TextField>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<PaymentIcon />}
-                    >
-                        PAGAR
+                <Grid item xs={6}>
+                    <Shippings />
+                </Grid>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<PaymentIcon />}
+                    type="submit"
+                >
+                    PAGAR
                     </Button>
-                </Grid>
             </Grid>
         </form>
     )

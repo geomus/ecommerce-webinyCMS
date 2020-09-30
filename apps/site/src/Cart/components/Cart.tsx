@@ -15,14 +15,14 @@ import { CartContext } from "../../utils/context";
 
 const useStyles = makeStyles({
     table: {
-        padding: 6,
-        maxWidth: "90%",
-    },
-    cellSmall: {
-        width: 140
+        maxWidth: "100%",
     },
     cellImgProduct: {
         width: "20%"
+    },
+    IconDelete: {
+        minWidth: "20px!important",
+        padding:0,
     },
     imgProduct: {
         width: "100%"
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 
 
 
-export default function SpanningTable() {
+export default function Cart() {
     const classes = useStyles();
 
     const { cart, emptyCart, updateQtyItem, deleteItemCart, totalCalculator } = useContext(CartContext);
@@ -40,25 +40,26 @@ export default function SpanningTable() {
 
     return (
         <TableContainer>
-            <Table className={classes.table} aria-label="spanning table">
+            <Table className={classes.table} aria-label="cart" size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell align="center" colSpan={3}>
-                            Detalles
-                        </TableCell>
-                        <TableCell size="small" align="right">Precio</TableCell>
-                        <TableCell size="small" align="right">Subtotal</TableCell>
-                        <TableCell size="small" align="right"></TableCell>
+                        <TableCell size="small" align="left"></TableCell>
+                        
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {cart.map((row) => (
                         <TableRow key={row.id}>
-                            <TableCell className={classes.cellImgProduct}>
+                            <TableCell padding="none" align="left" size="small">
+                                <Button value={row.id} id={row.id} onClick={deleteItemCart} className={classes.IconDelete}>
+                                    <HighlightOffIcon className={classes.IconDelete} />
+                                </Button>
+                            </TableCell>
+                            <TableCell colSpan={2} padding="none" className={classes.cellImgProduct}>
                                 <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
-                            <TableCell size="small">{row.name}</TableCell>
-                            <TableCell className={classes.cellSmall}>
+                            <TableCell colSpan={3} padding="none" size="small">{row.name}</TableCell>
+                            <TableCell colSpan={1}>
                                 <TextField
                                     id={row.id}
                                     value={row.quantity}
@@ -67,29 +68,23 @@ export default function SpanningTable() {
                                     onChange={updateQtyItem}
                                 />
                             </TableCell>
-                            <TableCell align="right">${row.price}</TableCell>
-                            <TableCell align="right">${row.quantity * row.price}</TableCell>
-                            <TableCell align="right" size="small">
-                                <Button value={row.id} id={row.id} onClick={deleteItemCart}>
-                                    <HighlightOffIcon />
-                                </Button>
-                            </TableCell>
+                            <TableCell colSpan={1} padding="none"align="left">${row.quantity * row.price}</TableCell>
                         </TableRow>
                     ))}
 
                     <TableRow>
-                        <TableCell colSpan={4}>
+                        <TableCell padding="none" colSpan={2}>
                             <Typography variant="body1">
                                 TOTAL CART
                             </Typography>
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell colSpan={4} align="center">
                             <Typography variant="body1">
                                 ${totalCart}
                             </Typography>
                         </TableCell>
-                        <TableCell align="right">
-                            <Button variant="contained" color="secondary" onClick={emptyCart}>
+                        <TableCell colSpan={1} padding="none" align="right">
+                            <Button variant="outlined" color="secondary" onClick={emptyCart}>
                                 VACIAR
                             </Button>
                         </TableCell>
