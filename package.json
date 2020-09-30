@@ -68,7 +68,8 @@
 			"api/pageBuilder",
 			"api/security/*",
 			"api/settingsManager",
-			"api/products"
+			"api/products",
+			"packages\\mercadopago"
 		]
 	},
 	"scripts": {
