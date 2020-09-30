@@ -536,6 +536,24 @@ module.exports = () => ({
                     env: apolloServiceEnv
                 }
             }
+        },
+        apiMercadoPagoGeneratePreference: {
+            watch: ["./mercado-pago/generate-preference/build"],
+            build: {
+                root: "./mercado-pago/generate-preference",
+                script: "yarn build"
+            },
+            deploy: {
+                component: "@webiny/serverless-function",
+                inputs: {
+                    role: "${lambdaRole.arn}",
+                    description: "Custom lambda function",
+                    region: process.env.AWS_REGION,
+                    code: "./mercado-pago/generate-preference/build",
+                    handler: "handler.handler",
+                    memory: 512
+                }
+            }
         }
     }
 });
