@@ -1,5 +1,5 @@
-import {generatePreference} from "mercadopago-utils";
+import {generatePreference} from "mercadopago"
 
 export const handler = async (event) => {
-    return await generatePreference(event.body);
+    return await generatePreference(event.body, event.token);
 };

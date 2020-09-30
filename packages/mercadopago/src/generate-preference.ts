@@ -1,31 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { mercadopago } from "mercadopago";
-import { Product } from "api/products";
-import { MercadopagoItem } from "./mercadopago-types";
+import { CheckoutItem, MercadopagoPreference } from "./mercadopago-types";
 
-interface CheckoutItem {
-    id: string;
-    quantity: number;
-}
 
-interface MercadpagoPaymentMethods {
-    excluded_payment_types: { id: string }[];
-}
-
-interface MercadopagoBackurls {
-    success: string;
-    pending: string;
-    failure: string;
-}
-
-interface MercadopagoPreference {
-    items: MercadopagoItem[];
-    payment_methods?: MercadpagoPaymentMethods;
-    back_urls: MercadopagoBackurls;
-    auto_return: string;
-}
-
-export async function generatePrefence(checkoutItems: Array<CheckoutItem>, accessToken: string) {
+export async function generatePreference(checkoutItems: Array<CheckoutItem>, accessToken: string) {
     mercadopago.configure({
         access_token: accessToken
     });
@@ -42,11 +20,11 @@ export async function generatePrefence(checkoutItems: Array<CheckoutItem>, acces
             };
         }),
         back_urls: {
-            success: "",
-            failure: "",
-            pending: ""
+            success: "www",
+            failure: "www",
+            pending: "www"
         },
-        auto_return:'approved'
+        auto_return: 'approved'
     };
 
     return (await mercadopago.preferences.create(preference)).body;
@@ -57,12 +35,33 @@ async function mapCheckoutItemsToProducts(checkoutItems: Array<CheckoutItem>): P
     for (let i = 0; i < checkoutItems.length; i++) {
         const item = checkoutItems[i];
         const product = await getProductDetail(item.id);
-        product.quanty = item.quantity;
+        Object.defineProperty(product, 'quantity', item.quantity)
+        //product.quantity = item.quantity;
         products.push(product);
     }
     return products;
 }
 
-async function getProductDetail(id: string): Product {
-    // await fetch(url,{POST, body: )
+async function getProductDetail(id: string) {
+    const url = "https://d20mfmn8vs0759.cloudfront.net/graphql";
+    const token = "9fab108c7415c466fcda64b463385871d1fbd3a8ad6d63ab";
+    const query = `
+    query {
+        products {
+            getProduct(id: ${id}) {
+                data {
+                    id
+                    name
+                    price
+                }
+            }
+        }
+    }
+    `;
+    const opts = {
+        method: "POST",
+        headers: { "Content-Type": "application/json", authorization: token },
+        body: JSON.stringify({ query })
+    };
+    await fetch(url, opts)
 }
