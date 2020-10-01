@@ -469,6 +469,11 @@ module.exports = () => ({
                         path: "/cms/{key+}",
                         method: "ANY",
                         function: "${cmsContent.arn}"
+                    },
+                    {
+                        path: "/mercado-pago/generate-preference",
+                        method: "POST",
+                        function: "${apiMercadoPagoGeneratePreference.arn}"
                     }
                 ]
             }
@@ -551,7 +556,10 @@ module.exports = () => ({
                     region: process.env.AWS_REGION,
                     code: "./mercado-pago/generate-preference/build",
                     handler: "handler.handler",
-                    memory: 512
+                    memory: 512,
+                    endpoints: [
+ 
+                    ]
                 }
             }
         }
