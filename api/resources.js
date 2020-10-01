@@ -517,6 +517,21 @@ module.exports = () => ({
                                     "PATCH",
                                     "DELETE"
                                 ]
+                            },
+                            "/mercado-pago/generate-preferences*": {
+                                ttl: 0,
+                                forward: {
+                                    headers: ["Accept", "Accept-Language"]
+                                },
+                                allowedHttpMethods: [
+                                    "GET",
+                                    "HEAD",
+                                    "OPTIONS",
+                                    "PUT",
+                                    "POST",
+                                    "PATCH",
+                                    "DELETE"
+                                ]
                             }
                         }
                     }
