@@ -518,7 +518,7 @@ module.exports = () => ({
                                     "DELETE"
                                 ]
                             },
-                            "/mercado-pago/generate-preferences*": {
+                            "/mercado-pago/generate-preferences": {
                                 ttl: 0,
                                 forward: {
                                     headers: ["Accept", "Accept-Language"]

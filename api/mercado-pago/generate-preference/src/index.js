@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 const mercadopago = require("mercadopago");
-const fetch = require("node-fetch");
+const axios = require("axios");
 
 async function generatePreference(checkoutItems, accessToken) {
     mercadopago.configure({
@@ -31,9 +31,11 @@ async function generatePreference(checkoutItems, accessToken) {
 
 async function mapCheckoutItemsToProducts(checkoutItems) {
     const products = [];
-    for (let i = 0; i < checkoutItems.length; i++) {
-        const item = checkoutItems[i];
+    const checkoutItemsJson = JSON.parse(checkoutItems)
+    for (let i = 0; i < checkoutItemsJson.length; i++) {
+        const item = checkoutItemsJson[i];
         const product = await getProductDetail(item.id);
+        console.log(product);
         product.data.products.getProduct.data.quantity = item.quantity;
         products.push(product);
     }
@@ -60,20 +62,18 @@ async function getProductDetail(id) {
     }
 `;
     const opts = {
-        method: "POST",
         headers: { "Content-Type": "application/json", authorization: token },
-        body: JSON.stringify({ query, variables })
     };
-    const response = await fetch(url, opts);
-    return response.json();
+    
+    const response = await axios.post(url, JSON.stringify({ query, variables }), opts);
+    return response.data
 }
 
-export const handler = async (event) => {
+ export const handler = async (event) => {
     const init = await generatePreference(event.body.cart, event.body.token);
     return {
         statusCode: 200,
-        body: JSON.stringify({ init_point: init, event })
+        body: JSON.stringify({ init_point: init })
     };
 };
-
 
