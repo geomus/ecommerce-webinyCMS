@@ -7,7 +7,7 @@ import {
   import { setContext } from '@apollo/client/link/context';
   
   const httpLink = createHttpLink({
-    uri: "https://d20mfmn8vs0759.cloudfront.net/graphql"
+    uri: "https://d1toa9fam8tpaa.cloudfront.net/graphql"
   });
   
   const authLink = setContext((_, { headers }) => {

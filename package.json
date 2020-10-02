@@ -69,7 +69,7 @@
 			"api/security/*",
 			"api/settingsManager",
 			"api/products",
-			"packages\\mercadopago"
+			"packages\\mercado-pago"
 		]
 	},
 	"scripts": {

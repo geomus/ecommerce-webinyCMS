@@ -5,5 +5,8 @@
   "license": "MIT",
   "scripts": {
     "build": "webiny run build"
+  },
+  "dependencies": {
+    "ts-node": "^9.0.0"
   }
 }
