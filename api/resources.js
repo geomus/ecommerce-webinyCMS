@@ -19,7 +19,8 @@ const apolloGatewayServices = {
     LAMBDA_SERVICE_PAGE_BUILDER: "${pageBuilderGraphQL.name}",
     LAMBDA_SERVICE_FORM_BUILDER: "${formBuilderGraphQL.name}",
     LAMBDA_SERVICE_HEADLESS_CMS: "${cmsGraphQL.name}",
-    LAMBDA_SERVICE_API_PRODUCTS: "${apiProducts.name}"
+    LAMBDA_SERVICE_API_PRODUCTS: "${apiProducts.name}",
+    LAMBDA_SERVICE_API_ORDERS: "${apiOrders.name}"
 };
 
 module.exports = () => ({
@@ -572,9 +573,26 @@ module.exports = () => ({
                     code: "./mercado-pago/generate-preference/build",
                     handler: "handler.handler",
                     memory: 512,
-                    endpoints: [
- 
-                    ]
+                    endpoints: []
+                }
+            }
+        },
+        apiOrders: {
+            watch: ["./orders/build"],
+            build: {
+                root: "./orders",
+                script: "yarn build"
+            },
+            deploy: {
+                component: "@webiny/serverless-function",
+                inputs: {
+                    role: "${lambdaRole.arn}",
+                    region: process.env.AWS_REGION,
+                    description: "GraphQL API",
+                    code: "./orders/build",
+                    handler: "handler.handler",
+                    memory: 512,
+                    env: apolloServiceEnv
                 }
             }
         }
