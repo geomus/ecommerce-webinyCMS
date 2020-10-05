@@ -50,27 +50,55 @@ const plugin: GraphQLSchemaPlugin = {
 
             type Order {
                 id: ID
-                title: String
-                description: String
-                isNice: Boolean
+                name: String!
+                lastName: String!
+                phone: Int!
+                address: String!
+                state:String!
+                city: String!
+                zip: String
+                pay: String!
+                shipping: String!
+                status: String
+                cart:String!
                 createdOn: DateTime
             }
 
             input OrderInput {
                 id: ID
-                title: String!
-                description: String
+                name: String!
+                lastName: String!
+                phone: Int!
+                address: String!
+                state:String!
+                city: String!
+                zip: String
+                pay: String!
+                shipping: String!
+                status: String!
+                cart:String!
                 isNice: Boolean
             }
 
             input OrderListWhere {
-                title: String
-                isNice: Boolean
+                name: String
+                lastName: String
+                state:String
+                city: String
+                pay: String
+                shipping: String
+                status: String
+                createdOn: DateTime
             }
 
             input OrderListSort {
-                title: Int
-                isNice: Boolean
+                name: String
+                lastName: String
+                state:String
+                city: String
+                pay: String
+                shipping: String
+                status: String
                 createdOn: Int
             }
 

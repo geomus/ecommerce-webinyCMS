@@ -26,21 +26,22 @@ async function generatePreference(checkoutItems, accessToken) {
         auto_return: "approved"
     };
     console.log(preference);
-    return (await mercadopago.preferences.create(preference)).body.id;
+    const resultGeneratePreference = await mercadopago.preferences.create(preference)
+    return resultGeneratePreference
 }
 
 async function mapCheckoutItemsToProducts(checkoutItems) {
     const products = [];
-    const checkoutItemsJson = JSON.parse(checkoutItems)
-    for (let i = 0; i < checkoutItemsJson.length; i++) {
-        const item = checkoutItemsJson[i];
-        const product = await getProductDetail(item.id);
-        console.log(product);
-        product.data.products.getProduct.data.quantity = item.quantity;
-        products.push(product);
+   
+    for (let i = 0; i < checkoutItems.length; i++) {
+      const item = checkoutItems[i];
+      const product = await getProductDetail(item.id);
+      product.data.products.getProduct.data.quantity = item.quantity;
+      products.push(product);
     }
+  
     return products;
-}
+  }
 
 async function getProductDetail(id) {
     const url = "https://d1toa9fam8tpaa.cloudfront.net/graphql";
@@ -69,11 +70,14 @@ async function getProductDetail(id) {
     return response.data
 }
 
- export const handler = async (event) => {
-    const init = await generatePreference(event.body.cart, event.body.token);
+ export const handler = async event => {
+    const body = JSON.parse(Buffer.from(event.body, 'base64').toString("utf-8"));
+    const responseGeneratePreference = await generatePreference(body.cart, body.token);
+    console.log(responseGeneratePreference)
+
     return {
-        statusCode: 200,
-        body: JSON.stringify({ init_point: init })
-    };
-};
+        statusCode:200,
+        body: JSON.stringify(responseGeneratePreference)
+    }
+  };
 

@@ -473,7 +473,7 @@ module.exports = () => ({
                     },
                     {
                         path: "/mercado-pago/generate-preference",
-                        method: "POST",
+                        method: "ANY",
                         function: "${apiMercadoPagoGeneratePreference.arn}"
                     }
                 ]
@@ -505,21 +505,6 @@ module.exports = () => ({
                                 ttl: 2592000 // 1 month
                             },
                             "/cms*": {
-                                ttl: 0,
-                                forward: {
-                                    headers: ["Accept", "Accept-Language"]
-                                },
-                                allowedHttpMethods: [
-                                    "GET",
-                                    "HEAD",
-                                    "OPTIONS",
-                                    "PUT",
-                                    "POST",
-                                    "PATCH",
-                                    "DELETE"
-                                ]
-                            },
-                            "/mercado-pago/generate-preferences": {
                                 ttl: 0,
                                 forward: {
                                     headers: ["Accept", "Accept-Language"]
@@ -573,7 +558,6 @@ module.exports = () => ({
                     code: "./mercado-pago/generate-preference/build",
                     handler: "handler.handler",
                     memory: 512,
-                    endpoints: []
                 }
             }
         },

@@ -59,6 +59,8 @@ export default function FormCheckout() {
     const [pay, setPay] = useState('');
     const [shipping, setShipping] = useState('')
     const {cart} = useContext(CartContext)
+    const token =
+        "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
 
     const handleChangeName = (event) => {
         setName(event.target.value);
@@ -87,25 +89,37 @@ export default function FormCheckout() {
     const handleChangeShipping = (event) => {
         setShipping(event.target.value);
     };
-
+    const generatePreference = (cartItem, userToken) => {
+        fetch(
+            "https://nn1ma60ksl.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
+            {
+                method: "POST",
+                mode: 'no-cors',
+                body: JSON.stringify({cart: cartItem, token: userToken }),
+            }
+        )
+            .then((res) => console.log(res))
+            
+            .catch((err) => console.error(err));
+    };
 
     const onSubmit = (e) => {
         e.preventDefault()
-        const data = {
-            user : [
-            name,
-            lastName,
-            phone,
-            address,
-            state,
-            city,
-            zip,
-            pay,
-            shipping
-            ],
+        const order = {
+            user : {
+            name: name,
+            lastName: lastName,
+            phone: phone,
+            address: address,
+            state: state,
+            city: city,
+            zip: zip,
+            pay: pay,
+            shipping:shipping
+            },
             cart
         }
-        console.log(data);
+        generatePreference(cart, token)
     }
 
 
