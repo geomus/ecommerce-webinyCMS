@@ -94,13 +94,12 @@ export default function FormCheckout() {
             "https://nn1ma60ksl.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
             {
                 method: "POST",
-                mode: 'no-cors',
                 body: JSON.stringify({cart: cartItem, token: userToken }),
             }
         )
-            .then((res) => console.log(res))
-            
-            .catch((err) => console.error(err));
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+            .catch((err) => console.error(err))
     };
 
     const onSubmit = (e) => {
@@ -119,6 +118,8 @@ export default function FormCheckout() {
             },
             cart
         }
+        console.log(order);
+        
         generatePreference(cart, token)
     }
 

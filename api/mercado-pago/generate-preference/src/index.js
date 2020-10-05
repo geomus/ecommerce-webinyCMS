@@ -75,9 +75,16 @@ async function getProductDetail(id) {
     const responseGeneratePreference = await generatePreference(body.cart, body.token);
     console.log(responseGeneratePreference)
 
-    return {
-        statusCode:200,
-        body: JSON.stringify(responseGeneratePreference)
-    }
+    return   {
+        statusCode: 200,
+        headers: {
+           "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+        },
+        body: JSON.stringify({
+          data: responseGeneratePreference.body
+        }),
+        isBase64Encoded: false
+      };
   };
 
