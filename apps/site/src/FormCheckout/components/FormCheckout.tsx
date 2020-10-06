@@ -10,6 +10,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import { CartContext } from "../../utils/context";
+import { useMutation } from "@apollo/client";
+import { createOrder } from '../../graphql/query'
 
 const useStyles = makeStyles({
     root: {
@@ -20,33 +22,42 @@ const useStyles = makeStyles({
 const paymentMethods = [
     {
         id: 1,
-        name: 'Efectivo'
+        name: 'Efectivo',
+        slug: 'efectivo'
     },
     {
         id: 2,
-        name: 'Transferencia bancaria'
+        name: 'Transferencia bancaria',
+        slug: 'transferencia-bancaria'
     },
     {
-        id: 2,
-        name: 'Mercado Pago'
+        id: 3,
+        name: 'Mercado Pago',
+        slug: 'mercado-pago'
     },
 ]
 const shippingMethods = [
     {
         id: 1,
-        name: 'Retiro por local'
+        name: 'Retiro por local',
+        slug: 'retiro-por-local'
     },
     {
         id: 2,
-        name: 'Envío a domicilio'
+        name: 'Envío a domicilio',
+        slug: 'envio-a-domicilio'
     },
     {
-        id: 2,
-        name: 'Acuerdo con el vendedor'
+        id: 3,
+        name: 'Acuerdo con el vendedor',
+        slug: 'acuerdo-con-el-vendedor'
     },
 ]
 
 export default function FormCheckout() {
+    const [addOrder] = useMutation(createOrder);
+
+
     const classes = useStyles()
 
     const [name, setName] = useState('')
@@ -58,7 +69,7 @@ export default function FormCheckout() {
     const [zip, setZip] = useState('')
     const [pay, setPay] = useState('');
     const [shipping, setShipping] = useState('')
-    const {cart} = useContext(CartContext)
+    const { cart } = useContext(CartContext)
     const token =
         "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
 
@@ -68,12 +79,12 @@ export default function FormCheckout() {
     const handleChangeLastName = (event) => {
         setLastName(event.target.value);
     };
-     const handleChangePhone = (event) => {
+    const handleChangePhone = (event) => {
         setPhone(event.target.value);
-    }; 
+    };
     const handleChangeAddress = (event) => {
         setAddress(event.target.value);
-    }; 
+    };
     const handleChangeState = (event) => {
         setState(event.target.value);
     };
@@ -89,23 +100,27 @@ export default function FormCheckout() {
     const handleChangeShipping = (event) => {
         setShipping(event.target.value);
     };
-    const generatePreference = (cartItem, userToken) => {
-        fetch(
+    const generatePreference = async (cartItem, userToken) => {
+        const response = await fetch(
             "https://nn1ma60ksl.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
             {
                 method: "POST",
-                body: JSON.stringify({cart: cartItem, token: userToken }),
+                body: JSON.stringify({ cart: cartItem, token: userToken }),
             }
         )
-            .then((res) => res.json())
-            .then((data) => console.log(data))
-            .catch((err) => console.error(err))
-    };
+        const body = await response.json()
+        console.log(body.data);
 
-    const onSubmit = (e) => {
+        return body.data
+    };
+    const executeInitPoint = (initPoint) => {
+        return window.open(initPoint)
+    }
+
+    const onSubmit = async (e) => {
         e.preventDefault()
+
         const order = {
-            user : {
             name: name,
             lastName: lastName,
             phone: phone,
@@ -114,13 +129,24 @@ export default function FormCheckout() {
             city: city,
             zip: zip,
             pay: pay,
-            shipping:shipping
-            },
-            cart
+            idPreference: null,
+            shipping: shipping,
+            cart: cart
         }
-        console.log(order);
-        
-        generatePreference(cart, token)
+
+        if (pay === 'Mercado Pago') {
+            //Pedir la preferencia
+            const preferenceData = await generatePreference(cart, token)
+            order.idPreference = preferenceData.id
+            //createOrder
+            await executeInitPoint(preferenceData.init_point)
+        }
+
+        addOrder({ variables: {data: order} })
+       
+        // Redirect /wonder-slug/pending
+
+
     }
 
 
@@ -154,7 +180,7 @@ export default function FormCheckout() {
                         <RadioGroup aria-label="payments" name="payments1" value={pay} onChange={handleChangePay}>
                             {
                                 paymentMethods.map((pay) => (
-                                    <FormControlLabel value={pay.name} control={<Radio />} label={pay.name} key={Math.random() * pay.id} />
+                                    <FormControlLabel value={pay.name} control={<Radio />} label={pay.name} key={pay.id + pay.name} />
                                 ))
                             }
                         </RadioGroup>

@@ -20,6 +20,7 @@ export default ({ createBase }) =>
             city: string({ validation: validation.create("required,maxLength:100") }),
             zip: string({ validation: validation.create("required,maxLength:30") }),
             pay: string({ validation: validation.create("required,maxLength:30") }),
+            idPreference: string({ value:null }),
             shipping: string({ validation: validation.create("required,maxLength:50") }),
             status: string({ validation: validation.create("required,maxLength:50"), value: 'Itention' }),
             cart: string({ validation: validation.create("required") }),

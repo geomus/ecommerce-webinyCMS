@@ -19,9 +19,9 @@ async function generatePreference(checkoutItems, accessToken) {
             };
         }),
         back_urls: {
-            success: "localhost:3000/success",
-            failure: "localhost:3000/failure",
-            pending: "localhost:3000/pending"
+            success: "localhost:3000/wonder-slug/success",
+            failure: "localhost:3000/wonder-slug/failure",
+            pending: "localhost:3000/wonder-slug/pending"
         },
         auto_return: "approved"
     };

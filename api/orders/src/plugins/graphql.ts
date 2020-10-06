@@ -58,6 +58,7 @@ const plugin: GraphQLSchemaPlugin = {
                 city: String!
                 zip: String
                 pay: String!
+                idPreference: String
                 shipping: String!
                 status: String
                 cart:String!
@@ -74,10 +75,10 @@ const plugin: GraphQLSchemaPlugin = {
                 city: String!
                 zip: String
                 pay: String!
+                idPreference: String
                 shipping: String!
-                status: String!
+                status: String
                 cart:String!
-                isNice: Boolean
             }
 
             input OrderListWhere {
@@ -86,6 +87,7 @@ const plugin: GraphQLSchemaPlugin = {
                 state:String
                 city: String
                 pay: String
+                idPreference: String
                 shipping: String
                 status: String
                 createdOn: DateTime
@@ -161,6 +163,7 @@ const plugin: GraphQLSchemaPlugin = {
                 // "@webiny/api-security" package, in order to define the required security scopes (permissions).
                 createOrder: hasScope("orders:create")(resolveCreate(orderFetcher)),
                 updateOrder: hasScope("orders:update")(resolveUpdate(orderFetcher)),
+                updateOrderIdPreference: hasScope("orders:update")(resolveUpdate(orderFetcher)),
                 deleteOrder: hasScope("orders:delete")(resolveDelete(orderFetcher))
             }
         }
