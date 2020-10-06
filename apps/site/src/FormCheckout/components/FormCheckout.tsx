@@ -131,9 +131,10 @@ export default function FormCheckout() {
             pay: pay,
             idPreference: null,
             shipping: shipping,
-            cart: cart
+            cart: JSON.stringify(cart)
         }
-
+        console.log(order);
+        
         if (pay === 'Mercado Pago') {
             //Pedir la preferencia
             const preferenceData = await generatePreference(cart, token)

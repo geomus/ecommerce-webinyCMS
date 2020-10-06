@@ -52,7 +52,7 @@ const plugin: GraphQLSchemaPlugin = {
                 id: ID
                 name: String!
                 lastName: String!
-                phone: Int!
+                phone: String!
                 address: String!
                 state:String!
                 city: String!
@@ -69,7 +69,7 @@ const plugin: GraphQLSchemaPlugin = {
                 id: ID
                 name: String!
                 lastName: String!
-                phone: Int!
+                phone: String!
                 address: String!
                 state:String!
                 city: String!

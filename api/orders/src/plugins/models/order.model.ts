@@ -14,7 +14,7 @@ export default ({ createBase }) =>
         withFields(() => ({
             name: string({ validation: validation.create("required,minLength:3,maxLength:100") }),
             lastName: string({ validation: validation.create("required,minLength:3,maxLength:100") }),
-            phone: number({ validation: validation.create("required,minLength:3,maxLength:30") }),
+            phone: string({ validation: validation.create("required,minLength:3,maxLength:30") }),
             address: string({ validation: validation.create("required,maxLength:100") }),
             state: string({ validation: validation.create("required,maxLength:100") }),
             city: string({ validation: validation.create("required,maxLength:100") }),
