@@ -1,5 +1,5 @@
 // @ts-ignore
-import { withFields, withName, string, number, pipe, withProps, withHooks } from "@webiny/commodo";
+import { withFields, withName, string, pipe, withProps, withHooks } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 
 /**

@@ -12,6 +12,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import { CartContext } from "../../utils/context";
 import { useMutation } from "@apollo/client";
 import { createOrder } from '../../graphql/query'
+import { CircularProgress } from '@material-ui/core';
 
 const useStyles = makeStyles({
     root: {
@@ -69,6 +70,7 @@ export default function FormCheckout() {
     const [zip, setZip] = useState('')
     const [pay, setPay] = useState('');
     const [shipping, setShipping] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     const { cart } = useContext(CartContext)
     const token =
         "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
@@ -114,10 +116,12 @@ export default function FormCheckout() {
         return body.data
     };
     const executeInitPoint = (initPoint) => {
-        return window.open(initPoint)
+        //return window.open(initPoint)
+        return window.location.href = initPoint
     }
 
     const onSubmit = async (e) => {
+        setIsLoading(true)
         e.preventDefault()
 
         const order = {
@@ -133,8 +137,7 @@ export default function FormCheckout() {
             shipping: shipping,
             cart: JSON.stringify(cart)
         }
-        console.log(order);
-        
+
         if (pay === 'Mercado Pago') {
             //Pedir la preferencia
             const preferenceData = await generatePreference(cart, token)
@@ -143,8 +146,8 @@ export default function FormCheckout() {
             await executeInitPoint(preferenceData.init_point)
         }
 
-        addOrder({ variables: {data: order} })
-       
+        addOrder({ variables: { data: order } })
+
         // Redirect /wonder-slug/pending
 
 
@@ -198,14 +201,17 @@ export default function FormCheckout() {
                         </RadioGroup>
                     </FormControl>
                 </Grid>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<PaymentIcon />}
-                    type="submit"
-                >
-                    PAGAR
-                    </Button>
+
+                {!isLoading ?
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<PaymentIcon/> }
+                        type="submit"
+                    >PAGAR
+                </Button>
+                    : <CircularProgress />}
+
             </Grid>
         </form>
     )
