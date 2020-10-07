@@ -1,5 +1,4 @@
 import React from 'react';
-import './ProductDetail.scss'
 import { useQuery } from "@apollo/client";
 import { product } from '../../graphql/query'
 import Container from '@material-ui/core/Container';
@@ -9,6 +8,8 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { makeStyles } from "@material-ui/core/styles"
+import { CircularProgress } from '@material-ui/core';
+
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -27,7 +28,7 @@ const ProductDetail = () => {
     const { loading, error, data } = useQuery(product, { variables: { id } });
     if (loading) {
         return (
-            <h1> Cargando </h1>
+            <h1> <CircularProgress/> </h1>
         )
     }
 

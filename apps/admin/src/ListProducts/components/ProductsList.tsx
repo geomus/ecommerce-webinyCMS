@@ -3,13 +3,15 @@ import Product from './Product'
 import { useQuery } from "@apollo/client";
 import { products } from '../../graphql/query'
 import Grid from '@material-ui/core/Grid';
+import { CircularProgress } from '@material-ui/core';
+
 
 const ProductsList = () => {
    const { loading, error, data } = useQuery(products);
 
    if (loading) {
       return (
-         <h1> Cargando </h1>
+         <h1> <CircularProgress/> </h1>
       )
    }
 

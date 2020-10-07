@@ -7,8 +7,10 @@ export const products = gql`
                 data {
                     id
                     name
+                    description
                     price
                     images
+                    tags
                 }
             }
         }
@@ -22,8 +24,10 @@ export const product = gql`
                 data {
                     id
                     name
+                    description
                     price
                     images
+                    tags
                 }
             }
         }

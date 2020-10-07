@@ -104,7 +104,7 @@ export default function FormCheckout() {
     };
     const generatePreference = async (cartItem, userToken) => {
         const response = await fetch(
-            "https://nn1ma60ksl.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
+            "https://dydq60bw25.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
             {
                 method: "POST",
                 body: JSON.stringify({ cart: cartItem, token: userToken }),
@@ -116,14 +116,15 @@ export default function FormCheckout() {
         return body.data
     };
     const executeInitPoint = (initPoint) => {
-        //return window.open(initPoint)
         return window.location.href = initPoint
+    }
+    const executeRedirectPayment = (url) => {
+        return window.location.href = url
     }
 
     const onSubmit = async (e) => {
         setIsLoading(true)
         e.preventDefault()
-
         const order = {
             name: name,
             lastName: lastName,
@@ -137,22 +138,17 @@ export default function FormCheckout() {
             shipping: shipping,
             cart: JSON.stringify(cart)
         }
-
+        
         if (pay === 'Mercado Pago') {
-            //Pedir la preferencia
             const preferenceData = await generatePreference(cart, token)
             order.idPreference = preferenceData.id
-            //createOrder
             await executeInitPoint(preferenceData.init_point)
+        } else {
+            await executeRedirectPayment('http://localhost:3000/wonder-slug/pending')
         }
 
         addOrder({ variables: { data: order } })
-
-        // Redirect /wonder-slug/pending
-
-
     }
-
 
     return (
         <form className={classes.root} onSubmit={onSubmit}>

@@ -44,8 +44,8 @@ async function mapCheckoutItemsToProducts(checkoutItems) {
   }
 
 async function getProductDetail(id) {
-    const url = "https://d1toa9fam8tpaa.cloudfront.net/graphql";
-    const token = "9fab108c7415c466fcda64b463385871d1fbd3a8ad6d63ab";
+    const url = "https://d3sa4l0419qgu3.cloudfront.net/graphql";
+    const token = "baec437445f7523373283e82ef30ba2029041f6b7f10a2b8";
     const variables = {
         id: id
     };
