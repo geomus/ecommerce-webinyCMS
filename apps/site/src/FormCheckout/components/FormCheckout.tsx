@@ -115,12 +115,16 @@ export default function FormCheckout() {
 
         return body.data
     };
-    const executeInitPoint = (initPoint) => {
-        return window.location.href = initPoint
+    const executeInitPoint = async (initPoint, order) => {
+        //return window.open(initPoint)
+
+        await addOrder({ variables: { data: order } });
+
+        return window.location.href = initPoint;
     }
-    const executeRedirectPayment = (url) => {
-        return window.location.href = url
-    }
+    // const executeRedirectPayment = (url) => {
+    //     return window.location.href = url
+    // }
 
     const onSubmit = async (e) => {
         setIsLoading(true)
@@ -142,12 +146,16 @@ export default function FormCheckout() {
         if (pay === 'Mercado Pago') {
             const preferenceData = await generatePreference(cart, token)
             order.idPreference = preferenceData.id
-            await executeInitPoint(preferenceData.init_point)
+            //createOrder
+            await executeInitPoint(preferenceData.init_point, order)
         } else {
-            await executeRedirectPayment('http://localhost:3000/wonder-slug/pending')
+            await addOrder({ variables: { data: order } })
         }
 
-        addOrder({ variables: { data: order } })
+
+        // Redirect /wonder-slug/pending
+
+
     }
 
     return (

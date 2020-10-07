@@ -54,7 +54,7 @@ const plugin: GraphQLSchemaPlugin = {
                 lastName: String!
                 phone: String!
                 address: String!
-                state:String!
+                state: String!
                 city: String!
                 zip: String
                 pay: String!
@@ -101,6 +101,7 @@ const plugin: GraphQLSchemaPlugin = {
                 pay: String
                 shipping: String
                 status: String
+                idPreference: String
                 createdOn: Int
             }
 
