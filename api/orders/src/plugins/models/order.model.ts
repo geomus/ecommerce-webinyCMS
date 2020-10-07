@@ -22,7 +22,7 @@ export default ({ createBase }) =>
             pay: string({ validation: validation.create("required,maxLength:30") }),
             idPreference: string({ value:null }),
             shipping: string({ validation: validation.create("required,maxLength:50") }),
-            status: string({ validation: validation.create("required,maxLength:50"), value: 'Itention' }),
+            status: string({ validation: validation.create("required,maxLength:50"), value: 'intent' }),
             cart: string({ validation: validation.create("required") }),
         })),
         withHooks({

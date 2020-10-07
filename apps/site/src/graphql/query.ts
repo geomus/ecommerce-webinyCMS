@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 
+/* PRODUCT */
 export const products = gql`
     {
         products {
@@ -45,6 +46,7 @@ export const productsFilter = gql`
     }
 `;
 
+/* ORDER */
 export const createOrder = gql`
     mutation createOrder($data: OrderInput!) {
         orders {
@@ -65,6 +67,41 @@ export const createOrder = gql`
                 error {
                     data
                 }
+            }
+        }
+    }
+`;
+
+export const orderExternalID = gql`
+    query listOrders($idPreference: String) {
+        orders {
+            listOrders(where: { idPreference: $idPreference }) {
+                data {
+                    id
+                    name
+                    lastName
+                    phone
+                    address
+                    state
+                    city
+                    zip
+                    pay
+                    idPreference
+                    status
+                    shipping
+                    cart
+                }
+            }
+        }
+    }
+`;
+
+export const updateOrder = gql`
+    mutation updateOrder($id: ID!,$data: OrderInput!) {
+        orders {
+            updateOrder(id: $id, data: $data) {
+                id
+                data
             }
         }
     }
