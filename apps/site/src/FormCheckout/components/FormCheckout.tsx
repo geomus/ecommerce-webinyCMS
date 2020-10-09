@@ -117,7 +117,7 @@ export default function FormCheckout() {
     };
     const executeInitPoint = async (initPoint, order) => {
         const orderGenerate = await addOrder({ variables: { data: order } });
-        console.log(orderGenerate)
+        
         return window.location.href = initPoint;
     }
      const executeRedirectPayment = (url, order) => {

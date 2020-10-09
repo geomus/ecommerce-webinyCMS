@@ -1,20 +1,39 @@
 import React, { useState } from 'react';
 import { makeStyles } from "@material-ui/core/styles"
 import { TextField } from '@material-ui/core';
+import { IconButton } from '@material-ui/core'
 import { useQuery } from "@apollo/client";
 import { products } from '../../graphql/query'
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles({
+    formSearch: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    inputTextForm: {
+        width: '90%'
+    },
     listProductsInline: {
-        fontSize: 16,
+        fontSize: 13,
         display: 'flex',
         flexDirection: 'column',
-        zIndex: 1000
+        zIndex: 1000,
+        position: 'absolute',
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        width: '100%',
+        borderRadius: '0 0 1rem 1rem'
     },
     productInline: {
         width: '100%',
         display: 'flex',
-        justifyContent: 'space-between',
+        alignItems: 'center',
+        '&:hover': {
+            backgroundColor: 'rgba(200,200,200,0.2)'
+        }
+    },
+    imgProductInline: {
+        marginRight: '1rem'
     }
 })
 
@@ -44,29 +63,41 @@ const ProductSearch = () => {
         return setProductsSearch(results);
     }
 
+
     const handleChange = async e => {
-        await setName(e.target.value);
-        await searchProduct()
+        if (e.target.value === '') {
+            setProductsSearch([])
+            setName('')
+        } else {
+            await setName(e.target.value);
+            await searchProduct()
+        }
     };
 
 
     return (
         <div>
-            <TextField
-                type="text"
-                value={name}
-                onChange={handleChange}
-                label="Search any product..."
-                fullWidth={true}
-            />
+            <form action="/wonder-slug/shop" method="get">
+                <TextField
+                name="search"
+                    type="text"
+                    value={name}
+                    onChange={handleChange}
+                    label="Search any product..."
+                    className={classes.inputTextForm}
+
+                />
+                <IconButton aria-label="serach" type='submit'>
+                    <SearchIcon />
+                </IconButton>
+            </form>
             <section className={classes.listProductsInline} >
                 {
                     productsSearch.map((item) => (
-                        <div key={item.id} className={classes.productInline}>
-                            <img src={item.images} alt="producto" width={30} />
-                            <span>{item.name}</span>
-                            <span>{item.price}</span>
-                        </div>
+                        <a key={item.id} className={classes.productInline} href={`/wonder-slug/product-detail?id=${item.id}`}>
+                            <img className={classes.imgProductInline} src={item.images} alt="producto" width={50} />
+                            <span >{item.name}</span>
+                        </a>
                     ))
                 }
             </section>
