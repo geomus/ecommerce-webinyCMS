@@ -6,8 +6,8 @@ import { CartContext } from "../../utils/context";
 
 
 const useStyles = makeStyles({
-    btnCenter: {
-        margin: "auto",
+    btnAdd: {
+        width: "100%",
     }
 })
 
@@ -24,11 +24,11 @@ export default function ShopCartButton(props) {
         return (
             <React.Fragment >
                 <Button
-                    className={classes.btnCenter}
+                    className={classes.btnAdd}
                     variant="contained"
                     color="primary"
                     startIcon={<ShoppingCartIcon />} onClick={() => addToCart(prod)}>
-                    ADD TO CART
+                    COMPRAR
             </Button>
             </React.Fragment>
         )

@@ -1,86 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import './ProductSearch.scss'
-import Product from '../../ListProducts/components/Product'
+import React, { useState } from 'react';
+import { makeStyles } from "@material-ui/core/styles"
 import { TextField } from '@material-ui/core';
+import { useQuery } from "@apollo/client";
+import { products } from '../../graphql/query'
 
-const products = [
-    {
-        id: 1,
-        name: "Zapatillas Nike",
-        images: "https://picsum.photos/id/235/300",
-        price: 1000,
+const useStyles = makeStyles({
+    listProductsInline: {
+        fontSize: 16,
+        display: 'flex',
+        flexDirection: 'column',
+        zIndex: 1000
     },
-    {
-        id: 2,
-        images: "https://picsum.photos/id/237/300",
-        price: 1800,
-        name: "Teclado Gamer"
-    },
-    {
-        id: 3,
-        images: "https://picsum.photos/id/236/300",
-        price: 2000,
-        name: "Pileta de Lona"
-    },
-    {
-        id: 4,
-        images: "https://picsum.photos/id/238/300",
-        price: 3500,
-        name: "Monitor Samsung"
-    },
-    {
-        id: 5,
-        name: "Zapatillas Adidas",
-        images: "https://picsum.photos/id/232/300",
-        price: 7000,
-    },
-    {
-        id: 6,
-        images: "https://picsum.photos/id/233/300",
-        price: 2800,
-        name: "Teclado Logitech"
-    },
-    {
-        id: 7,
-        images: "https://picsum.photos/id/231/300",
-        price: 2500,
-        name: "Auriculares JBL"
-    },
-    {
-        id: 8,
-        images: "https://picsum.photos/id/234/300",
-        price: 3500,
-        name: "MacBook Pro 2020"
+    productInline: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
     }
-]
+})
 
 const ProductSearch = () => {
+    const classes = useStyles()
     const [name, setName] = useState("");
     const [productsSearch, setProductsSearch] = useState([]);
 
-    const handleChange = e => {
-        setName(e.target.value);
-    };
-    useEffect(() => {
-        const results = products.filter(product =>
+    const { loading, error, data } = useQuery(products);
+
+    if (loading) {
+        return (
+            <h1> Cargando </h1>
+        )
+    }
+
+    if (error) {
+        console.dir(error)
+        return <h1> error </h1>;
+    }
+
+    const searchProduct = () => {
+        const listProd = data.products.listProducts.data
+        const results = listProd.filter(product =>
             product.name.toLowerCase().includes(name)
         );
-        setProductsSearch(results);
-    }, [name]);
+        return setProductsSearch(results);
+    }
+
+    const handleChange = async e => {
+        await setName(e.target.value);
+        await searchProduct()
+    };
+
 
     return (
-        <div className="container">
+        <div>
             <TextField
                 type="text"
                 value={name}
                 onChange={handleChange}
                 label="Search any product..."
+                fullWidth={true}
             />
+            <section className={classes.listProductsInline} >
                 {
-                productsSearch.map((item) => (
-                    <Product key={item.id} {...item}/>
-                ))
+                    productsSearch.map((item) => (
+                        <div key={item.id} className={classes.productInline}>
+                            <img src={item.images} alt="producto" width={30} />
+                            <span>{item.name}</span>
+                            <span>{item.price}</span>
+                        </div>
+                    ))
                 }
+            </section>
         </div>
     );
 }

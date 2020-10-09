@@ -26,11 +26,8 @@ const useStyles = makeStyles({
         backgroundSize: "contain",
         height: 200,
     },
-    white: {
-        color: "white",
-    },
     btnCenter: {
-        margin: "auto",
+        width: "100%",
     }
 });
 
@@ -38,8 +35,8 @@ export default function Product(props) {
     const classes = useStyles();
 
     return (
-        <Grid item xs={12} sm={6} md={3}>
-            <Card className={classes.root} key={props.id} elevation={5}>
+        <Grid item xs={12} sm={6} md={3} lg={2}>
+            <Card className={classes.root} key={props.id} elevation={0}>
                 <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
                         <CardMedia
                             className={classes.media}

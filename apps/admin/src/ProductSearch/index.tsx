@@ -42,7 +42,7 @@ export default () => {
                     IFrameEditor component and in the settings dialog.
                 */
                 return {
-                    type: "button-cart-home",
+                    type: "product-search",
                     elements: [],
                     data: {},
                     ...options
@@ -60,9 +60,9 @@ export default () => {
             }
         } as PbEditorPageElementPlugin,
         {
-            name: "pb-render-page-element-button-cart-home",
+            name: "pb-render-page-element-product-search",
             type: "pb-render-page-element",
-            elementType: "button-cart-home",
+            elementType: "product-search",
             render({ element }) {
                 return <ProductSearchRender element={element} />;
             }

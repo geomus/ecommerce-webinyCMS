@@ -116,15 +116,14 @@ export default function FormCheckout() {
         return body.data
     };
     const executeInitPoint = async (initPoint, order) => {
-        //return window.open(initPoint)
-
-        await addOrder({ variables: { data: order } });
-
+        const orderGenerate = await addOrder({ variables: { data: order } });
+        console.log(orderGenerate)
         return window.location.href = initPoint;
     }
-    // const executeRedirectPayment = (url) => {
-    //     return window.location.href = url
-    // }
+     const executeRedirectPayment = (url, order) => {
+        const orderGenerate = addOrder({ variables: { data: order } })
+         return window.location.href = url
+     }
 
     const onSubmit = async (e) => {
         setIsLoading(true)
@@ -149,13 +148,8 @@ export default function FormCheckout() {
             //createOrder
             await executeInitPoint(preferenceData.init_point, order)
         } else {
-            await addOrder({ variables: { data: order } })
+            await executeRedirectPayment('http://localhost:3000/wonder-slug/pending', order)
         }
-
-
-        // Redirect /wonder-slug/pending
-
-
     }
 
     return (

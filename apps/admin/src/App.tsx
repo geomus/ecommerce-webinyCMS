@@ -6,6 +6,7 @@ import ButtonCartHome from './ButtonCartHome';
 import Cart from './Cart';
 import FormCheckout from './FormCheckout';
 import PayResult from './PayResult';
+import ProductSearch from './ProductSearch';
 import PBGroupEcommerce from './plugins/PBGroupEcommerce';
 
 export default adminTemplate({
@@ -21,6 +22,7 @@ export default adminTemplate({
         Cart(),
         FormCheckout(),
         PayResult(),
+        ProductSearch(),
         PBGroupEcommerce
     ]
 });
