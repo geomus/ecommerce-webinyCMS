@@ -26,7 +26,8 @@
 		"@webiny/serverless-aws-s3-object": "^4.10.0",
 		"@webiny/serverless-component": "^4.10.0",
 		"@webiny/serverless-files": "^4.10.0",
-		"@webiny/serverless-function": "^4.10.0"
+		"@webiny/serverless-function": "^4.10.0",
+		"swiper": "^6.3.3"
 	},
 	"devDependencies": {
 		"@babel/plugin-proposal-class-properties": "^7.10.4",

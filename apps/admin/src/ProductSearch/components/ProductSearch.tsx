@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './ProductSearch.scss'
 import Product from '../../ListProducts/components/Product'
 import { TextField } from '@material-ui/core';
 
