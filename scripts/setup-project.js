@@ -4,7 +4,7 @@ const { green } = require("chalk");
 const crypto = require("crypto");
 const loadJson = require("load-json-file");
 const writeJson = require("write-json-file");
-const uuid = require("uuid/v4");
+const uuid = require("uuid").v4;
 
 const PROJECT_FOLDER = ".";
 

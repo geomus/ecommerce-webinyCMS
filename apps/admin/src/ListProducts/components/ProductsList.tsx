@@ -1,34 +1,35 @@
 import React from 'react';
-import './ProductsList.scss'
 import Product from './Product'
 import { useQuery } from "@apollo/client";
 import { products } from '../../graphql/query'
+import Grid from '@material-ui/core/Grid';
+import { CircularProgress } from '@material-ui/core';
+
 
 const ProductsList = () => {
    const { loading, error, data } = useQuery(products);
 
    if (loading) {
       return (
-        <h1> Cargando </h1>
+         <h1> <CircularProgress/> </h1>
       )
-    }
-  
-    if (error) {
-       console.dir(error)
-      return <h1> error </h1>;
-    }
+   }
 
-    
+   if (error) {
+      console.dir(error)
+      return <h1> error </h1>;
+   }
+
+
    return (
-      <div className="container">
-         {                                         
-            data.products.listProducts.data.map((info) => (
-               <Product key={info.id} {...info}/>
+      <Grid container spacing={2}>
+         {
+            data.products.listProducts.data.map((prod) => (
+               <Product key={prod.id} {...prod} />
             ))
-         };
-      </div>
+         }
+      </Grid>
    );
 }
 
 export default ProductsList;
-

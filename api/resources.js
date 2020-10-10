@@ -19,7 +19,8 @@ const apolloGatewayServices = {
     LAMBDA_SERVICE_PAGE_BUILDER: "${pageBuilderGraphQL.name}",
     LAMBDA_SERVICE_FORM_BUILDER: "${formBuilderGraphQL.name}",
     LAMBDA_SERVICE_HEADLESS_CMS: "${cmsGraphQL.name}",
-    LAMBDA_SERVICE_API_PRODUCTS: "${apiProducts.name}"
+    LAMBDA_SERVICE_API_PRODUCTS: "${apiProducts.name}",
+    LAMBDA_SERVICE_API_ORDERS: "${apiOrders.name}"
 };
 
 module.exports = () => ({
@@ -469,6 +470,11 @@ module.exports = () => ({
                         path: "/cms/{key+}",
                         method: "ANY",
                         function: "${cmsContent.arn}"
+                    },
+                    {
+                        path: "/mercado-pago/generate-preference",
+                        method: "ANY",
+                        function: "${apiMercadoPagoGeneratePreference.arn}"
                     }
                 ]
             }
@@ -531,6 +537,43 @@ module.exports = () => ({
                     region: process.env.AWS_REGION,
                     description: "GraphQL API",
                     code: "./products/build",
+                    handler: "handler.handler",
+                    memory: 512,
+                    env: apolloServiceEnv
+                }
+            }
+        },
+        apiMercadoPagoGeneratePreference: {
+            watch: ["./mercado-pago/generate-preference/build"],
+            build: {
+                root: "./mercado-pago/generate-preference",
+                script: "yarn build"
+            },
+            deploy: {
+                component: "@webiny/serverless-function",
+                inputs: {
+                    role: "${lambdaRole.arn}",
+                    description: "Custom lambda function",
+                    region: process.env.AWS_REGION,
+                    code: "./mercado-pago/generate-preference/build",
+                    handler: "handler.handler",
+                    memory: 512,
+                }
+            }
+        },
+        apiOrders: {
+            watch: ["./orders/build"],
+            build: {
+                root: "./orders",
+                script: "yarn build"
+            },
+            deploy: {
+                component: "@webiny/serverless-function",
+                inputs: {
+                    role: "${lambdaRole.arn}",
+                    region: process.env.AWS_REGION,
+                    description: "GraphQL API",
+                    code: "./orders/build",
                     handler: "handler.handler",
                     memory: 512,
                     env: apolloServiceEnv

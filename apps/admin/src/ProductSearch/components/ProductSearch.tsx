@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ProductSearch.scss'
 import Product from '../../ListProducts/components/Product'
+import { TextField } from '@material-ui/core';
 
 const products = [
     {
@@ -69,11 +70,11 @@ const ProductSearch = () => {
 
     return (
         <div className="container">
-            <input
+            <TextField
                 type="text"
-                placeholder="Search any product..."
                 value={name}
                 onChange={handleChange}
+                label="Search any product..."
             />
                 {
                 productsSearch.map((item) => (

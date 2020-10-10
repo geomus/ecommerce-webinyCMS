@@ -1,85 +1,106 @@
-import React, { useState, useEffect } from 'react';
-import './ProductSearch.scss'
-import Product from '../../ListProducts/components/Product'
+import React, { useState } from 'react';
+import { makeStyles } from "@material-ui/core/styles"
+import { TextField } from '@material-ui/core';
+import { IconButton } from '@material-ui/core'
+import { useQuery } from "@apollo/client";
+import { products } from '../../graphql/query'
+import SearchIcon from '@material-ui/icons/Search';
 
-const products = [
-    {
-        id: 1,
-        name: "Zapatillas Nike",
-        images: "https://picsum.photos/id/235/300",
-        price: 1000,
+const useStyles = makeStyles({
+    formSearch: {
+        display: 'flex',
+        alignItems: 'center'
     },
-    {
-        id: 2,
-        images: "https://picsum.photos/id/237/300",
-        price: 1800,
-        name: "Teclado Gamer"
+    inputTextForm: {
+        width: '90%'
     },
-    {
-        id: 3,
-        images: "https://picsum.photos/id/236/300",
-        price: 2000,
-        name: "Pileta de Lona"
+    listProductsInline: {
+        fontSize: 13,
+        display: 'flex',
+        flexDirection: 'column',
+        zIndex: 1000,
+        position: 'absolute',
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        width: '100%',
+        borderRadius: '0 0 1rem 1rem'
     },
-    {
-        id: 4,
-        images: "https://picsum.photos/id/238/300",
-        price: 3500,
-        name: "Monitor Samsung"
+    productInline: {
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        '&:hover': {
+            backgroundColor: 'rgba(200,200,200,0.2)'
+        }
     },
-    {
-        id: 5,
-        name: "Zapatillas Adidas",
-        images: "https://picsum.photos/id/232/300",
-        price: 7000,
-    },
-    {
-        id: 6,
-        images: "https://picsum.photos/id/233/300",
-        price: 2800,
-        name: "Teclado Logitech"
-    },
-    {
-        id: 7,
-        images: "https://picsum.photos/id/231/300",
-        price: 2500,
-        name: "Auriculares JBL"
-    },
-    {
-        id: 8,
-        images: "https://picsum.photos/id/234/300",
-        price: 3500,
-        name: "MacBook Pro 2020"
+    imgProductInline: {
+        marginRight: '1rem'
     }
-]
+})
 
 const ProductSearch = () => {
+    const classes = useStyles()
     const [name, setName] = useState("");
     const [productsSearch, setProductsSearch] = useState([]);
 
-    const handleChange = e => {
-        setName(e.target.value);
-    };
-    useEffect(() => {
-        const results = products.filter(product =>
+    const { loading, error, data } = useQuery(products);
+
+    if (loading) {
+        return (
+            <h1> Cargando </h1>
+        )
+    }
+
+    if (error) {
+        console.dir(error)
+        return <h1> error </h1>;
+    }
+
+    const searchProduct = () => {
+        const listProd = data.products.listProducts.data
+        const results = listProd.filter(product =>
             product.name.toLowerCase().includes(name)
         );
-        setProductsSearch(results);
-    }, [name]);
+        return setProductsSearch(results);
+    }
+
+
+    const handleChange = async e => {
+        if (e.target.value === '') {
+            setProductsSearch([])
+            setName('')
+        } else {
+            await setName(e.target.value);
+            await searchProduct()
+        }
+    };
+
 
     return (
-        <div className="container">
-            <input
-                type="text"
-                placeholder="Search any product..."
-                value={name}
-                onChange={handleChange}
-            />
+        <div>
+            <form action="/wonder-slug/shop" method="get">
+                <TextField
+                name="search"
+                    type="text"
+                    value={name}
+                    onChange={handleChange}
+                    label="Search any product..."
+                    className={classes.inputTextForm}
+
+                />
+                <IconButton aria-label="serach" type='submit'>
+                    <SearchIcon />
+                </IconButton>
+            </form>
+            <section className={classes.listProductsInline} >
                 {
-                productsSearch.map((item) => (
-                    <Product key={item.id} {...item}/>
-                ))
+                    productsSearch.map((item) => (
+                        <a key={item.id} className={classes.productInline} href={`/wonder-slug/product-detail?id=${item.id}`}>
+                            <img className={classes.imgProductInline} src={item.images} alt="producto" width={50} />
+                            <span >{item.name}</span>
+                        </a>
+                    ))
                 }
+            </section>
         </div>
     );
 }
