@@ -56,6 +56,7 @@ export const createOrder = gql`
         orders {
             createOrder(data: $data) {
                 data {
+                    id
                     name
                     lastName
                     phone
@@ -66,6 +67,7 @@ export const createOrder = gql`
                     pay
                     idPreference
                     shipping
+                    status
                     cart
                 }
                 error {
@@ -101,11 +103,27 @@ export const orderExternalID = gql`
 `;
 
 export const updateOrder = gql`
-    mutation updateOrder($id: ID!,$data: OrderInput!) {
+    mutation updateOrder($id: ID!, $data: OrderInput!) {
         orders {
             updateOrder(id: $id, data: $data) {
-                id
-                data
+                data {
+                    id
+                    name
+                    lastName
+                    phone
+                    address
+                    state
+                    city
+                    zip
+                    pay
+                    idPreference
+                    shipping
+                  	status
+                    cart
+                }
+                error {
+                    data
+                }
             }
         }
     }
