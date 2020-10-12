@@ -12,6 +12,7 @@ export const products = gql`
                     price
                     images
                     tags
+                    isFeatured
                 }
             }
         }
@@ -29,6 +30,7 @@ export const product = gql`
                     price
                     images
                     tags
+                    isFeatured
                 }
             }
         }
@@ -44,6 +46,7 @@ export const productsFilter = gql`
                     name
                     price
                     images
+                    isFeatured
                 }
             }
         }

@@ -8,6 +8,8 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { makeStyles } from "@material-ui/core/styles"
+import {ReactComponent as RbNew} from '../../../rb-new.svg'
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -20,6 +22,12 @@ const useStyles = makeStyles({
     },
     marginTags: {
         marginRight: "0.5rem"
+    },
+    ribbonNew: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: 70
     }
 });
 
@@ -52,7 +60,8 @@ const ProductDetail = () => {
                     <Typography variant="body1" gutterBottom>
                         Categoria del producto
                     </Typography>
-                    <hr></hr>
+                    { data.products.getProduct.data.isFeatured ? <RbNew className={classes.ribbonNew}/> : ''}
+                    <Divider/>
                     <Typography variant="h5" gutterBottom>
                         {data.products.getProduct.data.name}
                     </Typography>

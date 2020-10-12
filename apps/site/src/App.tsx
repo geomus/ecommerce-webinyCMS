@@ -8,9 +8,10 @@ import Cart from './Cart';
 import FormCheckout from './FormCheckout';
 import PayResult from './PayResult';
 import SliderListProducts from './SliderListProducts';
+import ShopProducts from "./ShopProducts";
 
 export default (params: SiteAppOptions = {}) => {
     const plugins = params.plugins || [];
-    plugins.push(ProductDetail(), ProductSearch(), ListProducts(), ButtonCartHome(), Cart(), FormCheckout(), PayResult(), SliderListProducts());
+    plugins.push(ProductDetail(), ProductSearch(), ListProducts(), ButtonCartHome(), Cart(), FormCheckout(), PayResult(), SliderListProducts(), ShopProducts());
     return createSite({ ...params, plugins });
 };

@@ -8,6 +8,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import {ReactComponent as RbNew} from '../../../rb-new.svg'
 
 
 export default function Product(props) {
@@ -41,6 +42,12 @@ export default function Product(props) {
             position: 'relative',
             top: 20,
             fontWeight: 'bold'
+        },
+        ribbonNew: {
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: 70
         }
     });
     const classes = useStyles();
@@ -60,6 +67,7 @@ export default function Product(props) {
                         <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
                             ${props.price}
                         </Typography>
+                        { props.isFeatured ? <RbNew className={classes.ribbonNew}/> : ''}
                     </CardContent>
                 </CardActionArea>
                 <CardActions>

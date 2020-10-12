@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 
+/* PRODUCT */
 export const products = gql`
     {
         products {
@@ -11,16 +12,17 @@ export const products = gql`
                     price
                     images
                     tags
+                    isFeatured
                 }
             }
         }
     }
-`
+`;
 
 export const product = gql`
-    {
+    query getProduct($id: ID!) {
         products {
-            getProduct(id: "5f7dcbbd7acd520009344d05") {
+            getProduct(id: $id) {
                 data {
                     id
                     name
@@ -28,11 +30,12 @@ export const product = gql`
                     price
                     images
                     tags
+                    isFeatured
                 }
             }
         }
     }
-`
+`;
 
 export const productsFilter = gql`
     query listProducts($name: String) {
@@ -43,16 +46,20 @@ export const productsFilter = gql`
                     name
                     price
                     images
+                    isFeatured
                 }
             }
         }
     }
-`
+`;
+
+/* ORDER */
 export const createOrder = gql`
     mutation createOrder($data: OrderInput!) {
         orders {
             createOrder(data: $data) {
                 data {
+                    id
                     name
                     lastName
                     phone
@@ -63,6 +70,58 @@ export const createOrder = gql`
                     pay
                     idPreference
                     shipping
+                    status
+                    cart
+                }
+                error {
+                    data
+                }
+            }
+        }
+    }
+`;
+
+export const orderExternalID = gql`
+    query listOrders($idPreference: String) {
+        orders {
+            listOrders(where: { idPreference: $idPreference }) {
+                data {
+                    id
+                    name
+                    lastName
+                    phone
+                    address
+                    state
+                    city
+                    zip
+                    pay
+                    idPreference
+                    status
+                    shipping
+                    cart
+                }
+            }
+        }
+    }
+`;
+
+export const updateOrder = gql`
+    mutation updateOrder($id: ID!, $data: OrderInput!) {
+        orders {
+            updateOrder(id: $id, data: $data) {
+                data {
+                    id
+                    name
+                    lastName
+                    phone
+                    address
+                    state
+                    city
+                    zip
+                    pay
+                    idPreference
+                    shipping
+                  	status
                     cart
                 }
                 error {

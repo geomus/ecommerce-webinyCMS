@@ -8,6 +8,7 @@ import FormCheckout from './FormCheckout';
 import PayResult from './PayResult';
 import ProductSearch from './ProductSearch';
 import SliderListProducts from './SliderListProducts';
+import ShopProducts from './ShopProducts';
 import PBGroupEcommerce from './plugins/PBGroupEcommerce';
 
 export default adminTemplate({
@@ -25,6 +26,7 @@ export default adminTemplate({
         PayResult(),
         ProductSearch(),
         SliderListProducts(),
+        ShopProducts(),
         PBGroupEcommerce
     ]
 });

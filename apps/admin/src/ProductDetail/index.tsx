@@ -4,7 +4,7 @@ import {
     PbEditorPageElementPlugin,
     PbRenderElementPlugin
 } from "@webiny/app-page-builder/types";
-import { ReactComponent as DetailIcon } from "./file-code-regular.svg";
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import ProductDetailRender from "./ProductDetailRender";
 import ProductDetailEditor from "./ProductDetailEditor";
 
@@ -29,7 +29,7 @@ export default () => {
                 preview() {
                     return (
                         <PreviewBox>
-                            <DetailIcon />
+                            <AssignmentIcon />
                         </PreviewBox>
                     );
                 }
