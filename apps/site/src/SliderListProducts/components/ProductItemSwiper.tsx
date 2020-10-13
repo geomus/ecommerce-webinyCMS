@@ -45,8 +45,8 @@ export default function Product(props) {
         },
         ribbonNew: {
             position: 'absolute',
-            top: 0,
-            right: 0,
+            top: -10,
+            right: -5,
             width: 70
         }
     });

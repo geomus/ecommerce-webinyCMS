@@ -45,8 +45,8 @@ export default function Product(props) {
         },
         ribbonNew: {
             position: 'absolute',
-            top: 0,
-            right: 0,
+            top: -10,
+            right: -5,
             width: 70
         }
     });
@@ -68,7 +68,7 @@ export default function Product(props) {
                         <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
                             ${props.price}
                         </Typography>
-                        { props.isFeatured ? <RbNew className={classes.ribbonNew}/> : ''}
+                        { props.isFeatured && <RbNew className={classes.ribbonNew}/>}
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
