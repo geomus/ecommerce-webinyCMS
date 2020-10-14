@@ -1,5 +1,5 @@
 import React from 'react';
-import ShopCartButton from '../../ListProducts/components/ShopCartButton'
+import ShopCartButton from './ShopCartButton'
 import { useTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -8,19 +8,18 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import {ReactComponent as RbNew} from '../../../rb-new.svg'
+import {ReactComponent as RbNew} from '../utils/svg/rb-new.svg'
 
 
 export default function Product(props) {
     const theme = useTheme();
     const useStyles = makeStyles({
         root: {
-            padding:"1rem",
             textAlign: "left",
             transition: "all 0.1s",
-            height: 395,
+            height: '100%',
             [theme.breakpoints.up(768)]: {
-                height: 310,
+                height: '85%',
             },
             '&:hover': {
                 transform: "scale(1.05) translateY(-20px)",
@@ -67,7 +66,7 @@ export default function Product(props) {
                         <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
                             ${props.price}
                         </Typography>
-                        { props.isFeatured ? <RbNew className={classes.ribbonNew}/> : ''}
+                        { props.isFeatured && <RbNew className={classes.ribbonNew}/>}
                     </CardContent>
                 </CardActionArea>
                 <CardActions>

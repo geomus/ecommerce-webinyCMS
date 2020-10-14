@@ -1,5 +1,5 @@
 import React from 'react';
-import Product from './ProductItemSwiper'
+import Product from '../../Product'
 import './SliderListProducts'
 import { useQuery } from "@apollo/client";
 import { products } from '../../graphql/query'

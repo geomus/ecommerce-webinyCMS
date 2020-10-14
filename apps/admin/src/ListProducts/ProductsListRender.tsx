@@ -3,6 +3,7 @@ import { css } from "emotion";
 import { ElementRoot } from "@webiny/app-page-builder/render/components/ElementRoot";
 import ProductsList from './components/ProductsList';
 
+
 const outerWrapper = css({
     boxSizing: "border-box"
 });
