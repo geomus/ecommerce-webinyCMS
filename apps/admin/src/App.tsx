@@ -9,8 +9,8 @@ import PayResult from './PayResult';
 import ProductSearch from './ProductSearch';
 import SliderListProducts from './SliderListProducts';
 import PBGroupEcommerce from './plugins/PBGroupEcommerce';
-import Dashboard from './plugins/Menus/Dashboard';
-import DashboardProductsRoute from './plugins/Routes/DashboardProductsRoute';
+import Dashboard from './Dashboard/Products/Menus/Dashboard';
+import DashboardProductsRoute from './Dashboard/Products/Routes/DashboardProductsRoute';
 
 export default adminTemplate({
     cognito: {
@@ -27,7 +27,6 @@ export default adminTemplate({
         PayResult(),
         ProductSearch(),
         SliderListProducts(),
-        ShopProducts(),
         Dashboard,
         DashboardProductsRoute,
         PBGroupEcommerce
