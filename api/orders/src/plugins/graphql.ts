@@ -82,6 +82,7 @@ const plugin: GraphQLSchemaPlugin = {
             }
 
             input OrderListWhere {
+                id: ID
                 name: String
                 lastName: String
                 state:String

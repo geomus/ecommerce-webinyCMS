@@ -10,6 +10,8 @@ import ProductSearch from './ProductSearch';
 import SliderListProducts from './SliderListProducts';
 import ShopProducts from './ShopProducts';
 import PBGroupEcommerce from './plugins/PBGroupEcommerce';
+import Dashboard from './plugins/Menus/Dashboard';
+import DashboardProductsRoute from './plugins/Routes/DashboardProductsRoute';
 
 export default adminTemplate({
     cognito: {
@@ -27,6 +29,8 @@ export default adminTemplate({
         ProductSearch(),
         SliderListProducts(),
         ShopProducts(),
-        PBGroupEcommerce
+        PBGroupEcommerce,
+        Dashboard,
+        DashboardProductsRoute
     ]
 });

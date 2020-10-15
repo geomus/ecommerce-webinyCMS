@@ -54,6 +54,30 @@ export const productsFilter = gql`
 `;
 
 /* ORDER */
+export const getOrder = gql`
+    query getOrder($id: ID!) {
+        orders {
+            getOrder(id: $id) {
+                data {
+                    id
+                    name
+                    lastName
+                    phone
+                    address
+                    state
+                    city
+                    zip
+                    pay
+                    idPreference
+                    shipping
+                    status
+                    cart
+                }
+            }
+        }
+    }
+`;
+
 export const createOrder = gql`
     mutation createOrder($data: OrderInput!) {
         orders {
