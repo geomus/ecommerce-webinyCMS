@@ -24,10 +24,7 @@ const ProductsList = () => {
         queryGQL = products
     }
 
-
     const { loading, error, data } = useQuery(queryGQL, { variables: { searchVariable } });
-
-    console.log(data);
 
     if (loading) {
         return (

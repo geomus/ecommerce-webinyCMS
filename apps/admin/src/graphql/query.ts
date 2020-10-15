@@ -13,6 +13,7 @@ export const products = gql`
                     images
                     tags
                     isFeatured
+                    isPublished
                 }
             }
         }
@@ -31,6 +32,7 @@ export const product = gql`
                     images
                     tags
                     isFeatured
+                    isPublished
                 }
             }
         }
@@ -44,9 +46,12 @@ export const productsFilter = gql`
                 data {
                     id
                     name
+                    description
                     price
                     images
+                    tags
                     isFeatured
+                    isPublished
                 }
             }
         }
@@ -138,9 +143,12 @@ export const searchProducts = gql`
                 data {
                     id
                     name
+                    description
                     price
                     images
+                    tags
                     isFeatured
+                    isPublished
                 }
             }
         }

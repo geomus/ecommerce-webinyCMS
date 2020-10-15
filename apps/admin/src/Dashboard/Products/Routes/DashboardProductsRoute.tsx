@@ -3,7 +3,7 @@ import { Route } from "@webiny/react-router";
 import { RoutePlugin } from "@webiny/app/types"
 import { AdminLayout } from "@webiny/app-admin/components/AdminLayout"
 import Helmet from 'react-helmet'
-import ProductsTable from '../../Dashboard/ProductsTable';
+import ProductsTable from '../Components/ProductsTable';
 
 export default [{
     type: "route",
