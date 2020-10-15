@@ -8,8 +8,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import {ReactComponent as RbNew} from '../../../rb-new.svg'
+import {ReactComponent as RbNew} from '../utils/svg/rb-new.svg'
 
 
 export default function Product(props) {
@@ -53,7 +52,6 @@ export default function Product(props) {
     const classes = useStyles();
 
     return (
-        <Grid item xs={6} sm={6} md={3} lg={2}>
             <Card className={classes.root} key={props.id} elevation={0}>
                 <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
                     <CardMedia
@@ -75,6 +73,5 @@ export default function Product(props) {
                     <ShopCartButton {...props} />
                 </CardActions>
             </Card>
-        </Grid>
     );
 }

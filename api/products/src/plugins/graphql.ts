@@ -10,7 +10,7 @@ import {
     resolveUpdate
 } from "@webiny/commodo-graphql";
 
-const productFetcher = ctx => ctx.models.Product;
+const productFetcher = (ctx) => ctx.models.Product;
 
 /**
  * As the name itself suggests, the "graphql-schema" plugin enables us to define our service's GraphQL schema.
@@ -50,12 +50,12 @@ const plugin: GraphQLSchemaPlugin = {
 
             type Product {
                 id: ID
-                name : String
+                name: String
                 slug: String
                 description: String
-                price : Float
-                images : [String]
-                tags : [String]
+                price: Float
+                images: [String]
+                tags: [String]
                 isPublished: Boolean
                 isFeatured: Boolean
                 createdOn: DateTime
@@ -63,12 +63,12 @@ const plugin: GraphQLSchemaPlugin = {
 
             input ProductInput {
                 id: ID
-                name : String!
+                name: String!
                 slug: String
                 description: String
-                price : Float
-                images : [String]
-                tags : [String]
+                price: Float
+                images: [String]
+                tags: [String]
                 isPublished: Boolean
                 isFeatured: Boolean
                 createdOn: DateTime
@@ -90,6 +90,12 @@ const plugin: GraphQLSchemaPlugin = {
                 isPublished: Boolean
             }
 
+            input ProductSearchInput {
+                query: String
+                fields: [String]
+                operator: String
+            }
+            
             type ProductResponse {
                 data: Product
                 error: ProductError
@@ -106,7 +112,7 @@ const plugin: GraphQLSchemaPlugin = {
 
                 listProducts(
                     where: ProductListWhere
-                    filter : ProductListFilter
+                    search: ProductSearchInput
                     sort: ProductListSort
                     limit: Int
                     after: String

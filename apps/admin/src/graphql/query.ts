@@ -131,3 +131,19 @@ export const updateOrder = gql`
         }
     }
 `;
+export const searchProducts = gql`
+    query listProducts($searchVariable: ProductSearchInput) {
+        products {
+            listProducts(search: $searchVariable) {
+                data {
+                    id
+                    name
+                    price
+                    images
+                    isFeatured
+                }
+            }
+        }
+    }
+`;
+

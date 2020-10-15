@@ -8,6 +8,8 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { makeStyles } from "@material-ui/core/styles"
+import {ReactComponent as RbNew} from '../../utils/svg/rb-new.svg'
+import { Divider } from '@material-ui/core';
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -16,10 +18,17 @@ const useStyles = makeStyles({
         justifyContent: "space-between"
     },
     imgFluid: {
+        position: 'relative',
         width: '100%'
     },
     marginTags: {
         marginRight: "0.5rem"
+    },
+    ribbonNew: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: 70
     }
 });
 
@@ -47,12 +56,13 @@ const ProductDetail = () => {
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                     <img src={data.products.getProduct.data.images} alt="Product" className={classes.imgFluid} />
+                    { data.products.getProduct.data.isFeatured ? <RbNew className={classes.ribbonNew}/> : ''}
                 </Grid>
                 <Grid item xs={12} md={6} className={classes.detailProduct}>
                     <Typography variant="body1" gutterBottom>
                         Categoria del producto
                     </Typography>
-                    <hr></hr>
+                    <Divider/>
                     <Typography variant="h5" gutterBottom>
                         {data.products.getProduct.data.name}
                     </Typography>

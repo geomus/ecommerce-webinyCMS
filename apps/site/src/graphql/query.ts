@@ -145,11 +145,27 @@ export const updateOrder = gql`
                     pay
                     idPreference
                     shipping
-                  	status
+                    status
                     cart
                 }
                 error {
                     data
+                }
+            }
+        }
+    }
+`;
+
+export const searchProducts = gql`
+    query listProducts($searchVariable: ProductSearchInput) {
+        products {
+            listProducts(search: $searchVariable) {
+                data {
+                    id
+                    name
+                    price
+                    images
+                    isFeatured
                 }
             }
         }

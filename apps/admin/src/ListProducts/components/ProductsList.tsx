@@ -1,35 +1,58 @@
 import React from 'react';
-import Product from './Product'
+import Product from '../../Product'
 import { useQuery } from "@apollo/client";
-import { products } from '../../graphql/query'
 import Grid from '@material-ui/core/Grid';
-import { CircularProgress } from '@material-ui/core';
-
+import { LinearProgress } from '@material-ui/core';
+import { products } from '../../graphql/query'
+import { searchProducts } from '../../graphql/query'
 
 const ProductsList = () => {
-   const { loading, error, data } = useQuery(products);
+    const params = new URLSearchParams(window.location.search)
+    const searchQuery = params.get('search')
+    let searchVariable
+    let queryGQL
 
-   if (loading) {
-      return (
-         <h1> <CircularProgress/> </h1>
-      )
-   }
+    if (searchQuery) {
+        searchVariable = {
+            query: searchQuery,
+            fields: 'name',
+            operator: 'regex'
+        }
+        queryGQL = searchProducts
+    } else {
+        searchVariable = null
+        queryGQL = products
+    }
 
-   if (error) {
-      console.dir(error)
-      return <h1> error </h1>;
-   }
+
+    const { loading, error, data } = useQuery(queryGQL, { variables: { searchVariable } });
+
+    console.log(data);
+
+    if (loading) {
+        return (
+            <h1> <LinearProgress /> </h1>
+        )
+    }
+
+    if (error) {
+        console.dir(error)
+        return <h1> error </h1>;
+    }
 
 
-   return (
-      <Grid container spacing={2}>
-         {
-            data.products.listProducts.data.map((prod) => (
-               <Product key={prod.id} {...prod} />
-            ))
-         }
-      </Grid>
-   );
+    return (
+        <Grid container spacing={2}>
+            {
+                data.products.listProducts.data.map((prod) => (
+                    <Grid item xs={12} md={4} lg={5} key={prod.id}>
+                        <Product {...prod} />
+                    </Grid>
+                ))
+            }
+        </Grid>
+    );
 }
 
 export default ProductsList;
+
