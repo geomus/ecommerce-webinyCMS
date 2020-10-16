@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 
-/* PRODUCT */
 export const products = gql`
     {
         products {
@@ -58,7 +57,6 @@ export const productsFilter = gql`
     }
 `;
 
-/* ORDER */
 export const createOrder = gql`
     mutation createOrder($data: OrderInput!) {
         orders {
@@ -126,7 +124,7 @@ export const updateOrder = gql`
                     pay
                     idPreference
                     shipping
-                  	status
+                    status
                     cart
                 }
                 error {
@@ -136,6 +134,7 @@ export const updateOrder = gql`
         }
     }
 `;
+
 export const searchProducts = gql`
     query listProducts($searchVariable: ProductSearchInput) {
         products {
@@ -155,3 +154,14 @@ export const searchProducts = gql`
     }
 `;
 
+export const updateIsPublishedProduct = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    isPublished
+                }
+            }
+        }
+    }
+`;

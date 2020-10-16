@@ -1,28 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import AddIcon from '@material-ui/icons/Add';
-import IconButton from '@material-ui/core/IconButton';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { useQuery } from "@apollo/client";
 import { products } from '../../../graphql/query'
-import { Button, Chip, LinearProgress } from '@material-ui/core';
+import { Chip, LinearProgress } from '@material-ui/core';
+import ProductsTableToolbar from './ProductsTableToolbar';
+import ProductsTableHead from './ProductsTableHead';
+import ProductsBtnPublished from './ProductsBtnPublished';
+import ProductsBtnEdit from './ProductsBtnEdit';
+import ProductsBtnDelete from './ProductsBtnDelete';
 
 
 
@@ -52,112 +47,6 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-    { id: 'count', disablePadding: false, disableSort: false, label: '#' },
-    { id: 'image', disablePadding: false, disableSort: false, label: 'Imagen' },
-    { id: 'name', disablePadding: false, disableSort: false, label: 'Producto' },
-    { id: 'price', disablePadding: false, disableSort: false, label: 'Precio' },
-    { id: 'tags', disablePadding: false, disableSort: true, label: 'Tags' },
-    { id: 'isPublished', disablePadding: false, disableSort: true, label: 'Publicado' },
-    { id: 'edit', disablePadding: false, disableSort: true, label: 'Editar' },
-    { id: 'delete', disablePadding: false, disableSort: true, label: 'Eliminar' }
-];
-
-function ProductsTableHead(props) {
-    const { classes, order, orderBy, onRequestSort } = props;
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
-    };
-
-    return (
-        <TableHead>
-            <TableRow>
-                {headCells.map((headCell) => (
-                    <TableCell
-                        key={headCell.id}
-                        align='center'
-                        padding={headCell.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                        {headCell.disableSort ? headCell.label
-                            : <TableSortLabel
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
-                                onClick={createSortHandler(headCell.id)}
-                            >
-                                {headCell.label}
-                                {orderBy === headCell.id ? (
-                                    <span className={classes.visuallyHidden}>
-                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                    </span>
-                                ) : null}
-                            </TableSortLabel>}
-
-                    </TableCell>
-                ))}
-            </TableRow>
-        </TableHead>
-    );
-}
-
-ProductsTableHead.propTypes = {
-    classes: PropTypes.object.isRequired,
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
-};
-
-const useToolbarStyles = makeStyles((theme) => ({
-    root: {
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(1),
-    },
-    highlight:
-        theme.palette.type === 'light'
-            ? {
-                color: theme.palette.secondary.main,
-                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-            }
-            : {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark,
-            },
-    title: {
-        flex: '1 1 100%',
-    }
-}));
-
-const ProductsTableToolbar = (props) => {
-    const classes = useToolbarStyles();
-    const { numSelected } = props;
-
-    return (
-        <Toolbar
-            className={clsx(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
-            <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                Products
-            </Typography>
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddIcon />}
-            >
-                NUEVO
-      </Button>
-        </Toolbar>
-    );
-};
-
-ProductsTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-};
-
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -181,10 +70,10 @@ const useStyles = makeStyles((theme) => ({
         width: 1,
     },
     cellImgProduct: {
-        width: "7%"
+        width: "8%"
     },
     imgProduct: {
-        width: "100%"
+        width: "70%"
     },
     marginTags: {
         marginRight: "0.5rem"
@@ -198,10 +87,9 @@ export default function ProductsTable() {
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(true);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     const { loading, error, data } = useQuery(products);
-    let count = 1
 
     if (loading) {
         return (
@@ -304,7 +192,11 @@ export default function ProductsTable() {
                                             key={row.id}
                                             selected={isItemSelected}
                                         >
-                                            <TableCell align="center">{count++}</TableCell>
+                                            <TableCell align="center">
+                                                <Typography variant="caption">
+                                                    {row.id}
+                                                </Typography>
+                                            </TableCell>
                                             <TableCell className={classes.cellImgProduct}>
                                                 <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
                                             </TableCell>
@@ -318,17 +210,13 @@ export default function ProductsTable() {
                                             </TableCell>
                                             <TableCell align="center">{row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}</TableCell>
                                             <TableCell align="center">
-                                                {row.isPublished ? <Checkbox defaultChecked color="default" /> : <Checkbox />}
+                                                <ProductsBtnPublished row={row} />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <IconButton aria-label="edit" color="primary">
-                                                    <EditIcon />
-                                                </IconButton>
+                                                <ProductsBtnEdit />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <IconButton aria-label="delete" color="secondary">
-                                                    <DeleteIcon />
-                                                </IconButton>
+                                                <ProductsBtnDelete />
                                             </TableCell>
                                         </TableRow>
                                     );

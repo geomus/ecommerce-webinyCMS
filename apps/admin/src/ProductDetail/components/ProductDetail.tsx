@@ -5,11 +5,10 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-import Button from '@material-ui/core/Button';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { makeStyles } from "@material-ui/core/styles"
 import {ReactComponent as RbNew} from '../../utils/svg/rb-new.svg'
 import { Divider } from '@material-ui/core';
+import ShopCartButton from '../../Product/ShopCartButton';
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -35,10 +34,7 @@ const useStyles = makeStyles({
 const ProductDetail = () => {
     const classes = useStyles();
 
-    const params = new URLSearchParams(window.location.search)
-    const id = params.get('id')
-
-    const { loading, error, data } = useQuery(product, { variables: { id } });
+    const { loading, error, data } = useQuery(product, { variables: { id: "5f7dcd607acd520009344d0a" } });
     if (loading) {
         return (
             <h1> Cargando </h1>
@@ -75,13 +71,7 @@ const ProductDetail = () => {
                     <div>
                         {tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} color="primary" label={tag} component="a" href="#chip" key={i+tag}clickable /> )}
                     </div>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<ShoppingCartIcon />}
-                    >
-                        ADD TO CART
-                    </Button>
+                    <ShopCartButton/>
                 </Grid>
             </Grid>
         </Container>

@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import {ReactComponent as RbNew} from '../utils/svg/rb-new.svg'
 
 
+
 export default function Product(props) {
     const theme = useTheme();
     const useStyles = makeStyles({

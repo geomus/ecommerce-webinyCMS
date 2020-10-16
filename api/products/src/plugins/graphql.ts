@@ -63,7 +63,7 @@ const plugin: GraphQLSchemaPlugin = {
 
             input ProductInput {
                 id: ID
-                name: String!
+                name: String
                 slug: String
                 description: String
                 price: Float

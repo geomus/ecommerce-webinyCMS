@@ -27,6 +27,10 @@ const SliderListProducts = () => {
     swiperSlide: {
       padding: "2rem 0",
       width: '180px!important',
+      height: 380,
+      '&:hover': {
+        height:'100%'
+      },
       [theme.breakpoints.up('lg')]: {
         width: '260px!important'
       }

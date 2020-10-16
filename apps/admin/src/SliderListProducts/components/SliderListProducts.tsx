@@ -22,7 +22,8 @@ const SliderListProducts = () => {
   const theme = useTheme();
   const useStyles = makeStyles({
     swiper: {
-      height: 460
+      height: 460,
+      width: "90vw"
     },
     swiperSlide: {
       padding: "2rem 0",
