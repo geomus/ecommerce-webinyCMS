@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, lighten, makeStyles, Toolbar, Typography } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { lighten, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import ProductsBtnCreate from './ProductsBtnCreate';
 
 
 const useToolbarStyles = makeStyles((theme) => ({
@@ -38,13 +38,7 @@ const ProductsTableToolbar = (props) => {
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
                 Products
             </Typography>
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddIcon />}
-            >
-                NUEVO
-      </Button>
+            <ProductsBtnCreate/>
         </Toolbar>
     );
 }

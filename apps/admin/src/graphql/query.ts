@@ -165,3 +165,13 @@ export const updateIsPublishedProduct = gql`
         }
     }
 `;
+
+export const deleteProduct = gql`
+    mutation deleteProduct($id: ID!) {
+        products {
+            deleteProduct(id: $id) {
+                data
+            }
+        }
+    }
+`;

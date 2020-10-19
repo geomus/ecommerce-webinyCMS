@@ -119,26 +119,6 @@ export default function ProductsTable() {
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        setSelected(newSelected);
-    };
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -152,7 +132,6 @@ export default function ProductsTable() {
         setDense(event.target.checked);
     };
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -180,30 +159,22 @@ export default function ProductsTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
-                                    const isItemSelected = isSelected(row.name);
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.name)}
                                             role="checkbox"
-                                            aria-checked={isItemSelected}
                                             tabIndex={-1}
                                             key={row.id}
-                                            selected={isItemSelected}
                                         >
-                                            <TableCell align="center">
-                                                <Typography variant="caption">
-                                                    {row.id}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell className={classes.cellImgProduct}>
+
+                                            <TableCell align="center" className={classes.cellImgProduct}>
                                                 <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.name}
                                             </TableCell>
-                                            <TableCell align="center">
+                                            <TableCell align="left">
                                                 <Typography variant="body1" component="span">
                                                     ${row.price}
                                                 </Typography>
@@ -216,7 +187,7 @@ export default function ProductsTable() {
                                                 <ProductsBtnEdit />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <ProductsBtnDelete />
+                                                <ProductsBtnDelete row={row} />
                                             </TableCell>
                                         </TableRow>
                                     );
