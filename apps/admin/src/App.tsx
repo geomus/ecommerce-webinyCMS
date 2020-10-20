@@ -11,6 +11,7 @@ import SliderListProducts from './SliderListProducts';
 import PBGroupEcommerce from './plugins/PBGroupEcommerce';
 import Dashboard from './Dashboard/Products/Menus/Dashboard';
 import DashboardProductsRoute from './Dashboard/Products/Routes/DashboardProductsRoute';
+import LogoAdmin from './plugins/LogoAdmin';
 
 export default adminTemplate({
     cognito: {
@@ -29,6 +30,7 @@ export default adminTemplate({
         SliderListProducts(),
         Dashboard,
         DashboardProductsRoute,
-        PBGroupEcommerce
+        PBGroupEcommerce,
+        LogoAdmin
     ]
 });

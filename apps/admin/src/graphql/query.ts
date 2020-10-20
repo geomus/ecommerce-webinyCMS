@@ -166,11 +166,42 @@ export const updateIsPublishedProduct = gql`
     }
 `;
 
+export const updateIsFeaturedProduct = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    isFeatured
+                }
+            }
+        }
+    }
+`;
+
 export const deleteProduct = gql`
     mutation deleteProduct($id: ID!) {
         products {
             deleteProduct(id: $id) {
                 data
+            }
+        }
+    }
+`;
+
+export const uploadFile = gql`
+    mutation uploadFile($data: UploadFileInput! ) {
+        files {
+            uploadFile(data: $data) {
+                data {
+                    data
+                    file {
+                        name
+                    }
+                }
+                error {
+                    data
+                    code
+                }
             }
         }
     }

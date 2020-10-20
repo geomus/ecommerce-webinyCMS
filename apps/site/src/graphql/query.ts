@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 export const products = gql`
     {
         products {
-            listProducts {
+            listProducts(where: {isPublished: true}) {
                 data {
                     id
                     name
@@ -13,6 +13,7 @@ export const products = gql`
                     images
                     tags
                     isFeatured
+                    isPublished
                 }
             }
         }

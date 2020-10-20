@@ -18,6 +18,7 @@ import ProductsTableHead from './ProductsTableHead';
 import ProductsBtnPublished from './ProductsBtnPublished';
 import ProductsBtnEdit from './ProductsBtnEdit';
 import ProductsBtnDelete from './ProductsBtnDelete';
+import ProductsBtnFeatured from './ProductsBtnFeatured';
 
 
 
@@ -182,6 +183,9 @@ export default function ProductsTable() {
                                             <TableCell align="center">{row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}</TableCell>
                                             <TableCell align="center">
                                                 <ProductsBtnPublished row={row} />
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <ProductsBtnFeatured row={row} />
                                             </TableCell>
                                             <TableCell align="center">
                                                 <ProductsBtnEdit />

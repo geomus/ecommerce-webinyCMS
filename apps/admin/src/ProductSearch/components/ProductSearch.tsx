@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from "@material-ui/core/styles"
-import { TextField } from '@material-ui/core';
+import { LinearProgress, TextField } from '@material-ui/core';
 import { IconButton } from '@material-ui/core'
 import { useQuery } from "@apollo/client";
 import { products } from '../../graphql/query'
@@ -46,7 +46,7 @@ const ProductSearch = () => {
 
     if (loading) {
         return (
-            <h1> Cargando </h1>
+            <h1> <LinearProgress /> </h1>
         )
     }
 

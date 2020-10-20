@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useMutation } from "@apollo/client";
-import { updateIsPublishedProduct } from '../../../graphql/query'
-import { makeStyles, IconButton, Snackbar, FormControlLabel, Checkbox} from '@material-ui/core';
+import { updateIsFeaturedProduct } from '../../../graphql/query'
+import { makeStyles, IconButton, Snackbar, FormControlLabel, Checkbox } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import CheckIcon from '@material-ui/icons/Check';
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import CloseIcon from '@material-ui/icons/Close';
-import { green, red } from '@material-ui/core/colors/'
+import { orange } from '@material-ui/core/colors/'
 import { products } from '../../../graphql/query'
 
 function Alert(props: AlertProps) {
@@ -14,43 +15,39 @@ function Alert(props: AlertProps) {
 
 
 const useStyles = makeStyles(() => ({
-    buttonYes: {
-        color: green[500]
+    button: {
+        color: orange[300]
     },
-    buttonNo: {
-        color: red[300]
-    }
+
 }))
 
-const ProductsBtnPublished = ({ row }) => {
+const ProductsBtnFeatured = ({ row }) => {
     const classes = useStyles()
     const [open, setOpen] = useState(false);
     const [checked, setChecked] = React.useState(row.isFeatured);
-    
-    const [changeIsPublished] = useMutation(updateIsPublishedProduct, {
+    const [changeIsFeatured] = useMutation(updateIsFeaturedProduct, {
         refetchQueries: () => [{ query: products }]
     })
 
-    const handlePublished = (event) => {
+    const handleFeatured = (event) => {
         setChecked(event.target.checked);
-        const published = { isPublished: null }
-        row.isPublished === true ? published.isPublished = false : published.isPublished = true
-        changeIsPublished({ variables: { id: row.id, data: published } })
+        const featured = { isFeatured: null }
+        row.isFeatured === true ? featured.isFeatured = false : featured.isFeatured = true
+        changeIsFeatured({ variables: { id: row.id, data: featured } })
         setOpen(true);
     }
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
     };
 
     return (
         <div>
             <FormControlLabel
-                control={<Checkbox icon={<CheckIcon />} checkedIcon={<CloseIcon />} name="checkedH" onChange={handlePublished}checked={checked}/>}
-                label="" aria-label="Product PublihandlePublished"
+                control={<Checkbox icon={<StarBorderIcon />} checkedIcon={<StarIcon />} name="checkedH" onChange={handleFeatured}checked={checked}/>}
+                label="" aria-label="Product Featured"
             />
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
                 <Alert onClose={handleClose} severity="success">
@@ -61,4 +58,4 @@ const ProductsBtnPublished = ({ row }) => {
     );
 }
 
-export default ProductsBtnPublished;
+export default ProductsBtnFeatured;

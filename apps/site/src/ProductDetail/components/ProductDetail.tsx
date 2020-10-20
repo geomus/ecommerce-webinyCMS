@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from "@material-ui/core/styles"
 import {ReactComponent as RbNew} from '../../utils/svg/rb-new.svg'
-import { Divider } from '@material-ui/core';
+import { Divider, LinearProgress } from '@material-ui/core';
 import ShopCartButton from '../../Product/ShopCartButton';
 
 const useStyles = makeStyles({
@@ -40,7 +40,7 @@ const ProductDetail = () => {
     const { loading, error, data } = useQuery(product, { variables: { id } });
     if (loading) {
         return (
-            <h1> Cargando </h1>
+            <h1> <LinearProgress /> </h1>
         )
     }
 

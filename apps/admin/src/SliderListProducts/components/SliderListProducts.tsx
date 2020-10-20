@@ -13,6 +13,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper.scss';
 import 'swiper/components/navigation/navigation.scss';
 import 'swiper/components/pagination/pagination.scss';
+import { LinearProgress } from '@material-ui/core';
 
 // install Swiper components
 SwiperCore.use([Navigation, Pagination, A11y]);
@@ -38,7 +39,7 @@ const SliderListProducts = () => {
 
   if (loading) {
      return (
-        <h1> Cargando </h1>
+        <h1> <LinearProgress /> </h1>
      )
   }
 
