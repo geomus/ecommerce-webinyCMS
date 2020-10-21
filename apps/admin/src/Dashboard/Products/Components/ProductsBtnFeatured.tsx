@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useMutation } from "@apollo/client";
 import { updateIsFeaturedProduct } from '../../../graphql/query'
-import { makeStyles, IconButton, Snackbar, FormControlLabel, Checkbox } from '@material-ui/core';
+import { makeStyles, Snackbar, FormControlLabel, Checkbox } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import CloseIcon from '@material-ui/icons/Close';
 import { orange } from '@material-ui/core/colors/'
 import { products } from '../../../graphql/query'
 
@@ -16,7 +15,7 @@ function Alert(props: AlertProps) {
 
 const useStyles = makeStyles(() => ({
     button: {
-        color: orange[300]
+        color: orange[500],
     },
 
 }))
@@ -46,7 +45,7 @@ const ProductsBtnFeatured = ({ row }) => {
     return (
         <div>
             <FormControlLabel
-                control={<Checkbox icon={<StarBorderIcon />} checkedIcon={<StarIcon />} name="checkedH" onChange={handleFeatured}checked={checked}/>}
+                control={<Checkbox icon={<StarBorderIcon className={classes.button}/>} checkedIcon={<StarIcon className={classes.button}/>} name="checkedH" onChange={handleFeatured}checked={checked}/>}
                 label="" aria-label="Product Featured"
             />
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>

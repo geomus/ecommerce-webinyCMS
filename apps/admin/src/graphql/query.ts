@@ -108,6 +108,28 @@ export const orderExternalID = gql`
     }
 `;
 
+export const listOrders = gql`
+    query listOrders {
+        orders {
+            listOrders {
+                data {
+                    name
+                    lastName
+                    phone
+                    address
+                    state
+                    city
+                    zip
+                    pay
+                    shipping
+                    status
+                    cart
+                }
+            }
+        }
+    }
+`;
+
 export const updateOrder = gql`
     mutation updateOrder($id: ID!, $data: OrderInput!) {
         orders {
@@ -189,7 +211,7 @@ export const deleteProduct = gql`
 `;
 
 export const uploadFile = gql`
-    mutation uploadFile($data: UploadFileInput! ) {
+    mutation uploadFile($data: UploadFileInput!) {
         files {
             uploadFile(data: $data) {
                 data {

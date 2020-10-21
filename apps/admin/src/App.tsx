@@ -9,8 +9,8 @@ import PayResult from './PayResult';
 import ProductSearch from './ProductSearch';
 import SliderListProducts from './SliderListProducts';
 import PBGroupEcommerce from './plugins/PBGroupEcommerce';
-import Dashboard from './Dashboard/Products/Menus/Dashboard';
-import DashboardProductsRoute from './Dashboard/Products/Routes/DashboardProductsRoute';
+import DashboardMenu from './Dashboard/Menus/DashboardMenu';
+import DashboardRoute from './Dashboard/Routes/DashboardRoute';
 import LogoAdmin from './plugins/LogoAdmin';
 
 export default adminTemplate({
@@ -28,8 +28,8 @@ export default adminTemplate({
         PayResult(),
         ProductSearch(),
         SliderListProducts(),
-        Dashboard,
-        DashboardProductsRoute,
+        DashboardMenu,
+        DashboardRoute,
         PBGroupEcommerce,
         LogoAdmin
     ]

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from "@apollo/client";
 import { updateIsPublishedProduct } from '../../../graphql/query'
-import { makeStyles, IconButton, Snackbar, FormControlLabel, Checkbox} from '@material-ui/core';
+import { makeStyles, Snackbar, FormControlLabel, Checkbox} from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
@@ -49,7 +49,7 @@ const ProductsBtnPublished = ({ row }) => {
     return (
         <div>
             <FormControlLabel
-                control={<Checkbox icon={<CheckIcon />} checkedIcon={<CloseIcon />} name="checkedH" onChange={handlePublished}checked={checked}/>}
+                control={<Checkbox icon={<CheckIcon className={classes.buttonYes}/>} checkedIcon={<CloseIcon className={classes.buttonNo} />} name="checkedH" onChange={handlePublished}checked={checked}/>}
                 label="" aria-label="Product PublihandlePublished"
             />
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>

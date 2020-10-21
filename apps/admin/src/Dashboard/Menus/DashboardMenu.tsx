@@ -16,7 +16,7 @@ export default  [{
             <Item label={"Users"} path="/users" />
           </Section>
           <Section label={"Stats"}>
-            <Item label={"Sales"} path="/sales" />
+            <Item label={"Orders"} path="/orders" />
           </Section>
         </Menu>
       );
