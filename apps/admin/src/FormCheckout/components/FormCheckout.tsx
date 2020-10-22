@@ -1,25 +1,18 @@
-import React, { useState, useContext } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { TextField } from '@material-ui/core';
-import { Grid } from '@material-ui/core'
-import { Button } from '@material-ui/core'
-import PaymentIcon from '@material-ui/icons/Payment';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import { CartContext } from "../../utils/context";
+import React, { useState, useContext } from 'react';
 import { useMutation } from "@apollo/client";
-import { createOrder } from '../../graphql/query'
-import { CircularProgress } from '@material-ui/core';
+import { CartContext } from "../../utils/context";
+import { createOrder } from '../../graphql/query';
+
+import { TextField, Grid, Button, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, CircularProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import PaymentIcon from '@material-ui/icons/Payment';
 
 const useStyles = makeStyles({
     root: {
         width: "100%",
         padding: "0.5rem"
     }
-})
+});
 const paymentMethods = [
     {
         id: 1,
@@ -36,7 +29,7 @@ const paymentMethods = [
         name: 'Mercado Pago',
         slug: 'mercado-pago'
     },
-]
+];
 const shippingMethods = [
     {
         id: 1,
@@ -53,25 +46,25 @@ const shippingMethods = [
         name: 'Acuerdo con el vendedor',
         slug: 'acuerdo-con-el-vendedor'
     },
-]
+];
 
 export default function FormCheckout() {
     const [addOrder] = useMutation(createOrder);
 
 
-    const classes = useStyles()
+    const classes = useStyles();
 
-    const [name, setName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [phone, setPhone] = useState('')
-    const [address, setAddress] = useState('')
-    const [state, setState] = useState('')
-    const [city, setCity] = useState('')
-    const [zip, setZip] = useState('')
+    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+    const [state, setState] = useState('');
+    const [city, setCity] = useState('');
+    const [zip, setZip] = useState('');
     const [pay, setPay] = useState('');
-    const [shipping, setShipping] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const { cart } = useContext(CartContext)
+    const [shipping, setShipping] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const { cart } = useContext(CartContext);
     const token =
         "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
 
@@ -109,20 +102,24 @@ export default function FormCheckout() {
                 method: "POST",
                 body: JSON.stringify({ cart: cartItem, token: userToken }),
             }
-        )
+        );
         const body = await response.json()
         console.log(body.data);
 
         return body.data
     };
-    const executeInitPoint = (initPoint) => {
-        //return window.open(initPoint)
-        return window.location.href = initPoint
-    }
+
+    const executePayment = async (url, order) => {
+        const { data } = await addOrder({ variables: { data: order } });
+        const orderGenerate = data.orders.createOrder.data;
+        await localStorage.setItem('orderId', JSON.stringify(orderGenerate.id));
+
+        return window.location.href = url;
+    };
 
     const onSubmit = async (e) => {
-        setIsLoading(true)
-        e.preventDefault()
+        setIsLoading(true);
+        e.preventDefault();
 
         const order = {
             name: name,
@@ -136,22 +133,18 @@ export default function FormCheckout() {
             idPreference: null,
             shipping: shipping,
             cart: JSON.stringify(cart)
-        }
+        };
 
         if (pay === 'Mercado Pago') {
             //Pedir la preferencia
             const preferenceData = await generatePreference(cart, token)
             order.idPreference = preferenceData.id
             //createOrder
-            await executeInitPoint(preferenceData.init_point)
-        }
-
-        addOrder({ variables: { data: order } })
-
-        // Redirect /wonder-slug/pending
-       
-
-    }
+            await executePayment(preferenceData.init_point, order)
+        } else {
+            await executePayment('http://localhost:3000/wonder-slug/pending', order)
+        };
+    };
 
 
     return (
@@ -214,5 +207,5 @@ export default function FormCheckout() {
 
             </Grid>
         </form>
-    )
-}
+    );
+};

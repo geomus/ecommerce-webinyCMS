@@ -29,6 +29,7 @@
 		"@webiny/serverless-component": "^4.10.0",
 		"@webiny/serverless-files": "^4.10.0",
 		"@webiny/serverless-function": "^4.10.0",
+		"react-butterfiles": "^1.3.3",
 		"swiper": "^6.3.3"
 	},
 	"devDependencies": {
