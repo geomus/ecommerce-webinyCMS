@@ -124,6 +124,7 @@ export const listOrders = gql`
                     shipping
                     status
                     cart
+                    createdOn
                 }
             }
         }

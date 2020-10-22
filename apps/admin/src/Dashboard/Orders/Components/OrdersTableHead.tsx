@@ -6,6 +6,8 @@ import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/cor
 const headCells = [
     { id: 'name', disablePadding: false, disableSort: false, label: 'Nombre' },
     { id: 'lastName', disablePadding: false, disableSort: false, label: 'Apellido' },
+    { id: 'createdOn', disablePadding: false, disableSort: false, label: 'Fecha' },
+    { id: 'totalOrder', disablePadding: false, disableSort: false, label: 'Total' },
     { id: 'phone', disablePadding: false, disableSort: false, label: 'Telefono' },
     { id: 'address', disablePadding: false, disableSort: false, label: 'Direccion' },
     { id: 'state', disablePadding: false, disableSort: false, label: 'Provincia' },

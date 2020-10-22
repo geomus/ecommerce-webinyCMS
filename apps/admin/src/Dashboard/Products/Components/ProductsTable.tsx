@@ -74,7 +74,8 @@ const useStyles = makeStyles((theme) => ({
         width: "8%"
     },
     imgProduct: {
-        width: "70%"
+        width: "70%",
+        borderRadius: "50%"
     },
     marginTags: {
         marginRight: "0.5rem"

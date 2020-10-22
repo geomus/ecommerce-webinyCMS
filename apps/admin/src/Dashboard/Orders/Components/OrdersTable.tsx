@@ -12,7 +12,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { useQuery } from "@apollo/client";
 import { listOrders } from '../../../graphql/query'
-import { Chip, LinearProgress } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import OrdersTableToolbar from './OrdersTableToolbar';
 import OrdersTableHead from './OrdersTableHead';
 import OrdersBtnView from './OrdersBtnView';
@@ -158,6 +158,7 @@ export default function OrdersTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
+                                    const cart = JSON.parse(row.cart)
 
                                     return (
                                         <TableRow
@@ -171,6 +172,11 @@ export default function OrdersTable() {
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.lastName}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <Typography variant="body2" component="span">
+                                                    {row.createdOn}
+                                                </Typography>
                                             </TableCell>
                                             <TableCell align="left">
                                                 <Typography variant="body2" component="span">
@@ -213,7 +219,8 @@ export default function OrdersTable() {
                                                 </Typography>
                                             </TableCell>
                                             <TableCell align="center">
-                                                <OrdersBtnView />
+                                                {/* <OrdersBtnView row={row} /> */}
+                                                {console.log(cart)}
                                             </TableCell>
                                             <TableCell align="center">
                                                 <OrdersBtnDisable row={row} />

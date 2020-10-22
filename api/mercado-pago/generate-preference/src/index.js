@@ -26,26 +26,26 @@ async function generatePreference(checkoutItems, accessToken) {
         auto_return: "approved"
     };
     console.log(preference);
-    const resultGeneratePreference = await mercadopago.preferences.create(preference)
-    return resultGeneratePreference
+    const resultGeneratePreference = await mercadopago.preferences.create(preference);
+    return resultGeneratePreference;
 }
 
 async function mapCheckoutItemsToProducts(checkoutItems) {
     const products = [];
-   
+
     for (let i = 0; i < checkoutItems.length; i++) {
-      const item = checkoutItems[i];
-      const product = await getProductDetail(item.id);
-      product.data.products.getProduct.data.quantity = item.quantity;
-      products.push(product);
+        const item = checkoutItems[i];
+        const product = await getProductDetail(item.id);
+        product.data.products.getProduct.data.quantity = item.quantity;
+        products.push(product);
     }
-  
+
     return products;
-  }
+}
 
 async function getProductDetail(id) {
-    const url = "https://d3sa4l0419qgu3.cloudfront.net/graphql";
-    const token = "baec437445f7523373283e82ef30ba2029041f6b7f10a2b8";
+    const url = "https://d1m83ec4ah5zkj.cloudfront.net/graphql";
+    const token = "53901e13cd10ea195d8133b27767b3a50b7f8d1d70b58d92";
     const variables = {
         id: id
     };
@@ -63,28 +63,27 @@ async function getProductDetail(id) {
     }
 `;
     const opts = {
-        headers: { "Content-Type": "application/json", authorization: token },
+        headers: { "Content-Type": "application/json", authorization: token }
     };
-    
+
     const response = await axios.post(url, JSON.stringify({ query, variables }), opts);
-    return response.data
+    return response.data;
 }
 
- export const handler = async event => {
-    const body = JSON.parse(Buffer.from(event.body, 'base64').toString("utf-8"));
+export const handler = async (event) => {
+    const body = JSON.parse(Buffer.from(event.body, "base64").toString("utf-8"));
     const responseGeneratePreference = await generatePreference(body.cart, body.token);
-    console.log(responseGeneratePreference)
+    console.log(responseGeneratePreference);
 
-    return   {
+    return {
         statusCode: 200,
         headers: {
-           "Access-Control-Allow-Origin" : "*", // Required for CORS support to work
-            "Access-Control-Allow-Credentials" : true // Required for cookies, authorization headers with HTTPS
+            "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+            "Access-Control-Allow-Credentials": true // Required for cookies, authorization headers with HTTPS
         },
         body: JSON.stringify({
-          data: responseGeneratePreference.body
+            data: responseGeneratePreference.body
         }),
         isBase64Encoded: false
-      };
-  };
-
+    };
+};

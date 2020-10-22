@@ -17,7 +17,7 @@ const ProductsBtnDelete = ({ row }) => {
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [productDelete] = useMutation(deleteProduct, {
-        refetchQueries: mutationResult => [{ query: products }]
+        refetchQueries: () => [{ query: products }]
     })
 
     const handleClickOpen = () => {
@@ -25,7 +25,7 @@ const ProductsBtnDelete = ({ row }) => {
     };
 
     const handleDelete = async () => {
-        const resultDelete = await productDelete({ variables: { id: row.id } })
+        await productDelete({ variables: { id: row.id } })
         setOpen(false);
         setOpenSnackbar(true);
     }
