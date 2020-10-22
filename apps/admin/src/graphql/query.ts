@@ -57,6 +57,29 @@ export const productsFilter = gql`
     }
 `;
 
+export const createProduct = gql`
+    mutation createProduct($data: ProductInput!) {
+        products {
+            createProduct(data: $data) {
+                data {
+                    id
+                    name
+                    slug
+                    description
+                    price
+                    images
+                    tags
+                    isPublished
+                    isFeatured
+                }
+                error {
+                    data
+                }
+            }
+        }
+    }
+`;
+
 export const createOrder = gql`
     mutation createOrder($data: OrderInput!) {
         orders {
