@@ -1,30 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, Component } from "react";
 import Files from "react-butterfiles";
 
-import { Input, Button, FormControl, Typography } from '@material-ui/core/';
+import { Input, Button, FormControl, Typography } from "@material-ui/core/";
 
-export default function FileUploadButton ({ handlerImages }){
+export default function FileUploadButton({ handlerImages, images }) {
     const [files, setFiles] = useState([]);
     const handleFiles = (selectedFile) => {
         files.push(selectedFile);
         setFiles(files);
     };
+
+    class ImagesOnEdit extends Component {
+        render() {
+            return (
+                images.map((img) => <li key={img}>{img}</li>)
+            );
+        };
+    };
+
     return (
         <Files
-        // multiple={true}
-        maxSize="6mb"
-        multipleMaxSize="10mb"
-        // multipleMaxCount={5}
-        accept={["image/jpg","image/jpeg","image/png"]}
-        onSuccess={( [selectedFile] )=>{
-            handleFiles(selectedFile);
-            handlerImages(files);
-        }}
-        // onError={errors => this.setState({ errors })}
+            // multiple={true}
+            maxSize="6mb"
+            multipleMaxSize="10mb"
+            // multipleMaxCount={5}
+            accept={["image/jpg", "image/jpeg", "image/png"]}
+            onSuccess={([selectedFile]) => {
+                handleFiles(selectedFile);                
+                handlerImages(files);
+            }}
+            // onError={errors => this.setState({ errors })}
         >
-            {({ browseFiles, getDropZoneProps }) =>{
+            {({ browseFiles, getDropZoneProps }) => {
                 return (
-                    <div >
+                    <div>
                         <div
                             {...getDropZoneProps({
                                 style: {
@@ -34,12 +43,13 @@ export default function FileUploadButton ({ handlerImages }){
                                 }
                             })}
                         >
-                            <br/>
+                            <br />
                             <Typography variant="subtitle2" gutterBottom>
                                 Soltá y cargá.
                             </Typography>
                             <ol>
-                                {files.map(file => (
+                                {images ? <ImagesOnEdit /> : ""}
+                                {files.map((file) => (
                                     <li key={file.name}>{file.name}</li>
                                 ))}
                                 {/* {this.state.errors.map(error => (
@@ -54,18 +64,26 @@ export default function FileUploadButton ({ handlerImages }){
                                     </li>
                                 ))} */}
                             </ol>
+                        </div>
+                        <div>
+                            {" "}
+                            <br />
+                            <FormControl>
+                                <Button color="secondary" variant="outlined" onClick={browseFiles}>
+                                    <Input
+                                        id="images"
+                                        type="file"
+                                        aria-describedby="images-helper"
+                                        fullWidth
+                                        style={{ display: "none" }}
+                                    />
+                                    Cargar Imágenes
+                                </Button>
+                            </FormControl>
+                        </div>
                     </div>
-                    <div> <br/>
-                    <FormControl>
-                        <Button color="secondary" variant="outlined" onClick={browseFiles}>
-                            <Input id="images" type="file" aria-describedby="images-helper" fullWidth style={{ display: "none" }}/>
-                            Cargar Imágenes
-                        </Button>
-                    </FormControl>
-                    </div>
-                </div>
-                )}
-            }
+                );
+            }}
         </Files>
-    )
-}
+    );
+};

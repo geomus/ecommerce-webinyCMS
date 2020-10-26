@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { createProduct, uploadFile, createFile, products } from "../../../graphql/query";
+import { useMutation, useQuery } from "@apollo/client";
+import {
+    updateProduct,
+    uploadFile,
+    deleteFile,
+    getFile,
+    createFile,
+    products
+} from "../../../graphql/query";
 import FileUploadButton from "./FileUploadButton";
 import {
     Container,
@@ -8,12 +15,10 @@ import {
     Paper,
     Snackbar,
     FormControl,
-    FormControlLabel,
     InputAdornment,
     InputLabel,
     Input,
     FormHelperText,
-    Checkbox,
     Button,
     CircularProgress
 } from "@material-ui/core/";
@@ -51,25 +56,35 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function ProductForm({ handleCloseDialog }) {
+export default function ProductFormEdit({ handleCloseDialog, product }) {
     const [files, setFiles] = useState([]);
+    const productId = product.id;
+    const productImages = product.images;
 
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
-    const [addProduct] = useMutation(createProduct, {
+    const oneImageKey = productImages[0];
+
+    const { error, data } = useQuery(getFile, { variables: { key: oneImageKey } });
+    if (error) {
+        console.dir(error);
+    }
+
+    const [deleteImage] = useMutation(deleteFile);
+    const [editProduct] = useMutation(updateProduct, {
         refetchQueries: () => [{ query: products }]
     });
+
     const classes = useStyles();
     const [isLoading, setIsLoading] = useState(false);
     const [openSuccess, setOpenSuccess] = useState(false);
     const [openError, setOpenError] = useState(false);
 
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [price, setPrice] = useState<Number>(1);
+    const [name, setName] = useState(product.name);
+    const [description, setDescription] = useState(product.description);
+    const [price, setPrice] = useState<Number>(product.price);
     const [imagesKeys, setImagesKeys] = useState([]);
-    const [tags, setTags] = useState([]);
-    const [isFeatured, setIsFeatured] = useState<Boolean>(false);
+    const [tags, setTags] = useState(product.tags);
 
     const uploadImage = async (selectedFile) => {
         const getPresignedPostData = async (selectedFile): Promise<any> => {
@@ -97,12 +112,12 @@ export default function ProductForm({ handleCloseDialog }) {
                 });
             } catch (error) {
                 console.log(error);
-            };
+            }
         };
 
         try {
             const presignedPostData = await getPresignedPostData(selectedFile);
-            const { file } = selectedFile.src;            
+            const { file } = selectedFile.src;
 
             await uploadFileToS3(presignedPostData, file);
             await createFileDB({
@@ -115,11 +130,11 @@ export default function ProductForm({ handleCloseDialog }) {
                         tags: ["producto"]
                     }
                 }
-            });            
+            });
             return presignedPostData.fields.key;
         } catch (e) {
             console.log("An error occurred!", e.message);
-        };
+        }
     };
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -150,31 +165,35 @@ export default function ProductForm({ handleCloseDialog }) {
         });
         setTags(_tags);
     };
-    const handleChangeIsFeatured = (event) => {
-        setIsFeatured(event.target.checked);
-    };
 
     const onSubmit = async (e) => {
         setIsLoading(true);
         e.preventDefault();
 
-        for (const file of files) {
-            const imageKey = await uploadImage(file);
-            imagesKeys.push(imageKey);
-            setImagesKeys(imagesKeys);
+        if (files.length !== 0) {
+            console.log(data);
+
+            let imageKey = [];
+            for (const file of files) {
+                imageKey = await uploadImage(file);
+                imagesKeys.push(imageKey);
+                setImagesKeys(imagesKeys);
+            }
+            await deleteImage({ variables: { id: data.files.getFile.data.id } });
+        } else {
+            setImagesKeys(productImages);
         }
+
         const product = {
             name: name,
             description: description,
             price: price,
             images: imagesKeys,
-            tags: tags,
-            isPublished: true,
-            isFeatured: isFeatured
+            tags: tags
         };
 
         try {
-            await addProduct({ variables: { data: product } });
+            await editProduct({ variables: { id: productId, data: product } });
 
             setOpenSuccess(true);
             setTimeout(function () {
@@ -195,7 +214,6 @@ export default function ProductForm({ handleCloseDialog }) {
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
                                 <FormControl>
-                                    <InputLabel htmlFor="name">Nombre</InputLabel>
                                     <Input
                                         required
                                         id="name"
@@ -205,6 +223,7 @@ export default function ProductForm({ handleCloseDialog }) {
                                         autoFocus
                                         autoComplete="given-name"
                                         onChange={handleChangeName}
+                                        defaultValue={product.name}
                                     />
                                     <FormHelperText id="name-helper">
                                         Nombre visible del producto a cargar.
@@ -222,6 +241,7 @@ export default function ProductForm({ handleCloseDialog }) {
                                     autoComplete="given-description"
                                     multiline
                                     onChange={handleChangeDescp}
+                                    defaultValue={product.description}
                                 />
                                 <FormHelperText id="description-helper">
                                     Breve descripción del producto.
@@ -241,6 +261,7 @@ export default function ProductForm({ handleCloseDialog }) {
                                             <InputAdornment position="start">$</InputAdornment>
                                         }
                                         onChange={handleChangePrice}
+                                        defaultValue={product.price}
                                     />
                                     <FormHelperText id="price-helper">
                                         Precio minorista base.
@@ -248,10 +269,10 @@ export default function ProductForm({ handleCloseDialog }) {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <InputLabel >Imágenes</InputLabel>
+                                <InputLabel>Imágenes</InputLabel>
                                 <FileUploadButton
                                     handlerImages={handleChangeImages}
-                                    images={null}
+                                    images={product.images}
                                 />
                                 <FormHelperText id="images-helper">
                                     Imágenes del producto (MÁX. 5).
@@ -271,25 +292,15 @@ export default function ProductForm({ handleCloseDialog }) {
                                             <InputAdornment position="start">#</InputAdornment>
                                         }
                                         onChange={handleChangeTags}
+                                        defaultValue={product.tags}
                                     />
                                     <FormHelperText id="tags-helper">
                                         Etiquetas relacionadas. Separar por comas cada TAG.
                                     </FormHelperText>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            color="secondary"
-                                            name="isFeatured"
-                                            onChange={handleChangeIsFeatured}
-                                        />
-                                    }
-                                    label="¿Destacar producto?"
-                                />
-                            </Grid>
                         </Grid>
+                        <br />
                         <FormControl>
                             {!isLoading ? (
                                 <Button
@@ -298,7 +309,7 @@ export default function ProductForm({ handleCloseDialog }) {
                                     startIcon=""
                                     type="submit"
                                 >
-                                    AGREGAR
+                                    GUARDAR
                                 </Button>
                             ) : (
                                 <CircularProgress />
@@ -308,12 +319,12 @@ export default function ProductForm({ handleCloseDialog }) {
                 </React.Fragment>
                 <Snackbar open={openSuccess} autoHideDuration={3000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="success">
-                        ¡Producto cargado con éxito!
+                        ¡Producto editado con éxito!
                     </Alert>
                 </Snackbar>
                 <Snackbar open={openError} autoHideDuration={5000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="error">
-                        ¡No se ha podido cargar el producto, revise sus datos!
+                        ¡No se ha podido editar el producto, revise sus datos!
                     </Alert>
                 </Snackbar>
             </Paper>
