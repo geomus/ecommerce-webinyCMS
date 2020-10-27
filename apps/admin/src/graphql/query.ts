@@ -8,7 +8,7 @@ export const products = gql`
                     id
                     name
                     description
-                    price
+                    priceBase
                     images
                     tags
                     isFeatured
@@ -27,7 +27,7 @@ export const product = gql`
                     id
                     name
                     description
-                    price
+                    priceBase
                     images
                     tags
                     isFeatured
@@ -46,7 +46,7 @@ export const productsFilter = gql`
                     id
                     name
                     description
-                    price
+                    priceBase
                     images
                     tags
                     isFeatured
@@ -66,7 +66,8 @@ export const createProduct = gql`
                     name
                     slug
                     description
-                    price
+                    priceBase
+                    prices
                     images
                     tags
                     isPublished
@@ -189,7 +190,7 @@ export const searchProducts = gql`
                     id
                     name
                     description
-                    price
+                    priceBase
                     images
                     tags
                     isFeatured
@@ -247,6 +248,35 @@ export const uploadFile = gql`
                 error {
                     data
                     code
+                }
+            }
+        }
+    }
+`;
+
+export const listPrices = gql`
+    query listPrices {
+        prices {
+            listPrices {
+                data {
+                    id
+                    name
+                    percent
+                    default
+                }
+            }
+        }
+    }
+`;
+
+export const createPrice = gql`
+    mutation createPrice($data: PriceInput!) {
+        prices {
+            createPrice(data: $data) {
+                data {
+                    name
+                    percent
+                    default
                 }
             }
         }

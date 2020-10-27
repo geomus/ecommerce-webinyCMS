@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from "@apollo/client";
 import { updateIsFeaturedProduct } from '../../../graphql/query'
 import { makeStyles, Snackbar, FormControlLabel, Checkbox } from '@material-ui/core';
@@ -23,13 +23,18 @@ const useStyles = makeStyles(() => ({
 const ProductsBtnFeatured = ({ row }) => {
     const classes = useStyles()
     const [open, setOpen] = useState(false);
-    const [checked, setChecked] = React.useState(row.isFeatured);
+    const [checkedFeatured, setCheckedFeatured] = React.useState(false);
+
+    useEffect(() => {
+        return setCheckedFeatured(row.isFeatured)
+    }, []);
+
     const [changeIsFeatured] = useMutation(updateIsFeaturedProduct, {
         refetchQueries: () => [{ query: products }]
     })
 
     const handleFeatured = (event) => {
-        setChecked(event.target.checked);
+        setCheckedFeatured(event.target.checked);
         const featured = { isFeatured: null }
         row.isFeatured === true ? featured.isFeatured = false : featured.isFeatured = true
         changeIsFeatured({ variables: { id: row.id, data: featured } })
@@ -45,7 +50,7 @@ const ProductsBtnFeatured = ({ row }) => {
     return (
         <div>
             <FormControlLabel
-                control={<Checkbox icon={<StarBorderIcon className={classes.button}/>} checkedIcon={<StarIcon className={classes.button}/>} name="checkedH" onChange={handleFeatured}checked={checked}/>}
+                control={<Checkbox icon={<StarBorderIcon className={classes.button} />} checkedIcon={<StarIcon className={classes.button} />} name="checkedH" onChange={handleFeatured} checked={checkedFeatured} />}
                 label="" aria-label="Product Featured"
             />
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>

@@ -8,7 +8,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import {ReactComponent as RbNew} from '../utils/svg/rb-new.svg'
+import { ReactComponent as RbNew } from '../utils/svg/rb-new.svg'
 
 
 export default function Product(props) {
@@ -52,26 +52,26 @@ export default function Product(props) {
     const classes = useStyles();
 
     return (
-            <Card className={classes.root} key={props.id} elevation={0}>
-                <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
-                    <CardMedia
-                        className={classes.media}
-                        image={props.images}
-                        title="Contemplative Reptile"
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="body2" color="textSecondary" className={classes.productName}>
-                            {props.name}
-                        </Typography>
-                        <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
-                            ${props.price}
-                        </Typography>
-                        { props.isFeatured && <RbNew className={classes.ribbonNew}/>}
-                    </CardContent>
-                </CardActionArea>
-                <CardActions>
-                    <ShopCartButton {...props} />
-                </CardActions>
-            </Card>
+        <Card className={classes.root} key={props.id} elevation={0}>
+            <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
+                <CardMedia
+                    className={classes.media}
+                    image={props.images}
+                    title="Contemplative Reptile"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="body2" color="textSecondary" className={classes.productName}>
+                        {props.name}
+                    </Typography>
+                    <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
+                        ${props.priceBase}
+                    </Typography>
+                    {props.isFeatured && <RbNew className={classes.ribbonNew} />}
+                </CardContent>
+            </CardActionArea>
+            <CardActions>
+                <ShopCartButton {...props} />
+            </CardActions>
+        </Card>
     );
 }

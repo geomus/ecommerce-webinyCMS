@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     },
     IconDelete: {
         minWidth: "20px!important",
-        padding:0,
+        padding: 0,
     },
     imgProduct: {
         width: "100%"
@@ -44,7 +44,7 @@ export default function Cart() {
                 <TableHead>
                     <TableRow>
                         <TableCell size="small" align="left"></TableCell>
-                        
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -68,7 +68,7 @@ export default function Cart() {
                                     onChange={updateQtyItem}
                                 />
                             </TableCell>
-                            <TableCell colSpan={1} padding="none"align="left">${row.quantity * row.price}</TableCell>
+                            <TableCell colSpan={1} padding="none" align="left">${row.quantity * row.priceBase}</TableCell>
                         </TableRow>
                     ))}
 

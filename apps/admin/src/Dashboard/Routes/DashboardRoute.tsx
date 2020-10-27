@@ -5,41 +5,60 @@ import { AdminLayout } from "@webiny/app-admin/components/AdminLayout"
 import Helmet from 'react-helmet'
 import OrdersTable from '../Orders/Components/OrdersTable';
 import ProductsTable from '../Products/Components/ProductsTable';
+import PricesListTabs from '../PricesList/Components/PricesListTabs';
 
 export default [{
-    type: "route",
-    name: "route-orders",
-    route: (
-      <Route
-        exact
-        path="/orders"
-        render={() =>
-          <AdminLayout>
-            <Helmet>
-              <title>Orders Manager</title>
-            </Helmet>
-            <OrdersTable/>
-          </AdminLayout>
-        }
-      />
-    )
-  } as RoutePlugin,
-  {
-    type: "route",
-    name: "route-products",
-    route: (
-      <Route
-        exact
-        path="/products"
-        render={() =>
-          <AdminLayout>
-            <Helmet>
-              <title>Products Manager</title>
-            </Helmet>
-            <ProductsTable/>
-          </AdminLayout>
-        }
-      />
-    )
-  } as RoutePlugin
+  type: "route",
+  name: "route-orders",
+  route: (
+    <Route
+      exact
+      path="/orders"
+      render={() =>
+        <AdminLayout>
+          <Helmet>
+            <title>Orders Manager</title>
+          </Helmet>
+          <OrdersTable />
+        </AdminLayout>
+      }
+    />
+  )
+} as RoutePlugin,
+{
+  type: "route",
+  name: "route-products",
+  route: (
+    <Route
+      exact
+      path="/products"
+      render={() =>
+        <AdminLayout>
+          <Helmet>
+            <title>Products Manager</title>
+          </Helmet>
+          <ProductsTable />
+        </AdminLayout>
+      }
+    />
+  )
+} as RoutePlugin,
+{
+  type: "route",
+  name: "route-prices-list",
+  route: (
+    <Route
+      exact
+      path="/prices"
+      render={() =>
+        <AdminLayout>
+          <Helmet>
+            <title>Prices List</title>
+          </Helmet>
+          <PricesListTabs/>
+        </AdminLayout>
+      }
+    />
+  )
+} as RoutePlugin
 ]

@@ -6,20 +6,14 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { useQuery } from "@apollo/client";
-import { products } from '../../../graphql/query'
-import { Chip, LinearProgress } from '@material-ui/core';
-import ProductsTableToolbar from './ProductsTableToolbar';
-import ProductsTableHead from './ProductsTableHead';
-import ProductsBtnPublished from './ProductsBtnPublished';
-import ProductsBtnEdit from './ProductsBtnEdit';
-import ProductsBtnDelete from './ProductsBtnDelete';
-import ProductsBtnFeatured from './ProductsBtnFeatured';
-
+import { searchProducts } from '../../../graphql/query'
+import { LinearProgress } from '@material-ui/core';
+import PricesListTableToolbar from './PricesListTableToolbar';
+import PricesListTableHead from './PricesListTableHead';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -74,16 +68,14 @@ const useStyles = makeStyles((theme) => ({
         width: "8%"
     },
     imgProduct: {
-        width: "70%",
-        borderRadius: "50%",
-        boxShadow: "3px 3px 15px rgba(0,0,0,0.15)"
+        width: "70%"
     },
     marginTags: {
         marginRight: "0.5rem"
     }
 }));
 
-export default function ProductsTable() {
+export default function PricesListTable({ searchQuery, percent }) {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -92,7 +84,13 @@ export default function ProductsTable() {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { loading, error, data } = useQuery(products);
+    const searchVariable = {
+        query: searchQuery,
+        fields: 'prices',
+        operator: 'eq'
+    }
+
+    const { loading, error, data } = useQuery(searchProducts, { variables: { searchVariable } });
 
     if (loading) {
         return (
@@ -104,15 +102,15 @@ export default function ProductsTable() {
         console.dir(error)
         return <h1> error </h1>;
     }
+    
     const rows = []
-    data.products.listProducts.data.map(product => rows.push(product))
+    data.products.listProducts.data.map(price => rows.push(price))
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
-
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelecteds = rows.map((n) => n.name);
@@ -121,35 +119,35 @@ export default function ProductsTable() {
         }
         setSelected([]);
     };
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
     const handleChangeDense = (event) => {
         setDense(event.target.checked);
     };
 
-
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
+    const priceListCalculator = (priceBase, percent) => {
+       
+        const finalPrice = priceBase * (percent / 100 + 1)
+        return finalPrice
+    }
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <ProductsTableToolbar numSelected={selected.length} />
+                <PricesListTableToolbar numSelected={selected.length} />
                 <TableContainer>
                     <Table
                         className={classes.table}
                         aria-labelledby="tableTitle"
                         size={dense ? 'small' : 'medium'}
-                        aria-label="Products table"
+                        aria-label="PricesList table"
                     >
-                        <ProductsTableHead
+                        <PricesListTableHead
                             classes={classes}
                             numSelected={selected.length}
                             order={order}
@@ -162,7 +160,6 @@ export default function ProductsTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
-
                                     return (
                                         <TableRow
                                             hover
@@ -170,30 +167,17 @@ export default function ProductsTable() {
                                             tabIndex={-1}
                                             key={row.id}
                                         >
-
-                                            <TableCell align="center" className={classes.cellImgProduct}>
-                                                <img src={`https://d1m83ec4ah5zkj.cloudfront.net/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
-                                            </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.name}
                                             </TableCell>
-                                            <TableCell align="left">
-                                                <Typography variant="body1" component="span">
-                                                    ${row.priceBase}
-                                                </Typography>
+                                            <TableCell component="th"align="center" scope="row">
+                                                ${row.priceBase}
                                             </TableCell>
-                                            <TableCell align="center">{row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}</TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnPublished row={row} />
+                                            <TableCell component="th" align="center"scope="row">
+                                                {percent}%
                                             </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnFeatured row={row} />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnEdit />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnDelete row={row} />
+                                            <TableCell component="th"align="center" scope="row">
+                                                ${priceListCalculator(row.priceBase, percent)}
                                             </TableCell>
                                         </TableRow>
                                     );

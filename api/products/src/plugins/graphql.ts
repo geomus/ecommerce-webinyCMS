@@ -66,8 +66,8 @@ const plugin: GraphQLSchemaPlugin = {
             type Price {
                 id: ID
                 name: String
-                discount: Int
-                products: [Product]
+                percent: Int
+                default: Boolean
             }
 
             type Product {
@@ -75,8 +75,8 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 slug: String
                 description: String
-                price: Float
-                prices: [Price]
+                priceBase: Float
+                prices: [String]
                 images: [String]
                 tags: [String]
                 isPublished: Boolean
@@ -85,9 +85,10 @@ const plugin: GraphQLSchemaPlugin = {
             }
 
             input PriceInput {
-                name: String!
-                discount: Int!
-                prices: [RefInput]
+                id: ID
+                name: String
+                percent: Int
+                default: Boolean
             }
 
             input ProductInput {
@@ -95,8 +96,8 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 slug: String
                 description: String
-                price: Float
-                prices: [RefInput]
+                priceBase: Int
+                prices: [String]
                 images: [String]
                 tags: [String]
                 isPublished: Boolean

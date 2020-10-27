@@ -34,7 +34,7 @@ export default function SpanningTable() {
 
     const [cart, setCart] = useState(localCart)
 
-    
+
     const emptyCart = () => {
         localStorage.setItem("cart", JSON.stringify([]))
         return setCart([])
@@ -43,13 +43,13 @@ export default function SpanningTable() {
     const updateQtyItem = (e) => {
         const id = e.currentTarget.id
         const newQty = e.target.value
-       
+
         const cartModified = cart.map(item => {
             if (item.id === id) {
                 item.quantity = newQty
             }
             return item
-        })  
+        })
 
         localStorage.setItem("cart", JSON.stringify(cartModified))
         return setCart(cartModified)
@@ -99,8 +99,8 @@ export default function SpanningTable() {
                                     onChange={updateQtyItem}
                                 />
                             </TableCell>
-                            <TableCell align="right">${row.price}</TableCell>
-                            <TableCell align="right">${row.quantity * row.price}</TableCell>
+                            <TableCell align="right">${row.priceBase}</TableCell>
+                            <TableCell align="right">${row.quantity * row.priceBase}</TableCell>
                             <TableCell align="right">
                                 <Button value={row.id} id={row.id} onClick={deleteItemCart}>
                                     <HighlightOffIcon />
