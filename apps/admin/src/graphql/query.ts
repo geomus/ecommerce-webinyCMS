@@ -49,8 +49,8 @@ export const productsFilter = gql`
                     priceBase
                     images
                     tags
-                    isFeatured
                     isPublished
+                    isFeatured
                 }
             }
         }
@@ -75,6 +75,148 @@ export const createProduct = gql`
                 }
                 error {
                     data
+                }
+            }
+        }
+    }
+`;
+
+export const searchProducts = gql`
+    query listProducts($searchVariable: ProductSearchInput) {
+        products {
+            listProducts(search: $searchVariable) {
+                data {
+                    id
+                    name
+                    description
+                    priceBase
+                    prices
+                    images
+                    tags
+                    isFeatured
+                    isPublished
+                }
+            }
+        }
+    }
+`;
+
+export const updateIsPublishedProduct = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    isPublished
+                }
+            }
+        }
+    }
+`;
+
+export const updateIsFeaturedProduct = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    isFeatured
+                }
+            }
+        }
+    }
+`;
+
+export const updateProduct = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    id
+                    name
+                    description
+                    price
+                    images
+                    tags
+                }
+            }
+        }
+    }
+`;
+
+export const deleteProduct = gql`
+    mutation deleteProduct($id: ID!) {
+        products {
+            deleteProduct(id: $id) {
+                data
+            }
+        }
+    }
+`;
+
+export const uploadFile = gql`
+    mutation uploadFile($data: UploadFileInput!) {
+        files {
+            uploadFile(data: $data) {
+                data {
+                    data
+                    file {
+                        name
+                    }
+                }
+                error {
+                    data
+                    code
+                }
+            }
+        }
+    }
+`;
+
+export const createFile = gql`
+    mutation createFile($data: FileInput!) {
+        files {
+            createFile(data: $data) {
+                data {
+                    id
+                    key
+                    size
+                    name
+                    type
+                    tags
+                }
+                error {
+                    data
+                    code
+                }
+            }
+        }
+    }
+`;
+
+export const deleteFile = gql`
+    mutation deleteFile($id: ID!) {
+        files {
+            deleteFile(id: $id) {
+                data
+                error {
+                    code
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const getFile = gql`
+    query getFile($key: String!) {
+        files {
+            getFile(where:{key: $key}){
+                data {
+                    id
+                    name
+                    tags
+                }
+                error {
+                    message
                 }
             }
         }
@@ -176,78 +318,6 @@ export const updateOrder = gql`
                 }
                 error {
                     data
-                }
-            }
-        }
-    }
-`;
-
-export const searchProducts = gql`
-    query listProducts($searchVariable: ProductSearchInput) {
-        products {
-            listProducts(search: $searchVariable) {
-                data {
-                    id
-                    name
-                    description
-                    priceBase
-                    images
-                    tags
-                    isFeatured
-                    isPublished
-                }
-            }
-        }
-    }
-`;
-
-export const updateIsPublishedProduct = gql`
-    mutation updateProduct($id: ID!, $data: ProductInput!) {
-        products {
-            updateProduct(id: $id, data: $data) {
-                data {
-                    isPublished
-                }
-            }
-        }
-    }
-`;
-
-export const updateIsFeaturedProduct = gql`
-    mutation updateProduct($id: ID!, $data: ProductInput!) {
-        products {
-            updateProduct(id: $id, data: $data) {
-                data {
-                    isFeatured
-                }
-            }
-        }
-    }
-`;
-
-export const deleteProduct = gql`
-    mutation deleteProduct($id: ID!) {
-        products {
-            deleteProduct(id: $id) {
-                data
-            }
-        }
-    }
-`;
-
-export const uploadFile = gql`
-    mutation uploadFile($data: UploadFileInput!) {
-        files {
-            uploadFile(data: $data) {
-                data {
-                    data
-                    file {
-                        name
-                    }
-                }
-                error {
-                    data
-                    code
                 }
             }
         }

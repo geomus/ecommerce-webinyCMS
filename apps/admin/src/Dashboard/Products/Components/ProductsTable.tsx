@@ -190,7 +190,7 @@ export default function ProductsTable() {
                                                 <ProductsBtnFeatured row={row} />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <ProductsBtnEdit />
+                                                <ProductsBtnEdit product={row}/>
                                             </TableCell>
                                             <TableCell align="center">
                                                 <ProductsBtnDelete row={row} />
