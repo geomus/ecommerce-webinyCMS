@@ -10,6 +10,7 @@ import { listPrices } from '../../../graphql/query';
 import { LinearProgress } from '@material-ui/core';
 import { useQuery } from '@apollo/client';
 import PricesListTable from './PricesListTable'
+import PricesCategoryBtnCreate from './PricesListBtnCreate'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -49,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
     },
+    btnPricesCategoryCreate : {
+        margin: "1rem 0 0 1.5rem"
+    }
 }));
 
 export default function PricesTabsListPrices() {
@@ -81,6 +85,7 @@ export default function PricesTabsListPrices() {
                     }
                 </Tabs>
             </AppBar>
+                <PricesCategoryBtnCreate className={classes.btnPricesCategoryCreate}/>
             {
                 data.prices.listPrices.data.map((price, index) =>
                     <TabPanel key={price.id} value={value} index={ index }>

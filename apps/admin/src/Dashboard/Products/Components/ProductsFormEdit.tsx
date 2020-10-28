@@ -82,7 +82,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
 
     const [name, setName] = useState(product.name);
     const [description, setDescription] = useState(product.description);
-    const [price, setPrice] = useState<Number>(product.price);
+    const [priceBase, setPriceBase] = useState<Number>(product.priceBase);
     const [imagesKeys, setImagesKeys] = useState([]);
     const [tags, setTags] = useState(product.tags);
 
@@ -151,8 +151,8 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
         setDescription(event.target.value);
     };
     const handleChangePrice = (event) => {
-        const price = Number(event.target.value);
-        setPrice(price);
+        const priceBase = Number(event.target.value);
+        setPriceBase(priceBase);
     };
     const handleChangeImages = (selectedFiles) => {
         setFiles(selectedFiles);
@@ -179,7 +179,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                 imagesKeys.push(imageKey);
                 setImagesKeys(imagesKeys);
             }
-            await deleteImage({ variables: { id: data.files.getFile.data.id } });
+            // await deleteImage({ variables: { id: data.files.getFile.data.id } });
         } else {
             setImagesKeys(productImages);
         }
@@ -187,7 +187,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
         const product = {
             name: name,
             description: description,
-            price: price,
+            priceBase: priceBase,
             images: imagesKeys,
             tags: tags
         };
@@ -198,7 +198,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
             setOpenSuccess(true);
             setTimeout(function () {
                 handleCloseDialog(false);
-            }, 3000);
+            }, 1500);
         } catch (error) {
             console.error(error);
             setOpenError(true);
@@ -261,7 +261,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                                             <InputAdornment position="start">$</InputAdornment>
                                         }
                                         onChange={handleChangePrice}
-                                        defaultValue={product.price}
+                                        defaultValue={product.priceBase}
                                     />
                                     <FormHelperText id="price-helper">
                                         Precio minorista base.

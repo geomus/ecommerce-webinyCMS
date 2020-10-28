@@ -34,9 +34,7 @@ const OrdersTableToolbar = (props) => {
             className={clsx(classes.root, {
                 [classes.highlight]: numSelected > 0,
             })}
-        >
-            <PricesCategoryBtnCreate />
-            
+        >      
         </Toolbar>
     );
 }

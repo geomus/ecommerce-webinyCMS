@@ -133,7 +133,7 @@ export const updateProduct = gql`
                     id
                     name
                     description
-                    price
+                    priceBase
                     images
                     tags
                 }

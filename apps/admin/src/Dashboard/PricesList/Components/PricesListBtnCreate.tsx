@@ -38,7 +38,7 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog() {
+export default function FullScreenDialog({className}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -88,7 +88,7 @@ export default function FullScreenDialog() {
 
   return (
     <div>
-      <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={handleClickOpen}>
+      <Button variant="contained" color="primary" startIcon={<AddIcon />} className={className} onClick={handleClickOpen}>
         NUEVA
       </Button>
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
