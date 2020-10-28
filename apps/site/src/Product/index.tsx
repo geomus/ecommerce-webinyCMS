@@ -57,7 +57,7 @@ export default function Product(props) {
             <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
                 <CardMedia
                     className={classes.media}
-                    image={`https://d1m83ec4ah5zkj.cloudfront.net/files/${props.images[0]}`}
+                    image={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}`}
                     title="Contemplative Reptile"
                 />
                 <CardContent>

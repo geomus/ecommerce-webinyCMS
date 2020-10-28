@@ -51,7 +51,7 @@ const ProductDetail = () => {
         <Container>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                    <img src={`https://d1m83ec4ah5zkj.cloudfront.net/files/${data.products.getProduct.data.images[0]}`} alt="Product" className={classes.imgFluid} />
+                    <img src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}`} alt="Product" className={classes.imgFluid} />
                     { data.products.getProduct.data.isFeatured ? <RbNew className={classes.ribbonNew}/> : ''}
                 </Grid>
                 <Grid item xs={12} md={6} className={classes.detailProduct}>

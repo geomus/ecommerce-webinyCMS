@@ -172,7 +172,7 @@ export default function ProductsTable() {
                                         >
 
                                             <TableCell align="center" className={classes.cellImgProduct}>
-                                                <img src={`https://d1m83ec4ah5zkj.cloudfront.net/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
+                                                <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.name}
