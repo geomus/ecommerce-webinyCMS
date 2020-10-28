@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
 const ProductsBtnPublished = ({ row }) => {
     const classes = useStyles()
     const [open, setOpen] = useState(false);
-    const [checkedPublished, setCheckedPublished] = React.useState(false);
+    const [checkedPublished, setCheckedPublished] = useState(false);
 
     useEffect(() => {
         return setCheckedPublished(row.isPublished)
@@ -53,7 +53,7 @@ const ProductsBtnPublished = ({ row }) => {
     return (
         <div>
             <FormControlLabel
-                control={<Checkbox icon={<CheckIcon className={classes.buttonYes} />} checkedIcon={<CloseIcon className={classes.buttonNo} />} name="checkedH" onChange={handlePublished} checked={checkedPublished} />}
+                control={<Checkbox checkedIcon={<CheckIcon className={classes.buttonYes} />} icon={<CloseIcon className={classes.buttonNo} />} name="checkedH" onChange={handlePublished} checked={checkedPublished} />}
                 label="" aria-label="Product PublihandlePublished"
             />
             <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>

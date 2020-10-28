@@ -95,7 +95,7 @@ const ProductSearch = () => {
                 {
                     productsSearch.map((item) => (
                         <a key={item.id} className={classes.productInline} href={`/wonder-slug/product-detail?id=${item.id}`}>
-                            <img className={classes.imgProductInline} src={item.images} alt="producto" width={50} />
+                            <img className={classes.imgProductInline} src={`https://d1m83ec4ah5zkj.cloudfront.net/files/${item.images[0]}`} alt="producto" width={50} />
                             <span >{item.name}</span>
                         </a>
                     ))

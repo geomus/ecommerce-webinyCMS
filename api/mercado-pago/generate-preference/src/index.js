@@ -19,9 +19,9 @@ async function generatePreference(checkoutItems, accessToken) {
             };
         }),
         back_urls: {
-            success: "localhost:3000/wonder-slug/success",
-            failure: "localhost:3000/wonder-slug/failure",
-            pending: "localhost:3000/wonder-slug/pending"
+            success: process.env.BACK_URL_MERCADO_PAGO + "/success",
+            failure: process.env.BACK_URL_MERCADO_PAGO + "/failure",
+            pending: process.env.BACK_URL_MERCADO_PAGO + "/pending"
         },
         auto_return: "approved"
     };
@@ -44,8 +44,8 @@ async function mapCheckoutItemsToProducts(checkoutItems) {
 }
 
 async function getProductDetail(id) {
-    const url = "https://d1m83ec4ah5zkj.cloudfront.net/graphql";
-    const token = "53901e13cd10ea195d8133b27767b3a50b7f8d1d70b58d92";
+    const url = process.env.GRAPHQL_API_URL;
+    const token = process.env.USER_TOKEN;
     const variables = {
         id: id
     };
@@ -56,7 +56,7 @@ async function getProductDetail(id) {
                 data {
                     id
                     name
-                    price
+                    priceBase
                 }
             }
         }

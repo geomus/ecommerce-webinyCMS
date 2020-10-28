@@ -56,7 +56,7 @@ export default function Cart() {
                                 </Button>
                             </TableCell>
                             <TableCell colSpan={2} padding="none" className={classes.cellImgProduct}>
-                                <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
+                                <img src={`https://d1m83ec4ah5zkj.cloudfront.net/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
                             <TableCell colSpan={3} padding="none" size="small">{row.name}</TableCell>
                             <TableCell colSpan={1}>

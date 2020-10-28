@@ -53,7 +53,7 @@ export const CartProvider = ({ children }) => {
     };
 
     function totalCalculator(items) {
-        return items.map((item) => item.price * item.quantity).reduce((sum, i) => sum + i, 0);
+        return items.map((item) => item.priceBase * item.quantity).reduce((sum, i) => sum + i, 0);
     }
 
     function totalQtyCalculator(items) {

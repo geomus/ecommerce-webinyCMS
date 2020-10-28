@@ -9,7 +9,7 @@ export const products = gql`
                     id
                     name
                     description
-                    price
+                    priceBase
                     images
                     tags
                     isFeatured
@@ -28,7 +28,7 @@ export const product = gql`
                     id
                     name
                     description
-                    price
+                    priceBase
                     images
                     tags
                     isFeatured
@@ -45,7 +45,7 @@ export const productsFilter = gql`
                 data {
                     id
                     name
-                    price
+                    priceBase
                     images
                     isFeatured
                 }
@@ -164,7 +164,7 @@ export const searchProducts = gql`
                 data {
                     id
                     name
-                    price
+                    priceBase
                     images
                     isFeatured
                 }

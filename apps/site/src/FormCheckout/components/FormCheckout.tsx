@@ -134,6 +134,8 @@ export default function FormCheckout() {
 
         if (pay === 'Mercado Pago') {
             const preferenceData = await generatePreference(cart, token)
+            console.log(order,preferenceData);
+            
             order.idPreference = preferenceData.id
             //createOrder
             await executePayment(preferenceData.init_point, order)

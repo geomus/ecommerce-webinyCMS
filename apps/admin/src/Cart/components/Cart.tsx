@@ -63,7 +63,7 @@ export default function SpanningTable() {
     }
 
     function totalCalculator(items) {
-        return items.map((item) => item.price * item.quantity).reduce((sum, i) => sum + i, 0);
+        return items.map((item) => item.priceBase * item.quantity).reduce((sum, i) => sum + i, 0);
     }
 
     const totalCart = totalCalculator(cart)
@@ -85,7 +85,7 @@ export default function SpanningTable() {
                     {cart.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell className={classes.cellImgProduct}>
-                                <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
+                                <img src={`https://d1m83ec4ah5zkj.cloudfront.net/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
                             <TableCell>{row.name}</TableCell>
                             <TableCell align="right" className={classes.cellQty}>

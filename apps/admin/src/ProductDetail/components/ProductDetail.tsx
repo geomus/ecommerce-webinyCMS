@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 const ProductDetail = () => {
     const classes = useStyles();
 
-    const { loading, error, data } = useQuery(product, { variables: { id: "5f7dcd607acd520009344d0a" } });
+    const { loading, error, data } = useQuery(product, { variables: { id: "5f984c67b7db96000753789e" } });
     if (loading) {
         return (
             <h1> <LinearProgress /> </h1>
@@ -51,7 +51,7 @@ const ProductDetail = () => {
         <Container>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                    <img src={data.products.getProduct.data.images} alt="Product" className={classes.imgFluid} />
+                    <img src={`https://d1m83ec4ah5zkj.cloudfront.net/files/${data.products.getProduct.data.images[0]}`} alt="Product" className={classes.imgFluid} />
                     { data.products.getProduct.data.isFeatured ? <RbNew className={classes.ribbonNew}/> : ''}
                 </Grid>
                 <Grid item xs={12} md={6} className={classes.detailProduct}>
