@@ -13,9 +13,9 @@ async function generatePreference(checkoutItems, accessToken) {
         items: products.map((product) => {
             return {
                 id: product.data.products.getProduct.data.id,
-                quantity: product.data.products.getProduct.data.quantity,
+                quantity: Number(product.data.products.getProduct.data.quantity),
                 title: product.data.products.getProduct.data.name,
-                unit_price: product.data.products.getProduct.data.price
+                unit_price: product.data.products.getProduct.data.priceBase
             };
         }),
         back_urls: {

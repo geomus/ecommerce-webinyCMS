@@ -97,7 +97,7 @@ export default function FormCheckout() {
 
     const generatePreference = async (cartItem, userToken) => {
         const response = await fetch(
-            "https://hliudyz0wk.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
+            "https://i3qgil5tza.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
             {
                 method: "POST",
                 body: JSON.stringify({ cart: cartItem, token: userToken }),
