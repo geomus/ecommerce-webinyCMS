@@ -8,9 +8,12 @@ import Cart from './Cart';
 import FormCheckout from './FormCheckout';
 import PayResult from './PayResult';
 import SliderListProducts from './SliderListProducts';
+import SignInRoute from './SignIn/routes'
+import SignUpRoute from './SignUp/routes'
 
 export default (params: SiteAppOptions = {}) => {
     const plugins = params.plugins || [];
-    plugins.push(ProductDetail(), ProductSearch(), ListProducts(), ButtonCartHome(), Cart(), FormCheckout(), PayResult(), SliderListProducts());
+    plugins.push(ProductDetail(), ProductSearch(), ListProducts(), ButtonCartHome(), Cart(), FormCheckout(), PayResult(), SliderListProducts(),
+    SignInRoute, SignUpRoute );
     return createSite({ ...params, plugins });
 };
