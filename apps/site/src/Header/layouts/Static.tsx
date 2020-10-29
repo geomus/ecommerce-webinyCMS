@@ -1,0 +1,24 @@
+import React, { useMemo } from "react";
+import { Addons } from "@webiny/app/components";
+import { getPlugins } from "@webiny/plugins";
+import { PbPageLayoutComponentPlugin } from "@webiny/app-page-builder/types";
+
+const Static = ({ children }) => {
+    const { header: Header }: any = useMemo(() => {
+        const plugins = getPlugins<PbPageLayoutComponentPlugin>("pb-layout-component");
+        return plugins.reduce((acc, item) => {
+            acc[item.componentType] = item.component;
+            return acc;
+        }, {});
+    }, []);
+
+    return (
+        <React.Fragment>
+            <Addons />
+            <Header />
+            {children}
+        </React.Fragment>
+    );
+};
+
+export default Static;

@@ -65,8 +65,7 @@ export default function FormCheckout() {
     const [shipping, setShipping] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { cart } = useContext(CartContext);
-    const token =
-        "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
+    const token = process.env.PUBLIC_KEY_MERCADO_PAGO;
 
     const handleChangeName = (event) => {
         setName(event.target.value);
@@ -97,7 +96,7 @@ export default function FormCheckout() {
     };
     const generatePreference = async (cartItem, userToken) => {
         const response = await fetch(
-            "https://dydq60bw25.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
+            "https://jpzs2agr52.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
             {
                 method: "POST",
                 body: JSON.stringify({ cart: cartItem, token: userToken }),
