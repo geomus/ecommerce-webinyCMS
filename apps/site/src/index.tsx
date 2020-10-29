@@ -8,8 +8,6 @@ import { ApolloProvider } from '@apollo/client'
 import client from './graphql/conection'
 import { CartProvider } from "./utils/context";
 
-
-
 const App = createApp();
 
 const render = module.hot ? ReactDOM.render : ReactDOM.hydrate;

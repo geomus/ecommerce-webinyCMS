@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { makeStyles } from "@material-ui/core/styles"
-import { TextField } from '@material-ui/core';
+import { LinearProgress, TextField } from '@material-ui/core';
 import { IconButton } from '@material-ui/core'
 import { useQuery } from "@apollo/client";
 import { products } from '../../graphql/query'
@@ -46,7 +46,7 @@ const ProductSearch = () => {
 
     if (loading) {
         return (
-            <h1> Cargando </h1>
+            <h1> <LinearProgress /> </h1>
         )
     }
 
@@ -95,7 +95,7 @@ const ProductSearch = () => {
                 {
                     productsSearch.map((item) => (
                         <a key={item.id} className={classes.productInline} href={`/wonder-slug/product-detail?id=${item.id}`}>
-                            <img className={classes.imgProductInline} src={item.images} alt="producto" width={50} />
+                            <img className={classes.imgProductInline} src={`${process.env.REACT_APP_API_URL}/files/${item.images[0]}`} alt="producto" width={50} />
                             <span >{item.name}</span>
                         </a>
                     ))

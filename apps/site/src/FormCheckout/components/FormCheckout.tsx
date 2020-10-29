@@ -1,25 +1,19 @@
 import React, { useState, useContext } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { TextField } from '@material-ui/core';
-import { Grid } from '@material-ui/core'
-import { Button } from '@material-ui/core'
-import PaymentIcon from '@material-ui/icons/Payment';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import { CartContext } from "../../utils/context";
 import { useMutation } from "@apollo/client";
-import { createOrder } from '../../graphql/query'
-import { CircularProgress } from '@material-ui/core';
+import { CartContext } from "../../utils/context";
+import { createOrder } from '../../graphql/query';
+
+import { TextField, Grid, Button, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, CircularProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles'
+import PaymentIcon from '@material-ui/icons/Payment';
 
 const useStyles = makeStyles({
     root: {
         width: "100%",
         padding: "0.5rem"
     }
-})
+});
+
 const paymentMethods = [
     {
         id: 1,
@@ -36,7 +30,7 @@ const paymentMethods = [
         name: 'Mercado Pago',
         slug: 'mercado-pago'
     },
-]
+];
 const shippingMethods = [
     {
         id: 1,
@@ -53,11 +47,10 @@ const shippingMethods = [
         name: 'Acuerdo con el vendedor',
         slug: 'acuerdo-con-el-vendedor'
     },
-]
+];
 
 export default function FormCheckout() {
     const [addOrder] = useMutation(createOrder);
-
 
     const classes = useStyles()
 
@@ -72,8 +65,7 @@ export default function FormCheckout() {
     const [shipping, setShipping] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const { cart } = useContext(CartContext)
-    const token =
-        "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
+    const token = "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
 
     const handleChangeName = (event) => {
         setName(event.target.value);
@@ -102,28 +94,26 @@ export default function FormCheckout() {
     const handleChangeShipping = (event) => {
         setShipping(event.target.value);
     };
+
     const generatePreference = async (cartItem, userToken) => {
         const response = await fetch(
-            "https://dydq60bw25.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
+            "https://i3qgil5tza.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
             {
                 method: "POST",
                 body: JSON.stringify({ cart: cartItem, token: userToken }),
             }
-        )
-        const body = await response.json()
-        console.log(body.data);
-
-        return body.data
+        );
+        const body = await response.json();
+        return body.data;
     };
-    const executeInitPoint = async (initPoint, order) => {
-        const orderGenerate = await addOrder({ variables: { data: order } });
-        
-        return window.location.href = initPoint;
-    }
-     const executeRedirectPayment = (url, order) => {
-        const orderGenerate = addOrder({ variables: { data: order } })
-         return window.location.href = url
-     }
+
+    const executePayment = async (url, order) => {
+        const { data } = await addOrder({ variables: { data: order } });
+        const orderGenerate = data.orders.createOrder.data;
+        await localStorage.setItem('orderId', JSON.stringify(orderGenerate.id));
+
+        return window.location.href = url;
+    };
 
     const onSubmit = async (e) => {
         setIsLoading(true)
@@ -141,14 +131,16 @@ export default function FormCheckout() {
             shipping: shipping,
             cart: JSON.stringify(cart)
         }
-        
+
         if (pay === 'Mercado Pago') {
             const preferenceData = await generatePreference(cart, token)
+            console.log(order,preferenceData);
+            
             order.idPreference = preferenceData.id
             //createOrder
-            await executeInitPoint(preferenceData.init_point, order)
+            await executePayment(preferenceData.init_point, order)
         } else {
-            await executeRedirectPayment('http://localhost:3000/wonder-slug/pending', order)
+            await executePayment('http://localhost:3000/wonder-slug/pending', order)
         }
     }
 

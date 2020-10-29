@@ -22,6 +22,11 @@ const apolloGatewayServices = {
     LAMBDA_SERVICE_API_PRODUCTS: "${apiProducts.name}",
     LAMBDA_SERVICE_API_ORDERS: "${apiOrders.name}"
 };
+const mercadoPagoEnv = {
+    GRAPHQL_API_URL: process.env.GRAPHQL_API_URL,
+    USER_TOKEN: process.env.USER_TOKEN,
+    BACK_URL_MERCADO_PAGO: process.env.BACK_URL_MERCADO_PAGO
+}
 
 module.exports = () => ({
     resources: {
@@ -558,6 +563,7 @@ module.exports = () => ({
                     code: "./mercado-pago/generate-preference/build",
                     handler: "handler.handler",
                     memory: 512,
+                    env: mercadoPagoEnv
                 }
             }
         },

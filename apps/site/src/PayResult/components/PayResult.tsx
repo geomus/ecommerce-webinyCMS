@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { orderExternalID } from "../../graphql/query";
+import { orderExternalID, updateOrder } from "../../graphql/query";
 import { CartContext } from "../../utils/context";
 
 import { Backdrop, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
@@ -35,41 +35,65 @@ interface Order {
 }
 
 export default function PayResult ( paramsObj: any, order: Order ) {
-    const { totalCalculator } = useContext(CartContext);
-    const classes = useStyles();
 
-    // get params from query string on a object
     useEffect(() => {
-        paramsObj = {};
-        const params = new URLSearchParams(window.location.search);
-        for (const value of params.keys()) {
-            paramsObj[value] = params.get(value);
-        }
+        const status = (window.location.pathname).search("success");
+        if ( status ) {
+            localStorage.removeItem("cart");
+        };
     }, []);
 
-    // check if external payment (MercadoPago)
-    if (!(paramsObj == {})) {
-        const idPreference = paramsObj.preference_id
-        const { loading, error, data } = useQuery( orderExternalID, { variables: { idPreference } } );
-
-        if (loading) {
-            return <Backdrop className={classes.backdrop} open={true}>
-                <CircularProgress color="inherit" />
-            </Backdrop>;
-        };
-
-        if (error) {
-            console.dir(error);
-            return <h1> error loading order </h1>;
-        };
-        order = data.orders.listOrders.data[0];
-        /** Logica de actualizar status order
-         * Mutation updateOrder(params.get('preferenece_id'))
-         * Pasarle el status que devuelve mercado pago (params.get('collection_status'))
-         */
+    paramsObj = [];
+    const params = new URLSearchParams(window.location.search);
+    for (const value of params.keys()) {
+        paramsObj[value] = params.get(value);
     };
-    const cart = JSON.parse(order.cart)
-    const totalOrder = totalCalculator(cart);
+
+    const { totalCalculator } = useContext(CartContext);
+    const [patchOrder] = useMutation(updateOrder);
+    const classes = useStyles();
+    const orderId = localStorage.getItem('orderId');
+
+    const updateStatus = (order: Order)=>{
+        console.log(orderId);
+        console.log(order);
+
+        return patchOrder({ variables: { id: orderId, data: order } });
+    };
+
+    const orderProcess = async ()=>{
+        // check for external payment (MercadoPago)
+        if (paramsObj) {
+            const idPreference = paramsObj.preference_id;
+            status = paramsObj.collection_status;
+
+            const { loading, error, data } = useQuery( orderExternalID, { variables: { idPreference } } );
+
+            if (loading) {
+                return <Backdrop className={classes.backdrop} open={true}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>;
+             };
+
+            if (error) {
+                console.dir(error);
+                return <h1> error loading order </h1>;
+            };
+
+            order = data.orders.listOrders.data[0];
+
+            const _order = Object.assign({}, order);
+            _order.status = status;
+
+            await updateStatus(_order);
+        }
+    };
+
+    orderProcess()
+
+    // const cart = JSON.parse(order.cart)
+    // const totalOrder = totalCalculator(cart);
+
     return (
         <React.Fragment>
             <h3>Mi orden:</h3> <br/>
@@ -104,12 +128,12 @@ export default function PayResult ( paramsObj: any, order: Order ) {
                         { (order.idPreference)?
                             <TableRow>
                                 <TableCell component="th" scope="row">
-                                    Identificador de MercadoPago: { order.idPreference }
+                                    Identificador de Mercado Pago: { order.idPreference }
                                 </TableCell>
                             </TableRow>: '' }
                         <TableRow>
                             <TableCell component="th" scope="row">
-                                Monto: ${ totalOrder }
+                                Monto: ${  }
                             </TableCell>
                         </TableRow>
                     </TableBody>

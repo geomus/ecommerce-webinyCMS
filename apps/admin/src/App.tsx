@@ -7,7 +7,11 @@ import Cart from './Cart';
 import FormCheckout from './FormCheckout';
 import PayResult from './PayResult';
 import ProductSearch from './ProductSearch';
+import SliderListProducts from './SliderListProducts';
 import PBGroupEcommerce from './plugins/PBGroupEcommerce';
+import DashboardMenu from './Dashboard/Menus/DashboardMenu';
+import DashboardRoute from './Dashboard/Routes/DashboardRoute';
+import LogoAdmin from './plugins/LogoAdmin';
 
 export default adminTemplate({
     cognito: {
@@ -23,6 +27,10 @@ export default adminTemplate({
         FormCheckout(),
         PayResult(),
         ProductSearch(),
-        PBGroupEcommerce
+        SliderListProducts(),
+        DashboardMenu,
+        DashboardRoute,
+        PBGroupEcommerce,
+        LogoAdmin
     ]
 });

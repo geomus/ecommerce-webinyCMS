@@ -8,7 +8,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import { ReactComponent as RbNew } from '../utils/svg/rb-new.svg'
+
 
 
 export default function Product(props) {
@@ -23,8 +24,6 @@ export default function Product(props) {
             },
             '&:hover': {
                 transform: "scale(1.05) translateY(-20px)",
-                textDecoration: "none",
-                boxShadow: " 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
                 zIndex: 1000,
                 height: '100%'
             },
@@ -43,32 +42,37 @@ export default function Product(props) {
             position: 'relative',
             top: 20,
             fontWeight: 'bold'
+        },
+        ribbonNew: {
+            position: 'absolute',
+            top: -10,
+            right: -5,
+            width: 70
         }
     });
     const classes = useStyles();
 
     return (
-        <Grid item xs={6} sm={6} md={3} lg={2}>
-            <Card className={classes.root} key={props.id} elevation={0}>
-                <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
-                    <CardMedia
-                        className={classes.media}
-                        image={props.images}
-                        title="Contemplative Reptile"
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="body2" color="textSecondary" className={classes.productName}>
-                            {props.name}
-                        </Typography>
-                        <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
-                            ${props.price}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-                <CardActions>
-                    <ShopCartButton {...props} />
-                </CardActions>
-            </Card>
-        </Grid>
+        <Card className={classes.root} key={props.id} elevation={0}>
+            <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
+                <CardMedia
+                    className={classes.media}
+                    image={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}`}
+                    title="Contemplative Reptile"
+                />
+                <CardContent>
+                    <Typography gutterBottom variant="body2" color="textSecondary" className={classes.productName}>
+                        {props.name}
+                    </Typography>
+                    <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
+                        ${props.priceBase}
+                    </Typography>
+                    {props.isFeatured && <RbNew className={classes.ribbonNew} />}
+                </CardContent>
+            </CardActionArea>
+            <CardActions>
+                <ShopCartButton {...props} />
+            </CardActions>
+        </Card>
     );
 }

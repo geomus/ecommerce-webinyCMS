@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     },
     IconDelete: {
         minWidth: "20px!important",
-        padding:0,
+        padding: 0,
     },
     imgProduct: {
         width: "100%"
@@ -44,7 +44,7 @@ export default function Cart() {
                 <TableHead>
                     <TableRow>
                         <TableCell size="small" align="left"></TableCell>
-                        
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -56,7 +56,7 @@ export default function Cart() {
                                 </Button>
                             </TableCell>
                             <TableCell colSpan={2} padding="none" className={classes.cellImgProduct}>
-                                <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
+                                <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
                             <TableCell colSpan={3} padding="none" size="small">{row.name}</TableCell>
                             <TableCell colSpan={1}>
@@ -68,7 +68,7 @@ export default function Cart() {
                                     onChange={updateQtyItem}
                                 />
                             </TableCell>
-                            <TableCell colSpan={1} padding="none"align="left">${row.quantity * row.price}</TableCell>
+                            <TableCell colSpan={1} padding="none" align="left">${row.quantity * row.priceBase}</TableCell>
                         </TableRow>
                     ))}
 

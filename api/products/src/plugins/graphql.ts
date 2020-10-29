@@ -10,16 +10,9 @@ import {
     resolveUpdate
 } from "@webiny/commodo-graphql";
 
-const productFetcher = ctx => ctx.models.Product;
+const productFetcher = (ctx) => ctx.models.Product;
+const priceFetcher = (ctx) => ctx.models.Price;
 
-/**
- * As the name itself suggests, the "graphql-schema" plugin enables us to define our service's GraphQL schema.
- * Use the "schema" and "resolvers" properties to define GraphQL types and resolvers, respectively.
- * Resolvers can be made from scratch, but to make it a bit easier, we rely on a couple of built-in generic
- * resolvers, imported from the "@webiny/commodo-graphql" package.
- *
- * @see https://docs.webiny.com/docs/api-development/graphql
- */
 const plugin: GraphQLSchemaPlugin = {
     type: "graphql-schema",
     name: "graphql-schema-products",
@@ -27,10 +20,19 @@ const plugin: GraphQLSchemaPlugin = {
         typeDefs: gql`
             type ProductDeleteResponse {
                 data: Boolean
-                error: ProductError
+                error: PriceError
+            }
+            type PriceDeleteResponse {
+                data: Boolean
+                error: PriceError
             }
 
             type ProductCursors {
+                next: String
+                previous: String
+            }
+
+            type PriceCursors {
                 next: String
                 previous: String
             }
@@ -42,41 +44,73 @@ const plugin: GraphQLSchemaPlugin = {
                 totalCount: Int
             }
 
+            type PriceListMeta {
+                cursors: PriceCursors
+                hasNextPage: Boolean
+                hasPreviousPage: Boolean
+                totalCount: Int
+            }
+
             type ProductError {
                 code: String
                 message: String
                 data: JSON
             }
 
+            type PriceError {
+                code: String
+                message: String
+                data: JSON
+            }
+
+            type Price {
+                id: ID
+                name: String
+                percent: Int
+                default: Boolean
+            }
+
             type Product {
                 id: ID
-                name : String
+                name: String
                 slug: String
                 description: String
-                price : Float
-                images : [String]
-                tags : [String]
+                priceBase: Float
+                prices: [String]
+                images: [String]
+                tags: [String]
                 isPublished: Boolean
                 isFeatured: Boolean
                 createdOn: DateTime
             }
 
+            input PriceInput {
+                id: ID
+                name: String
+                percent: Int
+                default: Boolean
+            }
+
             input ProductInput {
                 id: ID
-                name : String!
+                name: String
                 slug: String
                 description: String
-                price : Float
-                images : [String]
-                tags : [String]
+                priceBase: Int
+                prices: [String]
+                images: [String]
+                tags: [String]
                 isPublished: Boolean
                 isFeatured: Boolean
-                createdOn: DateTime
             }
 
             input ProductListWhere {
                 name: String
                 isPublished: Boolean
+            }
+
+            input PriceListWhere {
+                name: String
             }
 
             input ProductListSort {
@@ -85,14 +119,20 @@ const plugin: GraphQLSchemaPlugin = {
                 createdOn: Int
             }
 
-            input ProductListFilter {
-                name: String
-                isPublished: Boolean
+            input ProductSearchInput {
+                query: String
+                fields: [String]
+                operator: String
             }
 
             type ProductResponse {
                 data: Product
                 error: ProductError
+            }
+
+            type PriceResponse {
+                data: Price
+                error: PriceError
             }
 
             type ProductListResponse {
@@ -101,17 +141,29 @@ const plugin: GraphQLSchemaPlugin = {
                 error: ProductError
             }
 
+            type PriceListResponse {
+                data: [Price]
+                meta: PriceListMeta
+                error: PriceError
+            }
+
             type ProductQuery {
                 getProduct(id: ID): ProductResponse
 
                 listProducts(
                     where: ProductListWhere
-                    filter : ProductListFilter
+                    search: ProductSearchInput
                     sort: ProductListSort
                     limit: Int
                     after: String
                     before: String
                 ): ProductListResponse
+            }
+
+            type PriceQuery {
+                getPrice(id: ID): PriceResponse
+
+                listPrices(where: PriceListWhere): PriceListResponse
             }
 
             type ProductMutation {
@@ -122,35 +174,50 @@ const plugin: GraphQLSchemaPlugin = {
                 deleteProduct(id: ID!): ProductDeleteResponse
             }
 
+            type PriceMutation {
+                createPrice(data: PriceInput!): PriceResponse
+
+                updatePrice(id: ID!, data: PriceInput!): PriceResponse
+
+                deletePrice(id: ID!): PriceDeleteResponse
+            }
+
             extend type Query {
                 products: ProductQuery
+                prices: PriceQuery
             }
 
             extend type Mutation {
                 products: ProductMutation
+                prices: PriceMutation
             }
         `,
         resolvers: {
             Query: {
-                // Needs to be here, otherwise the resolvers below cannot return any result.
-                products: emptyResolver
+                products: emptyResolver,
+                prices: emptyResolver
             },
             Mutation: {
-                // Needs to be here, otherwise the resolvers below cannot return any result.
-                products: emptyResolver
+                products: emptyResolver,
+                prices: emptyResolver
             },
             ProductQuery: {
-                // With the generic resolvers, we also rely on the "hasScope" helper function from the
-                // "@webiny/api-security" package, in order to define the required security scopes (permissions).
                 getProduct: hasScope("products:get")(resolveGet(productFetcher)),
                 listProducts: hasScope("products:list")(resolveList(productFetcher))
             },
+            PriceQuery: {
+                getPrice: hasScope("prices:get")(resolveGet(priceFetcher)),
+                listPrices: hasScope("prices:list")(resolveList(priceFetcher))
+            },
             ProductMutation: {
-                // With the generic resolvers, we also rely on the "hasScope" helper function from the
-                // "@webiny/api-security" package, in order to define the required security scopes (permissions).
                 createProduct: hasScope("products:create")(resolveCreate(productFetcher)),
                 updateProduct: hasScope("products:update")(resolveUpdate(productFetcher)),
                 deleteProduct: hasScope("products:delete")(resolveDelete(productFetcher))
+            },
+            PriceMutation: {
+                createPrice: hasScope("prices:create")(resolveCreate(priceFetcher)),
+                updatePrice: hasScope("prices:update")(resolveUpdate(priceFetcher)),
+                deletePrice: hasScope("prices:delete")(resolveDelete(priceFetcher))
             }
         }
     }

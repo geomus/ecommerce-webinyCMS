@@ -34,7 +34,7 @@ export default function SpanningTable() {
 
     const [cart, setCart] = useState(localCart)
 
-    
+
     const emptyCart = () => {
         localStorage.setItem("cart", JSON.stringify([]))
         return setCart([])
@@ -43,13 +43,13 @@ export default function SpanningTable() {
     const updateQtyItem = (e) => {
         const id = e.currentTarget.id
         const newQty = e.target.value
-       
+
         const cartModified = cart.map(item => {
             if (item.id === id) {
                 item.quantity = newQty
             }
             return item
-        })  
+        })
 
         localStorage.setItem("cart", JSON.stringify(cartModified))
         return setCart(cartModified)
@@ -63,7 +63,7 @@ export default function SpanningTable() {
     }
 
     function totalCalculator(items) {
-        return items.map((item) => item.price * item.quantity).reduce((sum, i) => sum + i, 0);
+        return items.map((item) => item.priceBase * item.quantity).reduce((sum, i) => sum + i, 0);
     }
 
     const totalCart = totalCalculator(cart)
@@ -85,7 +85,7 @@ export default function SpanningTable() {
                     {cart.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell className={classes.cellImgProduct}>
-                                <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
+                                <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
                             <TableCell>{row.name}</TableCell>
                             <TableCell align="right" className={classes.cellQty}>
@@ -99,8 +99,8 @@ export default function SpanningTable() {
                                     onChange={updateQtyItem}
                                 />
                             </TableCell>
-                            <TableCell align="right">${row.price}</TableCell>
-                            <TableCell align="right">${row.quantity * row.price}</TableCell>
+                            <TableCell align="right">${row.priceBase}</TableCell>
+                            <TableCell align="right">${row.quantity * row.priceBase}</TableCell>
                             <TableCell align="right">
                                 <Button value={row.id} id={row.id} onClick={deleteItemCart}>
                                     <HighlightOffIcon />

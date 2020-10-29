@@ -1,7 +1,7 @@
 import * as React from "react";
 import { css } from "emotion";
 import { ElementRoot } from "@webiny/app-page-builder/render/components/ElementRoot";
-import ProductSearch from './components/ProductSearch';
+import SliderListProducts from './components/SliderListProducts';
 
 const outerWrapper = css({
     boxSizing: "border-box"
@@ -15,13 +15,13 @@ const innerWrapper = css({
     paddingBottom: 0
 });
 
-const ProductSearchEditor = props => {
+const SliderListProductsEditor = props => {
     const { element } = props;
 
     return (
         <ElementRoot
             className={
-                "webiny-pb-base-page-element-style webiny-pb-page-element-embed-product-search " +
+                "webiny-pb-base-page-element-style webiny-pb-page-element-embed-iframe " +
                 outerWrapper
             }
             element={element}
@@ -30,7 +30,7 @@ const ProductSearchEditor = props => {
                 <div id={element.id}/>
                 {/* Aca va el componente  */}
 
-                <ProductSearch/>
+                <SliderListProducts/>
 
                 {/* Aca va el componente  */}
             </div>
@@ -38,4 +38,4 @@ const ProductSearchEditor = props => {
     );
 };
 
-export default ProductSearchEditor;
+export default SliderListProductsEditor;
