@@ -28,7 +28,7 @@ const Header = () => {
                             <DesktopHeader menuName={menuName} name={name} logo={logo} />
                             <MobileHeader
                                 menuName={menuName}
-                                name={name}
+                                name="prueba layout"
                                 logo={logo}
                                 active={mobileMenu}
                                 toggleMenu={toggleMobileMenu}

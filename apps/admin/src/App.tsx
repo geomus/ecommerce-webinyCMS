@@ -12,6 +12,7 @@ import PBGroupEcommerce from './plugins/PBGroupEcommerce';
 import DashboardMenu from './Dashboard/Menus/DashboardMenu';
 import DashboardRoute from './Dashboard/Routes/DashboardRoute';
 import LogoAdmin from './plugins/LogoAdmin';
+import Header from './Header';
 
 export default adminTemplate({
     cognito: {
@@ -28,6 +29,7 @@ export default adminTemplate({
         PayResult(),
         ProductSearch(),
         SliderListProducts(),
+        Header (),
         DashboardMenu,
         DashboardRoute,
         PBGroupEcommerce,

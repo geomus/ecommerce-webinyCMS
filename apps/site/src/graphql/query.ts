@@ -172,18 +172,3 @@ export const searchProducts = gql`
         }
     }
 `;
-
-export const getHeaderData = gql`
-    query PbGetHeader {
-        pageBuilder {
-            getSettings {
-                data {
-                    name
-                    logo {
-                        src
-                    }
-                }
-            }
-        }
-    }
-`;

@@ -1,4 +1,4 @@
-import StaticLayout from "./layouts/Static";
+import Ecommerce from "./layouts/Ecommerce";
 import Header from "./components/Header";
 import CircularSpinner from "./components/CircularSpinner";
 
@@ -122,12 +122,12 @@ export default () => [
         }
     } as PbThemePlugin,
     {
-        name: "pb-page-layout-static",
+        name: "pb-page-layout-ecommerce",
         type: "pb-page-layout",
         layout: {
-            name: "static",
-            title: "Static page",
-            component: StaticLayout
+            name: "e-Commerce",
+            title: "e-Commerce",
+            component: Ecommerce
         }
     } as PbPageLayoutPlugin,
     {

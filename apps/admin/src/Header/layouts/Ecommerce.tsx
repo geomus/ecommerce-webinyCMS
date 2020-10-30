@@ -3,7 +3,7 @@ import { Addons } from "@webiny/app/components";
 import { getPlugins } from "@webiny/plugins";
 import { PbPageLayoutComponentPlugin } from "@webiny/app-page-builder/types";
 
-const Static = ({ children }) => {
+const Ecommerce = ({ children }) => {
     const { header: Header }: any = useMemo(() => {
         const plugins = getPlugins<PbPageLayoutComponentPlugin>("pb-layout-component");
         return plugins.reduce((acc, item) => {
@@ -21,4 +21,4 @@ const Static = ({ children }) => {
     );
 };
 
-export default Static;
+export default Ecommerce;
