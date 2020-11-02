@@ -3,6 +3,7 @@ import { lighten, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import ProductsBtnCreate from './ProductsBtnCreate';
+import ProductsBtnImport from './ProductsBtnImport';
 
 
 const useToolbarStyles = makeStyles((theme) => ({
@@ -39,6 +40,7 @@ const ProductsTableToolbar = (props) => {
                 Products
             </Typography>
             <ProductsBtnCreate/>
+            <ProductsBtnImport/>
         </Toolbar>
     );
 }
