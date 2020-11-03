@@ -1,11 +1,14 @@
-import Ecommerce from "./layouts/Ecommerce";
+import EcommerceLayout from "./layouts/Ecommerce";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import CircularSpinner from "./components/CircularSpinner";
+import { DefaultErrorPage, DefaultNotFoundPage } from "./components/defaultPages";
 
 import {
     PbPageLayoutComponentPlugin,
     PbPageLayoutPlugin,
-    PbThemePlugin
+    PbThemePlugin,
+    PbDefaultPagePlugin
 } from "@webiny/app-page-builder/types";
 
 export default () => [
@@ -125,9 +128,9 @@ export default () => [
         name: "pb-page-layout-ecommerce",
         type: "pb-page-layout",
         layout: {
-            name: "e-Commerce",
-            title: "e-Commerce",
-            component: Ecommerce
+            name: "ecommerce",
+            title: "Ecommerce Page",
+            component: EcommerceLayout
         }
     } as PbPageLayoutPlugin,
     {
@@ -137,9 +140,25 @@ export default () => [
         component: Header
     } as PbPageLayoutComponentPlugin,
     {
+        name: "pb-layout-component-footer",
+        type: "pb-layout-component",
+        componentType: "footer",
+        component: Footer
+    } as PbPageLayoutComponentPlugin,
+    {
         name: "pb-layout-component-loader",
         type: "pb-layout-component",
         componentType: "loader",
         component: CircularSpinner
-    } as PbPageLayoutComponentPlugin
+    } as PbPageLayoutComponentPlugin,
+    {
+        name: "pb-default-page-error",
+        type: "pb-default-page",
+        component: DefaultErrorPage
+    } as PbDefaultPagePlugin,
+    {
+        name: "pb-default-page-not-found",
+        type: "pb-default-page",
+        component: DefaultNotFoundPage
+    } as PbDefaultPagePlugin
 ];

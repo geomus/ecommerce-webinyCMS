@@ -4,7 +4,7 @@ import { getPlugins } from "@webiny/plugins";
 import { PbPageLayoutComponentPlugin } from "@webiny/app-page-builder/types";
 
 const Ecommerce = ({ children }) => {
-    const { header: Header }: any = useMemo(() => {
+    const { header: Header, footer: Footer }: any = useMemo(() => {
         const plugins = getPlugins<PbPageLayoutComponentPlugin>("pb-layout-component");
         return plugins.reduce((acc, item) => {
             acc[item.componentType] = item.component;
@@ -17,6 +17,7 @@ const Ecommerce = ({ children }) => {
             <Addons />
             <Header />
             {children}
+            <Footer />
         </React.Fragment>
     );
 };

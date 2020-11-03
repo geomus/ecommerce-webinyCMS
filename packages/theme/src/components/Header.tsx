@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import get from "lodash.get";
 import { Query } from "react-apollo";
-import { getHeaderData } from "../../graphql/query";
+import { getHeaderData } from "./graphql";
 import DesktopHeader from "./DesktopHeader";
 import MobileHeader from "./MobileHeader";
 
@@ -25,10 +25,10 @@ const Header = () => {
                             className={"webiny-pb-section-header"}
                             data-testid={"pb-desktop-mobile-headers"}
                         >
-                            <DesktopHeader menuName={menuName} name={name} logo={logo} />
+                            <DesktopHeader menuName={menuName} name="TEST LAYOUT" logo={logo} />
                             <MobileHeader
                                 menuName={menuName}
-                                name="prueba layout"
+                                name={name}
                                 logo={logo}
                                 active={mobileMenu}
                                 toggleMenu={toggleMobileMenu}
