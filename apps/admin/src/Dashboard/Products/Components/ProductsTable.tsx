@@ -106,6 +106,11 @@ export default function ProductsTable() {
     }
     const rows = []
     data.products.listProducts.data.map(product => rows.push(product))
+   
+    const dataForExport = []
+    data.products.listProducts.data.map(product => dataForExport.push(Object.values(product)))
+    console.log(dataForExport);
+    
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -141,7 +146,7 @@ export default function ProductsTable() {
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <ProductsTableToolbar numSelected={selected.length} />
+                <ProductsTableToolbar numSelected={selected.length} data={dataForExport}/>
                 <TableContainer>
                     <Table
                         className={classes.table}

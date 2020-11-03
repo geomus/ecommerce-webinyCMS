@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import ProductsBtnCreate from './ProductsBtnCreate';
 import ProductsBtnImport from './ProductsBtnImport';
+import ProductsBtnExport from './ProductsBtnExport';
 
 
 const useToolbarStyles = makeStyles((theme) => ({
@@ -26,9 +27,8 @@ const useToolbarStyles = makeStyles((theme) => ({
     }
 }));
 
-const ProductsTableToolbar = (props) => {
+const ProductsTableToolbar = ({numSelected, data}) => {
     const classes = useToolbarStyles();
-    const { numSelected } = props;
 
     return (
         <Toolbar
@@ -39,8 +39,9 @@ const ProductsTableToolbar = (props) => {
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
                 Products
             </Typography>
+            <ProductsBtnExport data={data}/>
+            <ProductsBtnImport />
             <ProductsBtnCreate/>
-            <ProductsBtnImport/>
         </Toolbar>
     );
 }

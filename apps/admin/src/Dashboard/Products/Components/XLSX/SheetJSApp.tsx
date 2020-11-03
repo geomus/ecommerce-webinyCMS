@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import XLSX from "xlsx";
 import DragDropFile from "./DragDropFile";
 import DataInput from "./DataInput";
 import OutTable from "./OurTable"
+import { Backdrop, makeStyles } from "@material-ui/core";
+import StepperImport from "./StepperImport";
+
+const useStyles = makeStyles((theme) => ({
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
+    },
+  }));
 
 /* generate an array of column objects */
 // eslint-disable-next-line @typescript-eslint/camelcase
@@ -14,65 +23,56 @@ const make_cols = refstr => {
     };
     return o;
 }
-    export default function SheetJSApp() {
-        const [state, setState] = useState({
-            data : [],
-            cols : []
-        })
+export default function SheetJSApp() {
+    const [state, setState] = useState({
+        data: [],
+        cols: []
+    })
+    const [open, setOpen] = useState(false);
+    const classes = useStyles();
+    const handleClose = () => {
+      setOpen(false);
+    };
 
-        function handleFile(file /*:File*/) {
-            /* Boilerplate to set up FileReader */
-            const reader = new FileReader();
-            const rABS = !!reader.readAsBinaryString;
-            reader.onload = e => {
-                /* Parse data */
-                const bstr = e.target.result;
-                const wb = XLSX.read(bstr, { type: rABS ? "binary" : "array" });
-                /* Get first worksheet */
-                const wsname = wb.SheetNames[0];
-                const ws = wb.Sheets[wsname];
-                /* Convert array of arrays */
-                const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-                /* Update state */
-                setState({ data: data, cols: make_cols(ws["!ref"]) });
-            };
-            if (rABS) { reader.readAsBinaryString(file) }
-            else { reader.readAsArrayBuffer(file) };
-        }
-        function exportFile() {
-            /* convert state to workbook */
-            const ws = XLSX.utils.aoa_to_sheet(this.state.data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
-            /* generate XLSX file and send to client */
-            XLSX.writeFile(wb, "sheetjs.xlsx");
-        }
 
-        console.log(state);
-        
-        return (
-            <DragDropFile handleFile={handleFile}>
-                <div className="row">
-                    <div className="col-xs-12">
-                        <DataInput handleFile={handleFile} />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-xs-12">
-                        <button
-                            disabled={!state.data.length}
-                            className="btn btn-success"
-                            onClick={exportFile}
-                        >
-                            Export
-            </button>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-xs-12">
-                        <OutTable data={state.data} cols={state.cols} />
-                    </div>
-                </div>
-            </DragDropFile>
-        )
+     function handleFile(file /*:File*/) {
+        /* Boilerplate to set up FileReader */
+        setOpen(true)
+        const reader = new FileReader();
+        const rABS = !!reader.readAsBinaryString;
+        reader.onload = async e => {
+            /* Parse data */
+            const bstr = e.target.result;
+            const wb = XLSX.read(bstr, { type: rABS ? "binary" : "array" });
+            /* Get first worksheet */
+            const wsname = wb.SheetNames[0];
+            const ws = wb.Sheets[wsname];
+            /* Convert array of arrays */
+            const data = await XLSX.utils.sheet_to_json(ws, { header: 1 });
+            /* Update state */
+            setState({ data: data, cols: make_cols(ws["!ref"]) });
+            setOpen(false)
+        };
+        if (rABS) {
+            reader.readAsBinaryString(file)
+
+        }
+        else {
+            reader.readAsArrayBuffer(file)
+        }
     }
+
+
+    return (
+        <Fragment>
+            <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
+                CARGANDO...
+            </Backdrop>
+            <DragDropFile handleFile={handleFile}>
+                        <StepperImport/>
+                        <DataInput handleFile={handleFile} />
+                        <OutTable data={state.data} cols={state.cols} />
+            </DragDropFile>
+        </Fragment>
+    )
+}

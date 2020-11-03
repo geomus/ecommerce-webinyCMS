@@ -9,35 +9,35 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
+    table: {
+        minWidth: 650,
+    },
 });
 
-export default function OurTable({data, cols}) {
-  const classes = useStyles();
+export default function OurTable({ data, cols }) {
+    const classes = useStyles();
 
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-          {cols.map(c => (
-                <TableCell key={c.key}>{c.name}</TableCell>
-              ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        {data.map((r, i) => (
-          <TableRow key={i}>
+    return (
+        <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        {cols.map(c => (
+                            <TableCell key={c.key}>{c.name}</TableCell>
+                        ))}
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {data.slice(0, 10).map((r, i) => (
+                        <TableRow key={i}>
                             {cols.map(c => (
-                  <TableCell key={c.key}>{r[c.key]}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+                                <TableCell key={c.key}>{r[c.key]}</TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 }
 
