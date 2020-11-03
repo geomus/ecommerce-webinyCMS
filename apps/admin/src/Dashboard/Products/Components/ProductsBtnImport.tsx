@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
             marginLeft: theme.spacing(2),
             flex: 1,
         },
+        marginButton: {
+        margin: "0 1rem"
+    }
     }),
 );
 
@@ -46,7 +49,7 @@ export default function FullScreenDialog() {
 
     return (
         <div>
-            <Button variant="outlined" color="primary" size="small" startIcon={<PublishIcon />} onClick={handleClickOpen}>
+            <Button className={classes.marginButton}variant="outlined" color="primary" size="small" startIcon={<PublishIcon />} onClick={handleClickOpen}>
                 IMPORTAR
       </Button>
             <Dialog fullScreen open={openDialog} onClose={handleCloseDialog} TransitionComponent={Transition}>

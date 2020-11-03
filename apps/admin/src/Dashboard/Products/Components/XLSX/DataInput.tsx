@@ -1,23 +1,28 @@
 import React from "react";
+import { makeStyles } from "@material-ui/core";
 
+const useStyles = makeStyles((theme) => ({
+    form: {
+        padding: "2rem"
+    },
+
+}));
 export default function DataInput({ handleFile }) {
+const classes = useStyles()
 
     function handleChange(e) {
         const files = e.target.files;
-        if (files && files[0]) {handleFile(files[0])};
+        if (files && files[0]) { handleFile(files[0]) };
     }
     return (
-        <form className="form-inline">
-            <div className="form-group">
-                <label htmlFor="file">Spreadsheet</label>
-                <input
-                    type="file"
-                    className="form-control"
-                    id="file"
-                    accept={".xlsx,.xls"}
-                    onChange={handleChange}
-                />
-            </div>
-        </form>
+            <form className={classes.form}>
+                    <input
+                        type="file"
+                        className="form-control"
+                        id="file"
+                        accept={".xlsx,.xls"}
+                        onChange={handleChange}
+                    />
+            </form>
     );
 }
