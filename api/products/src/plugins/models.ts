@@ -1,5 +1,5 @@
 // @ts-ignore
-import { withStorage, withCrudLogs, withSoftDelete, withFields, pipe } from "@webiny/commodo";
+import { withStorage, withCrudLogs, withSoftDelete, withFields, pipe} from "@webiny/commodo";
 import { withUser } from "@webiny/api-security";
 import product from "./models/product.model";
 import price from "./models/price.model";
