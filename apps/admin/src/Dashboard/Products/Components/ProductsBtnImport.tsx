@@ -58,9 +58,7 @@ export default function FullScreenDialog() {
                         <Typography variant="h6" className={classes.title}>
                             Importación masiva de productos
                         </Typography>
-                        <Button variant="outlined" color="inherit">
-                            GUARDAR
-                        </Button>
+
                     </Toolbar>
                 </AppBar>
                 <List>

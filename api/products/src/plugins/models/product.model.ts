@@ -7,6 +7,7 @@ export default ({ createBase }) =>
     pipe(
         withName("Product"),
         withFields((instance) => ({
+            sku: string(),
             name: onSet((value) => {
                 instance.slug = slugify(value).toLowerCase();
                 return value;

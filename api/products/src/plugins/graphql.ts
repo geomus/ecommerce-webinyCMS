@@ -72,6 +72,7 @@ const plugin: GraphQLSchemaPlugin = {
 
             type Product {
                 id: ID
+                sku: String
                 name: String
                 slug: String
                 description: String
@@ -93,6 +94,7 @@ const plugin: GraphQLSchemaPlugin = {
 
             input ProductInput {
                 id: ID
+                sku: String
                 name: String
                 slug: String
                 description: String
@@ -106,7 +108,8 @@ const plugin: GraphQLSchemaPlugin = {
 
             input ProductListWhere {
                 name: String
-                isPublished: Boolean
+                isPublished: Boolean                
+                sku: String
             }
 
             input PriceListWhere {
