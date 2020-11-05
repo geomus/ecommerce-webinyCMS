@@ -49,7 +49,6 @@ const ProductDetail = () => {
         return <h1> error </h1>;
     }
 
-    const tags = data.products.getProduct.data.tags
     return (
         <Container>
             <Grid container spacing={3}>
@@ -72,7 +71,10 @@ const ProductDetail = () => {
                     {data.products.getProduct.data.description}
                     </Typography>
                     <div>
-                        {tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} color="primary" label={tag} component="a" href="#chip" key={i+tag}clickable /> )}
+                        { data.products.getProduct.data.tags &&
+                        data.products.getProduct.data.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} 
+                        color="primary" label={tag} component="a" href="#chip" key={i+tag}clickable /> )
+                        }
                     </div>
                     <ShopCartButton/>
                 </Grid>

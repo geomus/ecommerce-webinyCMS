@@ -187,7 +187,10 @@ export default function ProductsTable() {
                                                     ${row.priceBase}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell align="center">{row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}</TableCell>
+                                            <TableCell align="center">{row.tags &&
+                                            row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} 
+                                            color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}
+                                            </TableCell>
                                             <TableCell align="center">
                                                 <ProductsBtnPublished row={row} />
                                             </TableCell>

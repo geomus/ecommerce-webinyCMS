@@ -71,7 +71,10 @@ const ProductDetail = () => {
                         {dataProducts[0].description}
                     </Typography>
                     <div>
-                        {dataProducts[0].tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}
+                        { dataProducts[0].tags &&
+                        dataProducts[0].tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} 
+                        color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
+                        }
                     </div>
                     <ShopCartButton />
                 </Grid>
