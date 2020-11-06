@@ -61,7 +61,7 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
         open: false,
         message: ''
     });
-    const [openBackdrop, setBackdrop] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleFormatData = () => {
         const finalData = [];
@@ -82,18 +82,22 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
         }
         return finalData;
     };
+
     const handleClickOpen = () => {
         setOpen(true);
     };
+
     const handleClose = () => {
         setOpen(false);
     };
+
     const handleReset = () => {
         cols.forEach((c) => {
             c.name = "notValid";
             c.used = false;
         });
     };
+
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>, index) => {
         const value = event.target.value.toString();
 
@@ -115,15 +119,14 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
             console.log("ya existo");
         }
     };
+
     const handleImportData = async () => {
-        handleClose()
+        setIsLoading(true)
         const dataProductsImported = await handleFormatData()
-        
+
         try {
-            setBackdrop(true)
             await bulkInsertProducts({ variables: { data: dataProductsImported } })
             setOpenSnackbar({ open: true, message: "La operacion fue exitosa" })
-            setTimeout(function () { handleCloseDialog(false) }, 1200);
         } catch (error) {
             console.error(error)
             setOpenSnackbar({ open: true, message: "Falló la operación" })
@@ -133,24 +136,10 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
         if (reason === 'clickaway') {
             return;
         }
-        setOpen(false);
+        handleCloseDialog(false)
     };
     return (
         <React.Fragment>
-            {
-                openBackdrop &&
-            <Backdrop open={true}>
-                    <CircularProgress color="inherit" />
-            </Backdrop>
-}
-            {
-                openSnackbar &&
-                <Snackbar open={openSnackbar.open} autoHideDuration={2000} onClose={handleCloseSnackbar} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
-                    <Alert onClose={handleCloseSnackbar} severity="info">
-                        {openSnackbar.message}
-                    </Alert>
-                </Snackbar>
-            }
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
@@ -187,7 +176,7 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.slice(0, 5).map((r, i) => (
+                        {data.slice(0, 3).map((r, i) => (
                             <TableRow key={i}>
                                 {cols.map((c) => (
                                     <TableCell key={c.key}>{r[c.key]}</TableCell>
@@ -204,6 +193,10 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
+                    {
+                        isLoading &&
+                        <CircularProgress />
+                    }
                     <Button onClick={handleClose} size="small" variant="contained" color="primary">
                         No
                     </Button>
@@ -217,6 +210,14 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
                         Si
                     </Button>
                 </DialogActions>
+                {
+                openSnackbar &&
+                <Snackbar open={openSnackbar.open} autoHideDuration={2000} onClose={handleCloseSnackbar} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
+                    <Alert onClose={handleCloseSnackbar} severity="info">
+                        {openSnackbar.message}
+                    </Alert>
+                </Snackbar>
+            }
             </Dialog>
             <IconButton aria-label="addMany" color="default" onClick={handleClickOpen}>
                 GUARDAR
