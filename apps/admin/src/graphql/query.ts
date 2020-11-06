@@ -352,3 +352,22 @@ export const createPrice = gql`
         }
     }
 `;
+
+export const createProducts = gql`
+    mutation createProducts($data: [ProductInput!]!) {
+        products {
+            createProducts(data: $data) {
+                data {
+                    name
+                    description
+                    priceBase
+                    images
+                    tags
+                }
+                error {
+                    data
+                }
+            }
+        }
+    }
+`;

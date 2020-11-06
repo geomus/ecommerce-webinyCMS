@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -11,10 +11,17 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
-import { Dialog, IconButton } from "@material-ui/core";
+import { Backdrop, CircularProgress, Dialog, IconButton, Snackbar } from "@material-ui/core";
 import { DialogActions } from "@material-ui/core";
 import { DialogContent } from "@material-ui/core";
 import { DialogContentText } from "@material-ui/core";
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { useMutation } from '@apollo/client'
+import { createProducts, products } from '../../../../graphql/query'
+
+function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,8 +38,12 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export default function OurTable({ data, cols, objectKeys }) {
+export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) {
     const classes = useStyles();
+
+    const [bulkInsertProducts] = useMutation(createProducts, {
+        refetchQueries: () => [{ query: products }]
+    })
 
     const formatObjectKeys = {};
     Object.assign(formatObjectKeys, objectKeys);
@@ -45,7 +56,12 @@ export default function OurTable({ data, cols, objectKeys }) {
     formatObjectKeys["notValid"] = null;
     const keys = Object.keys(formatObjectKeys);
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState({
+        open: false,
+        message: ''
+    });
+    const [openBackdrop, setBackdrop] = useState(false)
 
     const handleFormatData = () => {
         const finalData = [];
@@ -56,7 +72,7 @@ export default function OurTable({ data, cols, objectKeys }) {
             delete c["name"];
         });
         cols = cols.filter((value) => Object.keys(value).length !== 0);
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 1; i < data.length; i++) {
             const prod = {};
             for (let j = 0; j < data[i].length; j++) {
                 prod[cols[j]] = data[i][j];
@@ -64,23 +80,20 @@ export default function OurTable({ data, cols, objectKeys }) {
             }
             finalData.push(prod);
         }
-        console.log(finalData);
+        return finalData;
     };
-
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
     };
-
     const handleReset = () => {
         cols.forEach((c) => {
             c.name = "notValid";
             c.used = false;
         });
     };
-
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>, index) => {
         const value = event.target.value.toString();
 
@@ -102,9 +115,42 @@ export default function OurTable({ data, cols, objectKeys }) {
             console.log("ya existo");
         }
     };
-
+    const handleImportData = async () => {
+        handleClose()
+        const dataProductsImported = await handleFormatData()
+        
+        try {
+            setBackdrop(true)
+            await bulkInsertProducts({ variables: { data: dataProductsImported } })
+            setOpenSnackbar({ open: true, message: "La operacion fue exitosa" })
+            setTimeout(function () { handleCloseDialog(false) }, 1200);
+        } catch (error) {
+            console.error(error)
+            setOpenSnackbar({ open: true, message: "Falló la operación" })
+        }
+    }
+    const handleCloseSnackbar = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
     return (
         <React.Fragment>
+            {
+                openBackdrop &&
+            <Backdrop open={true}>
+                    <CircularProgress color="inherit" />
+            </Backdrop>
+}
+            {
+                openSnackbar &&
+                <Snackbar open={openSnackbar.open} autoHideDuration={2000} onClose={handleCloseSnackbar} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
+                    <Alert onClose={handleCloseSnackbar} severity="info">
+                        {openSnackbar.message}
+                    </Alert>
+                </Snackbar>
+            }
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
@@ -141,7 +187,7 @@ export default function OurTable({ data, cols, objectKeys }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((r, i) => (
+                        {data.slice(0, 5).map((r, i) => (
                             <TableRow key={i}>
                                 {cols.map((c) => (
                                     <TableCell key={c.key}>{r[c.key]}</TableCell>
@@ -162,7 +208,7 @@ export default function OurTable({ data, cols, objectKeys }) {
                         No
                     </Button>
                     <Button
-                        onClick={handleFormatData}
+                        onClick={handleImportData}
                         size="small"
                         variant="outlined"
                         color="primary"

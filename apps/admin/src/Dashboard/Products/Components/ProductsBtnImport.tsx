@@ -40,8 +40,8 @@ export default function FullScreenDialog() {
         setOpenDialog(true);
     };
 
-    const handleCloseDialog = () => {
-        setOpenDialog(false);
+    const handleCloseDialog = (param) => {
+        setOpenDialog(param);
     };
 
     return (
@@ -62,7 +62,7 @@ export default function FullScreenDialog() {
                     </Toolbar>
                 </AppBar>
                 <List>
-                    <SheetJSApp />
+                    <SheetJSApp handleCloseDialog= {handleCloseDialog} />
                 </List>
             </Dialog>
         </div>

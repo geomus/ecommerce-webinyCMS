@@ -17,7 +17,7 @@ const make_cols = (refstr) => {
     }
     return o;
 };
-export default function SheetJSApp() {
+export default function SheetJSApp({handleCloseDialog}) {
     const [state, setState] = useState({
         data: [],
         cols: []
@@ -95,7 +95,7 @@ export default function SheetJSApp() {
             </div>
             <div className="row">
                 <div className="col-xs-12">
-                    <OutTable data={state.data} cols={state.cols} objectKeys={objectKeys} />
+                    <OutTable handleCloseDialog={handleCloseDialog} data={state.data} cols={state.cols} objectKeys={objectKeys} />
                 </div>
             </div>
         </DragDropFile>
