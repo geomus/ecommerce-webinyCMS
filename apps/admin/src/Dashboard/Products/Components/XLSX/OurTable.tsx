@@ -42,24 +42,25 @@ export default function OurTable({ data, cols, objectKeys }) {
     formatObjectKeys["notValid"] = null;
     const keys = Object.keys(formatObjectKeys);
 
-    cols.forEach((c) => {
+    let newCols = cols.map((c) => c);
+    newCols.forEach((c) => {
         c.name = "notValid";
         c.used = false;
     });
-
+    const [headerState, setHeaderState] = React.useState(newCols);
     const handleFormatData = () => {
         const finalData = [];
-        cols.forEach((c) => {
+        newCols.forEach((c) => {
             delete c["key"];
             delete c["used"];
-            cols.push(c.name);
+            newCols.push(c.name);
             delete c["name"];
         });
-        cols = cols.filter((value) => Object.keys(value).length !== 0);
+        newCols = newCols.filter((value) => Object.keys(value).length !== 0);
         for (let i = 0; i < data.length; i++) {
             const prod = {};
             for (let j = 0; j < data[i].length; j++) {
-                prod[cols[j]] = data[i][j];
+                prod[newCols[j]] = data[i][j];
                 delete prod["notValid"];
             }
             finalData.push(prod);
@@ -71,8 +72,8 @@ export default function OurTable({ data, cols, objectKeys }) {
         const value = event.target.value.toString();
 
         let usedKey = false;
-        for (let i = 0; i < cols.length; i++) {
-            if (cols[i].name == value) {
+        for (let i = 0; i < newCols.length; i++) {
+            if (newCols[i].name == value) {
                 usedKey = true;
                 break;
             } else {
@@ -81,15 +82,15 @@ export default function OurTable({ data, cols, objectKeys }) {
         }
 
         if (!usedKey) {
-            cols[index].name = value;
-            cols[index].used = true;
+            newCols[index].name = value;
+            newCols[index].used = true;
             console.log("libre");
         } else {
             console.log("ya existo");
         }
     };
     const handleReset = () => {
-        cols.forEach((c) => {
+        newCols.forEach((c) => {
             c.name = "notValid";
             c.used = false;
         });
@@ -101,7 +102,7 @@ export default function OurTable({ data, cols, objectKeys }) {
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            {cols.map((c) => (
+                            {newCols.map((c) => (
                                 <TableCell key={c.key}>
                                     <FormControl className={classes.formControl}>
                                         <InputLabel id="column-select-label">Etiqueta</InputLabel>
@@ -135,7 +136,7 @@ export default function OurTable({ data, cols, objectKeys }) {
                     <TableBody>
                         {data.map((r, i) => (
                             <TableRow key={i}>
-                                {cols.map((c) => (
+                                {newCols.map((c) => (
                                     <TableCell key={c.key}>{r[c.key]}</TableCell>
                                 ))}
                             </TableRow>
