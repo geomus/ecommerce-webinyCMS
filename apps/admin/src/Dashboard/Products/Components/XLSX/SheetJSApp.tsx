@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
-import { products } from '../../../../graphql/query';
+import { products } from "../../../../graphql/query";
 import XLSX from "xlsx";
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress } from "@material-ui/core";
 import DragDropFile from "./DragDropFile";
 import DataInput from "./DataInput";
 import OutTable from "./OurTable";
@@ -37,7 +37,7 @@ export default function SheetJSApp() {
         console.dir(error);
         return <h1> error </h1>;
     }
-    const objectKeys = data.products.listProducts.data[0]
+    const objectKeys = data.products.listProducts.data[0];
 
     function handleFile(file /*:File*/) {
         /* Boilerplate to set up FileReader */
@@ -52,8 +52,13 @@ export default function SheetJSApp() {
             const ws = wb.Sheets[wsname];
             /* Convert array of arrays */
             const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+            const newCols = make_cols(ws["!ref"]);
+            newCols.forEach((c) => {
+                c.name = "notValid";
+                c.used = false;
+            });
             /* Update state */
-            setState({ data: data, cols: make_cols(ws["!ref"]) });
+            setState({ data: data, cols: newCols });
         };
         if (rABS) {
             reader.readAsBinaryString(file);
@@ -69,8 +74,6 @@ export default function SheetJSApp() {
         /* generate XLSX file and send to client */
         XLSX.writeFile(wb, "sheetjs.xlsx");
     }
-
-    console.log(state);
 
     return (
         <DragDropFile handleFile={handleFile}>

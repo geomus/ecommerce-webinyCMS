@@ -8,10 +8,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
+import { Dialog, IconButton } from "@material-ui/core";
+import { DialogActions } from "@material-ui/core";
+import { DialogContent } from "@material-ui/core";
+import { DialogContentText } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,25 +45,21 @@ export default function OurTable({ data, cols, objectKeys }) {
     formatObjectKeys["notValid"] = null;
     const keys = Object.keys(formatObjectKeys);
 
-    let newCols = cols.map((c) => c);
-    newCols.forEach((c) => {
-        c.name = "notValid";
-        c.used = false;
-    });
-    const [headerState, setHeaderState] = React.useState(newCols);
+    const [open, setOpen] = React.useState(false);
+
     const handleFormatData = () => {
         const finalData = [];
-        newCols.forEach((c) => {
+        cols.forEach((c) => {
             delete c["key"];
             delete c["used"];
-            newCols.push(c.name);
+            cols.push(c.name);
             delete c["name"];
         });
-        newCols = newCols.filter((value) => Object.keys(value).length !== 0);
+        cols = cols.filter((value) => Object.keys(value).length !== 0);
         for (let i = 0; i < data.length; i++) {
             const prod = {};
             for (let j = 0; j < data[i].length; j++) {
-                prod[newCols[j]] = data[i][j];
+                prod[cols[j]] = data[i][j];
                 delete prod["notValid"];
             }
             finalData.push(prod);
@@ -68,12 +67,26 @@ export default function OurTable({ data, cols, objectKeys }) {
         console.log(finalData);
     };
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleReset = () => {
+        cols.forEach((c) => {
+            c.name = "notValid";
+            c.used = false;
+        });
+    };
+
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>, index) => {
         const value = event.target.value.toString();
 
         let usedKey = false;
-        for (let i = 0; i < newCols.length; i++) {
-            if (newCols[i].name == value) {
+        for (let i = 0; i < cols.length; i++) {
+            if (cols[i].name == value) {
                 usedKey = true;
                 break;
             } else {
@@ -82,18 +95,12 @@ export default function OurTable({ data, cols, objectKeys }) {
         }
 
         if (!usedKey) {
-            newCols[index].name = value;
-            newCols[index].used = true;
+            cols[index].name = value;
+            cols[index].used = true;
             console.log("libre");
         } else {
             console.log("ya existo");
         }
-    };
-    const handleReset = () => {
-        newCols.forEach((c) => {
-            c.name = "notValid";
-            c.used = false;
-        });
     };
 
     return (
@@ -102,7 +109,7 @@ export default function OurTable({ data, cols, objectKeys }) {
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            {newCols.map((c) => (
+                            {cols.map((c) => (
                                 <TableCell key={c.key}>
                                     <FormControl className={classes.formControl}>
                                         <InputLabel id="column-select-label">Etiqueta</InputLabel>
@@ -136,7 +143,7 @@ export default function OurTable({ data, cols, objectKeys }) {
                     <TableBody>
                         {data.map((r, i) => (
                             <TableRow key={i}>
-                                {newCols.map((c) => (
+                                {cols.map((c) => (
                                     <TableCell key={c.key}>{r[c.key]}</TableCell>
                                 ))}
                             </TableRow>
@@ -144,10 +151,31 @@ export default function OurTable({ data, cols, objectKeys }) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Button onClick={handleFormatData} variant="outlined" color="inherit">
+            <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        ¿Desea realizar la carga masiva de productos?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} size="small" variant="contained" color="primary">
+                        No
+                    </Button>
+                    <Button
+                        onClick={handleFormatData}
+                        size="small"
+                        variant="outlined"
+                        color="primary"
+                        autoFocus
+                    >
+                        Si
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <IconButton aria-label="addMany" color="default" onClick={handleClickOpen}>
                 GUARDAR
-            </Button>
-            <Button onClick={handleReset} variant="outlined" color="inherit">
+            </IconButton>
+            <Button onClick={handleReset} color="default">
                 RESET
             </Button>
         </React.Fragment>
