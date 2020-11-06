@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Addons } from "@webiny/app/components";
 import { getPlugins } from "@webiny/plugins";
 import { PbPageLayoutComponentPlugin } from "@webiny/app-page-builder/types";
+import { CartProvider } from "../components/utils/context";
 
 const Ecommerce = ({ children }) => {
     const { header: Header, footer: Footer }: any = useMemo(() => {
@@ -14,10 +15,12 @@ const Ecommerce = ({ children }) => {
 
     return (
         <React.Fragment>
-            <Addons />
-            <Header />
-            {children}
-            <Footer />
+            <CartProvider>
+                <Addons />
+                <Header />
+                {children}
+                <Footer />
+            </CartProvider>
         </React.Fragment>
     );
 };

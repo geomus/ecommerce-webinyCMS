@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "@webiny/react-router";
 import { Menu } from "@webiny/app-page-builder/render/components";
 import Navigation from "./Navigation";
+import ButtonCartHome from "./ButtonCartHome";
 
 const DesktopHeader = ({
     menuName,
@@ -26,6 +27,9 @@ const DesktopHeader = ({
                         <span className={"webiny-pb-section-header__site-name"}>{name}</span>
                     )}
                 </Link>
+            </div>
+            <div>
+                <ButtonCartHome />
             </div>
             <nav className={"webiny-pb-section-header__navigation"}>
                 <Menu slug={menuName} component={Navigation} />
