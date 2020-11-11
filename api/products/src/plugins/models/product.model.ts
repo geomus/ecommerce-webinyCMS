@@ -1,5 +1,5 @@
 // @ts-ignore
-import {withFields,withName,string,boolean,number, pipe, withProps, onSet} from "@webiny/commodo";
+import { withFields, withName, string, boolean, number, pipe, withProps, onSet } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 import slugify from "slugify";
 
@@ -16,12 +16,13 @@ export default ({ createBase }) =>
             description: string({ validation: validation.create("maxLength:500") }),
             priceBase: number(),
             prices: string({
-                list: true,
+                list: true
             }),
+            category: string({ list: true }),
             images: string({ list: true }),
             tags: string({ list: true }),
-            isPublished: boolean({ value: true }), // ¿Està publicado?
-            isFeatured: boolean({ value: false }) // ¿Està destacado?
+            isPublished: boolean({ value: true }),
+            isFeatured: boolean({ value: false })
         })),
         withProps({
             get shortDescription() {

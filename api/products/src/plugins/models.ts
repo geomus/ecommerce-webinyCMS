@@ -3,6 +3,7 @@ import { withStorage, withCrudLogs, withSoftDelete, withFields, pipe} from "@web
 import { withUser } from "@webiny/api-security";
 import product from "./models/product.model";
 import price from "./models/price.model";
+import category from "./models/category.model";
 
 export default () => ({
     name: "context-models",
@@ -30,6 +31,7 @@ export default () => ({
         context.models = {
             Product: product({ createBase,  }),
             Price: price({ createBase  }),
+            Category: category({ createBase  }),
             createBase
         };
     }

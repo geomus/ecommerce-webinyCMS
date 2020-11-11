@@ -12,6 +12,7 @@ export default  [{
       return (
         <Menu name="products" icon={<AllInboxIcon />} label="Products">
             <Item label={"Products List"} path="/products" />
+            <Item label={"Categories"} path="/categories" />
             <Item label={"Prices"} path="/prices" />
         </Menu>
       );

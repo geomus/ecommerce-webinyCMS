@@ -209,7 +209,7 @@ export const deleteFile = gql`
 export const getFile = gql`
     query getFile($key: String!) {
         files {
-            getFile(where:{key: $key}){
+            getFile(where: { key: $key }) {
                 data {
                     id
                     name
@@ -366,6 +366,34 @@ export const createProducts = gql`
                 }
                 error {
                     data
+                }
+            }
+        }
+    }
+`;
+
+export const listCategories = gql`
+    query listCategory {
+        categories {
+            listCategory {
+                data {
+                    name
+                    category
+                    subcategories
+                }
+            }
+        }
+    }
+`;
+
+export const createCategory = gql`
+    mutation createPrice($data: PriceInput!) {
+        prices {
+            createPrice(data: $data) {
+                data {
+                    name
+                    percent
+                    default
                 }
             }
         }

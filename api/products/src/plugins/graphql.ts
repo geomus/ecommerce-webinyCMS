@@ -14,6 +14,8 @@ import resolveBulkImport from './resolveBulkImport'
 
 const productFetcher = (ctx) => ctx.models.Product;
 const priceFetcher = (ctx) => ctx.models.Price;
+const categoryFetcher = (ctx) => ctx.models.Category;
+
 
 const plugin: GraphQLSchemaPlugin = {
     type: "graphql-schema",
@@ -28,13 +30,20 @@ const plugin: GraphQLSchemaPlugin = {
                 data: Boolean
                 error: PriceError
             }
+            type CategoryDeleteResponse {
+                data: Boolean
+                error: CategoryError
+            }
 
             type ProductCursors {
                 next: String
                 previous: String
             }
-
             type PriceCursors {
+                next: String
+                previous: String
+            }
+            type CategoryCursors {
                 next: String
                 previous: String
             }
@@ -53,6 +62,13 @@ const plugin: GraphQLSchemaPlugin = {
                 totalCount: Int
             }
 
+            type CategoryListMeta {
+                cursors: CategoryCursors
+                hasNextPage: Boolean
+                hasPreviousPage: Boolean
+                totalCount: Int
+            }
+
             type ProductError {
                 code: String
                 message: String
@@ -65,11 +81,24 @@ const plugin: GraphQLSchemaPlugin = {
                 data: JSON
             }
 
+            type CategoryError {
+                code: String
+                message: String
+                data: JSON
+            }
+
             type Price {
                 id: ID
                 name: String
                 percent: Int
                 default: Boolean
+            }
+
+            type Category {
+                id: ID
+                name: String
+                category: String
+                subcategories: [String]
             }
 
             type Product {
@@ -80,6 +109,7 @@ const plugin: GraphQLSchemaPlugin = {
                 description: String
                 priceBase: Float
                 prices: [String]
+                category: [String]
                 images: [String]
                 tags: [String]
                 isPublished: Boolean
@@ -94,6 +124,13 @@ const plugin: GraphQLSchemaPlugin = {
                 default: Boolean
             }
 
+            input CategoryInput {
+                id: ID
+                name: String
+                category: String
+                subcategories: [String]
+            }
+
             input ProductInput {
                 id: ID
                 sku: String
@@ -101,6 +138,7 @@ const plugin: GraphQLSchemaPlugin = {
                 slug: String
                 description: String
                 priceBase: Int
+                category: [String]
                 prices: [String]
                 images: [String]
                 tags: [String]
@@ -112,10 +150,16 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 isPublished: Boolean                
                 sku: String
+                category: [String]
             }
 
             input PriceListWhere {
                 name: String
+            }
+
+            input CategoryListWhere {
+                name: String
+                subcategories: [String]
             }
 
             input ProductListSort {
@@ -140,6 +184,11 @@ const plugin: GraphQLSchemaPlugin = {
                 error: PriceError
             }
 
+            type CategoryResponse {
+                data: Category
+                error: CategoryError
+            }
+
             type ProductListResponse {
                 data: [Product]
                 meta: ProductListMeta
@@ -150,6 +199,12 @@ const plugin: GraphQLSchemaPlugin = {
                 data: [Price]
                 meta: PriceListMeta
                 error: PriceError
+            }
+
+            type CategoryListResponse {
+                data: [Category]
+                meta: CategoryListMeta
+                error: CategoryError
             }
 
             type ProductQuery {
@@ -171,6 +226,12 @@ const plugin: GraphQLSchemaPlugin = {
                 listPrices(where: PriceListWhere): PriceListResponse
             }
 
+            type CategoryQuery {
+                getCategory(id: ID): CategoryResponse
+
+                listCategory(where: CategoryListWhere): CategoryListResponse
+            }
+
             type ProductMutation {
                 createProduct(data: ProductInput!): ProductResponse
 
@@ -189,24 +250,36 @@ const plugin: GraphQLSchemaPlugin = {
                 deletePrice(id: ID!): PriceDeleteResponse
             }
 
+            type CategoryMutation {
+                createCategory(data: CategoryInput!): CategoryResponse
+
+                updateCategory(id: ID!, data: CategoryInput!): CategoryResponse
+
+                deleteCategory(id: ID!): CategoryDeleteResponse
+            }
+
             extend type Query {
                 products: ProductQuery
                 prices: PriceQuery
+                categories: CategoryQuery
             }
 
             extend type Mutation {
                 products: ProductMutation
                 prices: PriceMutation
+                categories: CategoryMutation
             }
         `,
         resolvers: {
             Query: {
                 products: emptyResolver,
-                prices: emptyResolver
+                prices: emptyResolver,
+                category: emptyResolver
             },
             Mutation: {
                 products: emptyResolver,
-                prices: emptyResolver
+                prices: emptyResolver,
+                category: emptyResolver
             },
             ProductQuery: {
                 getProduct: hasScope("products:get")(resolveGet(productFetcher)),
@@ -215,6 +288,10 @@ const plugin: GraphQLSchemaPlugin = {
             PriceQuery: {
                 getPrice: hasScope("prices:get")(resolveGet(priceFetcher)),
                 listPrices: hasScope("prices:list")(resolveList(priceFetcher))
+            },
+            CategoryQuery: {
+                getCategory: hasScope("category:get")(resolveGet(categoryFetcher)),
+                listCategory: hasScope("category:list")(resolveList(categoryFetcher))
             },
             ProductMutation: {
                 createProduct: hasScope("products:create")(resolveCreate(productFetcher)),
@@ -226,6 +303,11 @@ const plugin: GraphQLSchemaPlugin = {
                 createPrice: hasScope("prices:create")(resolveCreate(priceFetcher)),
                 updatePrice: hasScope("prices:update")(resolveUpdate(priceFetcher)),
                 deletePrice: hasScope("prices:delete")(resolveDelete(priceFetcher))
+            },
+            CategoryMutation: {
+                createCategory: hasScope("category:create")(resolveCreate(categoryFetcher)),
+                updateCategory: hasScope("category:update")(resolveUpdate(categoryFetcher)),
+                deleteCategory: hasScope("category:delete")(resolveDelete(categoryFetcher))
             }
         }
     }
