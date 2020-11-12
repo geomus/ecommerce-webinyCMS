@@ -2,7 +2,6 @@ import React from 'react';
 import { lighten, makeStyles, Toolbar, } from '@material-ui/core';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import PricesCategoryBtnCreate from './PricesListBtnCreate';
 
 
 const useToolbarStyles = makeStyles((theme) => ({
@@ -25,7 +24,7 @@ const useToolbarStyles = makeStyles((theme) => ({
     }
 }));
 
-const OrdersTableToolbar = (props) => {
+const categoriesToolbar = (props) => {
     const classes = useToolbarStyles();
     const { numSelected } = props;
 
@@ -39,8 +38,8 @@ const OrdersTableToolbar = (props) => {
     );
 }
 
-export default OrdersTableToolbar;
+export default categoriesToolbar;
 
-OrdersTableToolbar.propTypes = {
+categoriesToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
 };

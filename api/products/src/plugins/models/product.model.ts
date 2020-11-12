@@ -18,7 +18,9 @@ export default ({ createBase }) =>
             prices: string({
                 list: true
             }),
-            category: string({ list: true }),
+            category: string({ 
+                list: true 
+            }),
             images: string({ list: true }),
             tags: string({ list: true }),
             isPublished: boolean({ value: true }),

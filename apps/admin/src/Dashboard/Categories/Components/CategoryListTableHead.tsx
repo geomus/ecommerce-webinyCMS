@@ -4,10 +4,8 @@ import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/cor
 
 
 const headCells = [
-    { id: 'name', disablePadding: false, disableSort: false, label: 'Lista' },
-    { id: 'priceBase', disablePadding: false, disableSort: false, label: 'Precio Base' },
-    { id: 'percent', disablePadding: false, disableSort: false, label: 'Porcentaje' },
-    { id: 'finalPrice', disablePadding: false, disableSort: false, label: 'Precio Final' },
+    { id: 'name', disablePadding: false, disableSort: false, label: 'Subcategorías' },
+    { id: 'subcategories', disablePadding: false, disableSort: false, label: 'Cant. Subcategorías' }
 
 ];
 const ProductsTableHead = (props) => {

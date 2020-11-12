@@ -10,12 +10,11 @@ import {
     resolveUpdate
 } from "@webiny/commodo-graphql";
 
-import resolveBulkImport from './resolveBulkImport'
+import resolveBulkImport from "./resolveBulkImport";
 
 const productFetcher = (ctx) => ctx.models.Product;
 const priceFetcher = (ctx) => ctx.models.Price;
 const categoryFetcher = (ctx) => ctx.models.Category;
-
 
 const plugin: GraphQLSchemaPlugin = {
     type: "graphql-schema",
@@ -148,7 +147,7 @@ const plugin: GraphQLSchemaPlugin = {
 
             input ProductListWhere {
                 name: String
-                isPublished: Boolean                
+                isPublished: Boolean
                 sku: String
                 category: [String]
             }
@@ -159,6 +158,7 @@ const plugin: GraphQLSchemaPlugin = {
 
             input CategoryListWhere {
                 name: String
+                category: String
                 subcategories: [String]
             }
 
@@ -169,6 +169,12 @@ const plugin: GraphQLSchemaPlugin = {
             }
 
             input ProductSearchInput {
+                query: String
+                fields: [String]
+                operator: String
+            }
+
+            input CategorySearchInput {
                 query: String
                 fields: [String]
                 operator: String
@@ -229,7 +235,13 @@ const plugin: GraphQLSchemaPlugin = {
             type CategoryQuery {
                 getCategory(id: ID): CategoryResponse
 
-                listCategory(where: CategoryListWhere): CategoryListResponse
+                listCategory(
+                    where: CategoryListWhere
+                    search: CategorySearchInput
+                    limit: Int
+                    after: String
+                    before: String
+                ): CategoryListResponse
             }
 
             type ProductMutation {
@@ -274,12 +286,12 @@ const plugin: GraphQLSchemaPlugin = {
             Query: {
                 products: emptyResolver,
                 prices: emptyResolver,
-                category: emptyResolver
+                categories: emptyResolver
             },
             Mutation: {
                 products: emptyResolver,
                 prices: emptyResolver,
-                category: emptyResolver
+                categories: emptyResolver
             },
             ProductQuery: {
                 getProduct: hasScope("products:get")(resolveGet(productFetcher)),

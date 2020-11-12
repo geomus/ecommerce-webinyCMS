@@ -377,9 +377,13 @@ export const listCategories = gql`
         categories {
             listCategory {
                 data {
+                    id
                     name
                     category
                     subcategories
+                }
+                error {
+                    message
                 }
             }
         }
@@ -387,13 +391,35 @@ export const listCategories = gql`
 `;
 
 export const createCategory = gql`
-    mutation createPrice($data: PriceInput!) {
-        prices {
-            createPrice(data: $data) {
+    mutation createCategory($data: CategoryInput!) {
+        categories {
+            createCategory(data: $data) {
                 data {
+                    id
                     name
-                    percent
-                    default
+                    category
+                    subcategories
+                }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const listParentCategories = gql`
+    query listCategory($searchVariable: CategorySearchInput) {
+        categories {
+            listCategory (search: $searchVariable) {
+                data {
+                    id
+                    name
+                    category
+                    subcategories
+                }
+                error {
+                    message
                 }
             }
         }
