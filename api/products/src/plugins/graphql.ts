@@ -14,6 +14,7 @@ import resolveBulkImport from './resolveBulkImport'
 
 const productFetcher = (ctx) => ctx.models.Product;
 const priceFetcher = (ctx) => ctx.models.Price;
+const propertyFetcher = (ctx) => ctx.models.Property;
 
 const plugin: GraphQLSchemaPlugin = {
     type: "graphql-schema",
@@ -28,13 +29,20 @@ const plugin: GraphQLSchemaPlugin = {
                 data: Boolean
                 error: PriceError
             }
+            type PropertyDeleteResponse {
+                data: Boolean
+                error: PropertyError
+            }
 
             type ProductCursors {
                 next: String
                 previous: String
             }
-
             type PriceCursors {
+                next: String
+                previous: String
+            }
+            type PropertyCursors {
                 next: String
                 previous: String
             }
@@ -45,9 +53,14 @@ const plugin: GraphQLSchemaPlugin = {
                 hasPreviousPage: Boolean
                 totalCount: Int
             }
-
             type PriceListMeta {
                 cursors: PriceCursors
+                hasNextPage: Boolean
+                hasPreviousPage: Boolean
+                totalCount: Int
+            }
+            type PropertyListMeta {
+                cursors: PropertyCursors
                 hasNextPage: Boolean
                 hasPreviousPage: Boolean
                 totalCount: Int
@@ -58,8 +71,12 @@ const plugin: GraphQLSchemaPlugin = {
                 message: String
                 data: JSON
             }
-
             type PriceError {
+                code: String
+                message: String
+                data: JSON
+            }
+            type PropertyError {
                 code: String
                 message: String
                 data: JSON
@@ -71,7 +88,6 @@ const plugin: GraphQLSchemaPlugin = {
                 percent: Int
                 default: Boolean
             }
-
             type Product {
                 id: ID
                 sku: String
@@ -84,16 +100,39 @@ const plugin: GraphQLSchemaPlugin = {
                 tags: [String]
                 isPublished: Boolean
                 isFeatured: Boolean
+                variantProperty: [Property]
+                variants: [ProductVariant]
                 createdOn: DateTime
             }
+            type Property {
+                id: ID
+                name: String
+                valueType: String
+            }
+            type ProductVariant {
+                id: ID
+                name: String
+                propertyValues: String
+                stock: Int
+            }
 
+            input PropertyInput {
+                id: ID
+                name: String
+                valueType: String
+            }
+            input ProductVariantInput {
+                id: ID
+                name: String
+                propertyValues: String
+                stock: Int
+            }
             input PriceInput {
                 id: ID
                 name: String
                 percent: Int
                 default: Boolean
             }
-
             input ProductInput {
                 id: ID
                 sku: String
@@ -106,6 +145,8 @@ const plugin: GraphQLSchemaPlugin = {
                 tags: [String]
                 isPublished: Boolean
                 isFeatured: Boolean
+                variantProperty: [PropertyInput]
+                variants: [ProductVariantInput]
             }
 
             input ProductListWhere {
@@ -113,8 +154,10 @@ const plugin: GraphQLSchemaPlugin = {
                 isPublished: Boolean                
                 sku: String
             }
-
             input PriceListWhere {
+                name: String
+            }
+            input PropertyListWhere {
                 name: String
             }
 
@@ -134,10 +177,13 @@ const plugin: GraphQLSchemaPlugin = {
                 data: Product
                 error: ProductError
             }
-
             type PriceResponse {
                 data: Price
                 error: PriceError
+            }
+            type PropertyResponse {
+                data: Property
+                error: PropertyError
             }
 
             type ProductListResponse {
@@ -145,11 +191,15 @@ const plugin: GraphQLSchemaPlugin = {
                 meta: ProductListMeta
                 error: ProductError
             }
-
             type PriceListResponse {
                 data: [Price]
                 meta: PriceListMeta
                 error: PriceError
+            }
+            type PropertyListResponse {
+                data: [Property]
+                meta: PropertyListMeta
+                error: PropertyError
             }
 
             type ProductQuery {
@@ -171,6 +221,12 @@ const plugin: GraphQLSchemaPlugin = {
                 listPrices(where: PriceListWhere): PriceListResponse
             }
 
+            type PropertyQuery {
+                getProperty(id: ID): PropertyResponse
+
+                listProperties(where: PropertyListWhere): PropertyListResponse
+            }
+
             type ProductMutation {
                 createProduct(data: ProductInput!): ProductResponse
 
@@ -189,24 +245,36 @@ const plugin: GraphQLSchemaPlugin = {
                 deletePrice(id: ID!): PriceDeleteResponse
             }
 
+            type PropertyMutation {
+                createProperty(data: PropertyInput!): PropertyResponse
+
+                updateProperty(id: ID!, data: PropertyInput!): PropertyResponse
+
+                deleteProperty(id: ID!): PropertyDeleteResponse
+            }
+
             extend type Query {
                 products: ProductQuery
                 prices: PriceQuery
+                properties: PropertyQuery
             }
 
             extend type Mutation {
                 products: ProductMutation
                 prices: PriceMutation
+                properties: PropertyMutation
             }
         `,
         resolvers: {
             Query: {
                 products: emptyResolver,
-                prices: emptyResolver
+                prices: emptyResolver,
+                properties: emptyResolver
             },
             Mutation: {
                 products: emptyResolver,
-                prices: emptyResolver
+                prices: emptyResolver,
+                properties: emptyResolver
             },
             ProductQuery: {
                 getProduct: hasScope("products:get")(resolveGet(productFetcher)),
@@ -215,6 +283,10 @@ const plugin: GraphQLSchemaPlugin = {
             PriceQuery: {
                 getPrice: hasScope("prices:get")(resolveGet(priceFetcher)),
                 listPrices: hasScope("prices:list")(resolveList(priceFetcher))
+            },
+            PropertyQuery: {
+                getProperty: hasScope("properties:get")(resolveGet(propertyFetcher)),
+                listProperties: hasScope("properties:list")(resolveList(propertyFetcher))
             },
             ProductMutation: {
                 createProduct: hasScope("products:create")(resolveCreate(productFetcher)),
@@ -226,6 +298,11 @@ const plugin: GraphQLSchemaPlugin = {
                 createPrice: hasScope("prices:create")(resolveCreate(priceFetcher)),
                 updatePrice: hasScope("prices:update")(resolveUpdate(priceFetcher)),
                 deletePrice: hasScope("prices:delete")(resolveDelete(priceFetcher))
+            },
+            PropertyMutation: {
+                createProperty: hasScope("properties:create")(resolveCreate(propertyFetcher)),
+                updateProperty: hasScope("properties:update")(resolveUpdate(propertyFetcher)),
+                deleteProperty: hasScope("properties:delete")(resolveDelete(propertyFetcher))
             }
         }
     }

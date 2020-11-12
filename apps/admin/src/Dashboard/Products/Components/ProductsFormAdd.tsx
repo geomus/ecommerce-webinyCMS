@@ -22,6 +22,7 @@ import {
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsCheckboxPricesCategory from './ProductsCheckboxPricesCategory'
+import SelectProperty from './SelectProperty'
 
 
 function Alert(props: AlertProps) {
@@ -110,7 +111,7 @@ export default function ProductForm({ handleCloseDialog }) {
 
         try {
             const presignedPostData = await getPresignedPostData(selectedFile);
-            const { file } = selectedFile.src;            
+            const { file } = selectedFile.src;
 
             await uploadFileToS3(presignedPostData, file);
             await createFileDB({
@@ -123,7 +124,7 @@ export default function ProductForm({ handleCloseDialog }) {
                         tags: ["producto"]
                     }
                 }
-            });            
+            });
             return presignedPostData.fields.key;
         } catch (e) {
             console.log("An error occurred!", e.message);
@@ -148,13 +149,13 @@ export default function ProductForm({ handleCloseDialog }) {
         setPrice(price);
     };
     const handleIdPrices = (event) => {
-        const idValue = event.currentTarget.id       
+        const idValue = event.currentTarget.id
         console.log(event.target.checked);
         if (event.target.checked) {
-        const id = idPrices
-        id.push( idValue )
-        setIdPrices(id);
-        console.log(idPrices);
+            const id = idPrices
+            id.push(idValue)
+            setIdPrices(id);
+            console.log(idPrices);
         }
     };
     const handleChangeImages = (selectedFiles) => {
@@ -189,7 +190,7 @@ export default function ProductForm({ handleCloseDialog }) {
             tags: tags,
             isFeatured: isFeatured,
         };
-        
+
         try {
             await addProduct({ variables: { data: product } });
 
@@ -201,11 +202,11 @@ export default function ProductForm({ handleCloseDialog }) {
             setIsLoading(false);
         }
     };
-    
-    const { loading, error, data } =  useQuery(listPrices)
+
+    const { loading, error, data } = useQuery(listPrices)
 
     useEffect(() => {
-        if(!loading && data) {
+        if (!loading && data) {
             const objectForStatePrices = data.prices.listPrices.data.map(price => {
                 const idStatePrices = price.id + 'state'
                 const objectForStatePrices = { [idStatePrices]: false }
@@ -285,6 +286,9 @@ export default function ProductForm({ handleCloseDialog }) {
                                     </FormHelperText>
                                 </FormControl>
                                 <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} data={data} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <SelectProperty />
                             </Grid>
                             <Grid item xs={12}>
                                 <InputLabel >Imágenes</InputLabel>
