@@ -13,6 +13,10 @@ export const products = gql`
                     tags
                     isFeatured
                     isPublished
+                    variants {
+                        name
+                        propertyValues
+                    }
                 }
             }
         }
@@ -32,6 +36,10 @@ export const product = gql`
                     tags
                     isFeatured
                     isPublished
+                    variants {
+                        name
+                        propertyValues
+                    }
                 }
             }
         }
@@ -51,6 +59,10 @@ export const productsFilter = gql`
                     tags
                     isPublished
                     isFeatured
+                    variants {
+                        name
+                        propertyValues
+                    }
                 }
             }
         }
@@ -72,6 +84,11 @@ export const createProduct = gql`
                     tags
                     isPublished
                     isFeatured
+                    variantProperties
+                    variants {
+                        name
+                        propertyValues
+                    }
                 }
                 error {
                     data

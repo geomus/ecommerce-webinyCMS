@@ -1,55 +1,52 @@
 /* eslint-disable no-use-before-define */
-import React from 'react';
-import Chip from '@material-ui/core/Chip';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import { useQuery } from '@apollo/client'
 import { listProperties } from '../../../graphql/query'
-import { LinearProgress } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: 500,
-    '& > * + *': {
-      marginTop: theme.spacing(3),
+const useStyles = makeStyles(() => ({
+    root: {
+        width: "100%",
+        display: "flex",
+        alignItems: "flex-end",
+        padding: "10px 0"
     },
-  },
+    textField: {
+        textTransform: "uppercase",
+        paddingRight: 10
+    },
+    inputField: {
+        border: 0,
+        borderBottom: "1px solid #000"
+    }
 }));
 
-export default function Tags() {
-  const classes = useStyles();
-  const {loading, error, data } = useQuery(listProperties)
+export default function Tags({handleChangeVariants}) {
+    const classes = useStyles();
+    const [propertyList, setPropertyList] = useState([{
+        id: null,
+        name: null
+    }])
+    
+    const { loading, error, data } = useQuery(listProperties)
+    useEffect(() => {
+        if (!loading && data) {
+            const properties = data.properties.listProperties.data    
+            setPropertyList(properties)
+        }
+    }, [loading, data])
+    
 
-  if (loading) {
     return (
-        <h1> <LinearProgress /> </h1>
-    )
-}
-
-if (error) {
-    console.dir(error)
-    return <h1> error </h1>;
-}
-
-
-
-  return (
-    <div className={classes.root}>
-      <Autocomplete
-        multiple
-        id="tags-standard"
-        options={data.properties.listProperties.data.map((option) => option.name)}     
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="standard"
-            label="Elija las variantes que tendrá el producto"
-            placeholder="Favorites"
-          />
-        )}
-      />
-    </div>
-  );
+        <div>
+                    {
+                        propertyList.map((item, i) => 
+                        <div key={i} className={classes.root}>
+                            <p className={classes.textField}>{item.name}:</p>
+                            <input className={classes.inputField} type="text" name={item.name} onBlur={handleChangeVariants} />
+                        </div>)
+                    }
+        </div >
+    );
 }
 

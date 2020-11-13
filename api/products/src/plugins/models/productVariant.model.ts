@@ -7,7 +7,7 @@ export default ({ createBase, context }) =>
         withName("ProductVariant"),
         withFields(() => ({
             name: string({ validation: validation.create("maxLength:20"), value: null }),
-            propertyValues: string(),
+            propertyValues: string({list:true}),
             stock: number({ value: null }),
             product: ref({
                 instanceOf: context.models.Product

@@ -22,10 +22,7 @@ pipe(
             tags: string({ list: true }),
             isPublished: boolean({ value: true }), 
             isFeatured: boolean({ value: false }),
-            variantProperties: ref({
-                list: true,
-                instanceOf: context.models.Property
-            }),
+            variantProperties: string({list:true}),
             variants: ref({
                 list: true, 
                 instanceOf: context.models.ProductVariant

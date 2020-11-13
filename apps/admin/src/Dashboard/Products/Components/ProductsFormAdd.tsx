@@ -80,6 +80,9 @@ export default function ProductForm({ handleCloseDialog }) {
     const [idPrices, setIdPrices] = useState([]);
     const [checkedPrices, setCheckedPrices] = useState([{}])
 
+    const [variantsProperties, setVariantProperties] = useState([])
+    const [productVariants, setProductVariants] = useState([])
+
     const uploadImage = async (selectedFile) => {
         const getPresignedPostData = async (selectedFile): Promise<any> => {
             const _data = {
@@ -172,6 +175,22 @@ export default function ProductForm({ handleCloseDialog }) {
     const handleChangeIsFeatured = (event) => {
         setIsFeatured(event.target.checked);
     };
+    const handleChangeVariants = (e) => {
+        const array = productVariants
+        const splitProperties = e.target.value.split(",")
+        const newObject = { 
+            name: e.currentTarget.name,
+            propertyValues: splitProperties
+        }
+        array.push(newObject)
+        setProductVariants(array)
+
+        const arrayVariants = variantsProperties
+        arrayVariants.push(e.currentTarget.name)
+        setVariantProperties(arrayVariants)
+        console.log(productVariants);
+        
+    }
     const onSubmit = async (e) => {
         setIsLoading(true);
         e.preventDefault();
@@ -189,7 +208,12 @@ export default function ProductForm({ handleCloseDialog }) {
             images: imagesKeys,
             tags: tags,
             isFeatured: isFeatured,
+            variantProperties: variantsProperties,
+            variants: productVariants
         };
+
+        console.log(product);
+        
 
         try {
             await addProduct({ variables: { data: product } });
@@ -288,7 +312,12 @@ export default function ProductForm({ handleCloseDialog }) {
                                 <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} data={data} />
                             </Grid>
                             <Grid item xs={12}>
-                                <SelectProperty />
+                                <FormControl>
+                                    <FormHelperText id="price-helper">
+                                        Selecciona las variantes del producto. (Separadas por comas)
+                                    </FormHelperText>
+                                    <SelectProperty handleChangeVariants={handleChangeVariants} />
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <InputLabel >Imágenes</InputLabel>

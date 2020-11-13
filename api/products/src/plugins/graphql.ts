@@ -100,7 +100,7 @@ const plugin: GraphQLSchemaPlugin = {
                 tags: [String]
                 isPublished: Boolean
                 isFeatured: Boolean
-                variantProperty: [Property]
+                variantProperties: [String]
                 variants: [ProductVariant]
                 createdOn: DateTime
             }
@@ -112,7 +112,7 @@ const plugin: GraphQLSchemaPlugin = {
             type ProductVariant {
                 id: ID
                 name: String
-                propertyValues: String
+                propertyValues: [String]
                 stock: Int
             }
 
@@ -124,7 +124,7 @@ const plugin: GraphQLSchemaPlugin = {
             input ProductVariantInput {
                 id: ID
                 name: String
-                propertyValues: String
+                propertyValues: [String]
                 stock: Int
             }
             input PriceInput {
@@ -145,7 +145,7 @@ const plugin: GraphQLSchemaPlugin = {
                 tags: [String]
                 isPublished: Boolean
                 isFeatured: Boolean
-                variantProperty: [PropertyInput]
+                variantProperties: [String]
                 variants: [ProductVariantInput]
             }
 
