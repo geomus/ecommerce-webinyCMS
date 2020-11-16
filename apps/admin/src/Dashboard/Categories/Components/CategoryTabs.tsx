@@ -6,11 +6,11 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { listCategories } from "../../../graphql/query";
+import { listParentCategories } from "../../../graphql/query";
 import { LinearProgress } from "@material-ui/core";
 import { useQuery } from "@apollo/client";
-import CategoryListTable from "./CategoryListTable";
-import PricesCategoryBtnCreate from "./PricesListBtnCreate";
+import CategoryListTable from "./CategoryTable";
+import CategoryBtnCreate from "./CategoryBtnCreate";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -55,11 +55,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function ListCategories() {
+export default function listParentsCategories() {
     const classes = useStyles();
     const [value, setValue] = useState(0);
 
-    const { loading, error, data } = useQuery(listCategories);
+
+    const { loading, error, data } = useQuery(listParentCategories);
 
     if (loading) {
         return (
@@ -83,15 +84,15 @@ export default function ListCategories() {
         <div className={classes.root}>
             <AppBar position="static">
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                    {data.categories.listCategory.data.map((price, index) => (
-                        <Tab key={price.id} label={price.name} {...a11yProps({ index })} />
+                    {data.categories.listCategories.data.map((category, index) => (
+                        <Tab key={category.id} label={category.name} {...a11yProps({ index })} />
                     ))}
                 </Tabs>
             </AppBar>
-            <PricesCategoryBtnCreate className={classes.btnCategoryCreate} />
-            {data.prices.listPrices.data.map((price, index) => (
-                <TabPanel key={price.id} value={value} index={index}>
-                    <CategoryListTable searchQuery={price.id} percent={price.percent} />
+            <CategoryBtnCreate className={classes.btnCategoryCreate} parentCategories={data.categories.listCategories.data} />
+            {data.categories.listCategories.data.map((category, index) => (
+                <TabPanel key={category.id} value={value} index={index}>
+                    <CategoryListTable categoryId={category.id} />
                 </TabPanel>
             ))}
         </div>

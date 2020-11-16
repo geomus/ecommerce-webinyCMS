@@ -96,7 +96,7 @@ const plugin: GraphQLSchemaPlugin = {
             type Category {
                 id: ID
                 name: String
-                category: String
+                parentId: String
                 subcategories: [String]
             }
 
@@ -126,7 +126,7 @@ const plugin: GraphQLSchemaPlugin = {
             input CategoryInput {
                 id: ID
                 name: String
-                category: String
+                parentId: String
                 subcategories: [String]
             }
 
@@ -158,7 +158,7 @@ const plugin: GraphQLSchemaPlugin = {
 
             input CategoryListWhere {
                 name: String
-                category: String
+                parentId: String
                 subcategories: [String]
             }
 
@@ -235,7 +235,7 @@ const plugin: GraphQLSchemaPlugin = {
             type CategoryQuery {
                 getCategory(id: ID): CategoryResponse
 
-                listCategory(
+                listCategories(
                     where: CategoryListWhere
                     search: CategorySearchInput
                     limit: Int
@@ -303,7 +303,7 @@ const plugin: GraphQLSchemaPlugin = {
             },
             CategoryQuery: {
                 getCategory: hasScope("category:get")(resolveGet(categoryFetcher)),
-                listCategory: hasScope("category:list")(resolveList(categoryFetcher))
+                listCategories: hasScope("category:list")(resolveList(categoryFetcher))
             },
             ProductMutation: {
                 createProduct: hasScope("products:create")(resolveCreate(productFetcher)),

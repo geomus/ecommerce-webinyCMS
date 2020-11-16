@@ -6,6 +6,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
@@ -18,12 +20,32 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createCategory, listCategories } from "../../../graphql/query";
+import { createCategory, updateCategory, listAllCategories, listParentCategories } from "../../../graphql/query";
 import { useMutation } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
+        layout: {
+            width: "auto",
+            marginLeft: theme.spacing(2),
+            marginRight: theme.spacing(2),
+            [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+                width: 600,
+                marginLeft: "auto",
+                marginRight: "auto"
+            }
+        },
+        paper: {
+            marginTop: theme.spacing(3),
+            marginBottom: theme.spacing(3),
+            padding: theme.spacing(2),
+            [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+                marginTop: theme.spacing(6),
+                marginBottom: theme.spacing(6),
+                padding: theme.spacing(3)
+            }
+        },
         appBar: {
             position: "relative"
         },
@@ -44,24 +66,28 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog({ className }) {
+export default function FullScreenDialog({ className, parentCategories }) {
+  console.log(parentCategories);
+  
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [checked, setChecked] = useState(false);
     const [name, setName] = useState("");
-    const [subcategories, setSubcategory] = useState(null);
-    const [category, setCategory] = useState(false);
+    const [parentId, setParentId] = useState(null);
+    const [subcategories, setSubcategories] = useState(null);
 
-    const [addProductCategory] = useMutation(createCategory, {
-        refetchQueries: () => [{ query: listCategories }]
+    const [addCategory] = useMutation(createCategory, {
+        refetchQueries: () => [{ query: listAllCategories && listParentCategories }]
     });
+    
+    const[patchCategory] = useMutation(updateCategory);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = (boolean) => {
-        setOpen(boolean);
+        setOpen(false);
     };
     const handleCloseSnackbar = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === "clickaway") {
@@ -72,22 +98,22 @@ export default function FullScreenDialog({ className }) {
     const handleName = (e) => {
         setName(e.target.value);
     };
-    const handleCategory = (e) => {
-        setSubcategory(e.target.value);
+    const handleparentId = (e) => {
+        setParentId(e.target.value);
     };
     const handleChangeCheckbox = (e) => {
         setChecked(e.target.checked);
-        setCategory(e.target.checked);
+        setSubcategories(e.target.checked);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const productCategory = {
+        const category = {
             name: name,
-            category: Number(subcategories),
+            parentId: Number(parentId),
             subcategories: subcategories
         };
-        await addProductCategory({ variables: { data: productCategory } });
+        await addCategory({ variables: { data: category } });
         setTimeout(function () {
             handleClose(false);
         }, 1200);
@@ -95,7 +121,7 @@ export default function FullScreenDialog({ className }) {
     };
 
     return (
-        <div>
+        <React.Fragment>
             <Button
                 variant="contained"
                 color="primary"
@@ -117,45 +143,50 @@ export default function FullScreenDialog({ className }) {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            Nueva categoria de producto
+                            Nueva categoría de producto
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <Grid container>
-                    <form onSubmit={handleSubmit}>
-                        <FormGroup>
-                            <TextField
-                                id="nameCategory"
-                                label="Nombre"
-                                onChange={handleName}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <TextField
-                                id="categoryProduct"
-                                label="category"
-                                type="number"
-                                onChange={handleCategory}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={checked}
-                                        onChange={handleChangeCheckbox}
-                                        name="categoryCategory"
+                <Container className={classes.layout}>
+                    <Paper className={classes.paper}>
+                        <Grid container>
+                            <form onSubmit={handleSubmit}>
+                                <FormGroup>
+                                    <TextField
+                                        id="nameCategory"
+                                        label="Nombre"
+                                        onChange={handleName}
+                                        required
                                     />
-                                }
-                                label="Categoria por defecto"
-                            />
-                        </FormGroup>
-                        <Button variant="contained" color="primary" type="submit">
-                            {" "}
-                            GUARDAR
-                        </Button>
-                    </form>
-                </Grid>
+                                </FormGroup>
+                                <FormGroup>
+                                    <TextField
+                                        id="parentIdCategory"
+                                        label="Porcentaje"
+                                        type="number"
+                                        onChange={handleparentId}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={checked}
+                                                onChange={handleChangeCheckbox}
+                                                name="subcategoriesCategory"
+                                            />
+                                        }
+                                        label="¿Pertenece a otra categoría?"
+                                    />
+                                </FormGroup>
+                                <Button variant="contained" color="primary" type="submit">
+                                    {" "}
+                                    GUARDAR
+                                </Button>
+                            </form>
+                        </Grid>
+                    </Paper>
+                </Container>
                 <Snackbar
                     open={openSnackbar}
                     autoHideDuration={2000}
@@ -167,6 +198,6 @@ export default function FullScreenDialog({ className }) {
                     </Alert>
                 </Snackbar>
             </Dialog>
-        </div>
+        </React.Fragment>
     );
 }

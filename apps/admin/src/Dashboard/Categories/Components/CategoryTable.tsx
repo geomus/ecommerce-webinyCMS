@@ -10,10 +10,10 @@ import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { useQuery } from "@apollo/client";
-import { listParentCategories } from "../../../graphql/query";
+import { listSubcategories } from "../../../graphql/query";
 import { LinearProgress } from "@material-ui/core";
-import CategoryListTableToolbar from "./CategoryListTableToolbar";
-import CategoryListTableHead from "./CategoryListTableHead";
+import CategoryListTableToolbar from "./CategoryTableToolbar";
+import CategoryListTableHead from "./CategoryTableHead";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function CategoryListTable({ searchQuery, percent }) {
+export default function CategoryListTable({ categoryId }) {
     const classes = useStyles();
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
@@ -79,14 +79,8 @@ export default function CategoryListTable({ searchQuery, percent }) {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const searchVariable = {
-        query: searchQuery,
-        fields: "category",
-        operator: "eq"
-    };
-
-    const { loading, error, data } = useQuery(listParentCategories, {
-        variables: { searchVariable }
+    const { loading, error, data } = useQuery(listSubcategories, {
+        variables: { parentId: categoryId }
     });
 
     if (loading) {
@@ -104,7 +98,7 @@ export default function CategoryListTable({ searchQuery, percent }) {
     }
 
     const rows = [];
-    data.products.listProducts.data.map((price) => rows.push(price));
+    data.categories.listCategories.data.map((subcat) => rows.push(subcat));
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
@@ -131,10 +125,7 @@ export default function CategoryListTable({ searchQuery, percent }) {
     };
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-    const priceListCalculator = (priceBase, percent) => {
-        const finalPrice = priceBase * (percent / 100 + 1);
-        return finalPrice;
-    };
+
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
@@ -144,7 +135,7 @@ export default function CategoryListTable({ searchQuery, percent }) {
                         className={classes.table}
                         aria-labelledby="tableTitle"
                         size={dense ? "small" : "medium"}
-                        aria-label="PricesList table"
+                        aria-label="Category list table"
                     >
                         <CategoryListTableHead
                             classes={classes}
@@ -162,16 +153,12 @@ export default function CategoryListTable({ searchQuery, percent }) {
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                             <TableCell component="th" scope="row">
-                                                {row.name}
+                                                {row.name.replace(/^\w/, (c) => c.toUpperCase())}
                                             </TableCell>
                                             <TableCell component="th" align="center" scope="row">
-                                                ${row.priceBase}
-                                            </TableCell>
-                                            <TableCell component="th" align="center" scope="row">
-                                                {percent}%
-                                            </TableCell>
-                                            <TableCell component="th" align="center" scope="row">
-                                                ${priceListCalculator(row.priceBase, percent)}
+                                                {row.subcategories
+                                                    ? row.subcategories.length
+                                                    : "Sin subcategorías"}
                                             </TableCell>
                                         </TableRow>
                                     );

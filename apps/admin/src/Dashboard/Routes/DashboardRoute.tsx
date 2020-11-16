@@ -6,7 +6,7 @@ import Helmet from 'react-helmet'
 import OrdersTable from '../Orders/Components/OrdersTable';
 import ProductsTable from '../Products/Components/ProductsTable';
 import PricesListTabs from '../PricesList/Components/PricesListTabs';
-import CategoryTab from '../Categories/Components/PricesListTabs';
+import CategoryTab from '../Categories/Components/CategoryTabs';
 
 export default [{
   type: "route",

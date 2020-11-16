@@ -372,14 +372,14 @@ export const createProducts = gql`
     }
 `;
 
-export const listCategories = gql`
-    query listCategory {
+export const listSubcategories = gql`
+    query listCategories($parentId: String) {
         categories {
-            listCategory {
+            listCategories(where: { parentId: $parentId }) {
                 data {
                     id
                     name
-                    category
+                    parentId
                     subcategories
                 }
                 error {
@@ -397,7 +397,7 @@ export const createCategory = gql`
                 data {
                     id
                     name
-                    category
+                    parentId
                     subcategories
                 }
                 error {
@@ -409,13 +409,61 @@ export const createCategory = gql`
 `;
 
 export const listParentCategories = gql`
-    query listCategory($searchVariable: CategorySearchInput) {
+    query listCategories {
         categories {
-            listCategory (search: $searchVariable) {
+            listCategories(where: { parentId: null }) {
                 data {
                     id
                     name
-                    category
+                    parentId
+                    subcategories
+                }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const listAllCategories = gql`
+    query listCategories {
+        categories {
+            listCategories {
+                data {
+                    id
+                    name
+                    parentId
+                    subcategories
+                }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const deleteCategory = gql`
+    mutation deleteCategory($id: ID!) {
+        categories {
+            deleteCategory(id: $id) {
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const updateCategory = gql`
+    mutation updateCategory($id: ID!, $data: CategoryInput!) {
+        categories {
+            updateCategory(id: $id, data: $data) {
+                data {
+                    id
+                    name
+                    parentId
                     subcategories
                 }
                 error {
