@@ -69,25 +69,6 @@ export default function Cart() {
                                 <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
                             <TableCell colSpan={3} padding="none" size="small">{row.name}</TableCell>
-                            {
-                                row.variants &&
-                                row.variants.map((variant, i) =>
-                                    <FormControl key={i}>
-                                        <InputLabel htmlFor="age-native-simple">{variant.name}</InputLabel>
-                                        { }
-                                        <Select
-                                            native
-                                            value={state[variant.name]}
-                                            onChange={handleChange}
-                                            defaultValue={row.variantsSelected[variant.name]}
-                                        >
-                                            {
-                                                variant.propertyValues.map((data, i) => <option key={i} value={data}>{data}</option>)
-                                            }
-
-                                        </Select>
-                                    </FormControl>)
-                            }
                             <TableCell colSpan={1}>
                                 <TextField
                                     id={row.id}

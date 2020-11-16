@@ -14,6 +14,10 @@ export const products = gql`
                     tags
                     isFeatured
                     isPublished
+                    variants {
+                        name
+                        propertyValues
+                    }
                 }
             }
         }

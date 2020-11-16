@@ -10,15 +10,16 @@ export const CartProvider = ({ children }) => {
         setCart(localCart);
     }, []);
 
-    const addToCart = (prod) => {
+    const addToCart = (prod, variants) => {
         const localCart = JSON.parse(localStorage.getItem("cart")) ?? [];
-
         const { id } = prod;
         const existingProd = localCart.find((cartProd) => cartProd.id == id);
         if (existingProd) {
             existingProd.quantity += prod.quantity;
         } else {
-            localCart.push(prod);
+            const productAdded = {...prod, variantsSelected: variants}
+            console.log(productAdded);
+            localCart.push(productAdded);
         }
         localStorage.setItem("cart", JSON.stringify(localCart));
         setCart(localCart);
