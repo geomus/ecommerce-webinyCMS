@@ -1,7 +1,9 @@
 // @ts-ignore
-import { withFields, withName, string, boolean, number, pipe, withProps, onSet } from "@webiny/commodo";
+import { withFields, withName, string, boolean, number, pipe, withProps, onSet, ref } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 import slugify from "slugify";
+
+const Category = (ctx) => ctx.models.Category
 
 export default ({ createBase }) =>
     pipe(
@@ -18,9 +20,7 @@ export default ({ createBase }) =>
             prices: string({
                 list: true
             }),
-            category: string({ 
-                list: true 
-            }),
+            category: ref({ instanceOf: Category, list: true }),
             images: string({ list: true }),
             tags: string({ list: true }),
             isPublished: boolean({ value: true }),
