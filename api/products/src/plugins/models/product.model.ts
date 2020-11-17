@@ -3,9 +3,7 @@ import { withFields, withName, string, boolean, number, pipe, withProps, onSet, 
 import { validation } from "@webiny/validation";
 import slugify from "slugify";
 
-const Category = (ctx) => ctx.models.Category
-
-export default ({ createBase }) =>
+export default ({ createBase, context }) =>
     pipe(
         withName("Product"),
         withFields((instance) => ({
@@ -20,7 +18,7 @@ export default ({ createBase }) =>
             prices: string({
                 list: true
             }),
-            category: ref({ instanceOf: Category, list: true }),
+            category: ref({ instanceOf: context.models.Category, list: true }),
             images: string({ list: true }),
             tags: string({ list: true }),
             isPublished: boolean({ value: true }),

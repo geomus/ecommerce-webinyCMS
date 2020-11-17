@@ -96,8 +96,7 @@ const plugin: GraphQLSchemaPlugin = {
             type Category {
                 id: ID
                 name: String
-                parentId: String
-                subcategories: [String]
+                parent: Category
             }
 
             type Product {
@@ -108,7 +107,7 @@ const plugin: GraphQLSchemaPlugin = {
                 description: String
                 priceBase: Float
                 prices: [String]
-                category: [String]
+                category: [Category]
                 images: [String]
                 tags: [String]
                 isPublished: Boolean
@@ -126,8 +125,7 @@ const plugin: GraphQLSchemaPlugin = {
             input CategoryInput {
                 id: ID
                 name: String
-                parentId: String
-                subcategories: [String]
+                parent: RefInput
             }
 
             input ProductInput {
@@ -137,7 +135,7 @@ const plugin: GraphQLSchemaPlugin = {
                 slug: String
                 description: String
                 priceBase: Int
-                category: [String]
+                category: [RefInput]
                 prices: [String]
                 images: [String]
                 tags: [String]
@@ -149,7 +147,7 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 isPublished: Boolean
                 sku: String
-                category: [String]
+                category: [CategoryInput]
             }
 
             input PriceListWhere {
@@ -158,8 +156,7 @@ const plugin: GraphQLSchemaPlugin = {
 
             input CategoryListWhere {
                 name: String
-                parentId: String
-                subcategories: [String]
+                parent: CategoryInput
             }
 
             input ProductListSort {
