@@ -155,14 +155,19 @@ const plugin: GraphQLSchemaPlugin = {
             }
 
             input CategoryListWhere {
+                id: ID
                 name: String
-                parent: CategoryInput
+                parent: RefInput
             }
 
             input ProductListSort {
                 name: Int
                 isPublished: Boolean
                 createdOn: Int
+            }
+
+            input CategoryListSort {
+                name: Int
             }
 
             input ProductSearchInput {
@@ -235,6 +240,7 @@ const plugin: GraphQLSchemaPlugin = {
                 listCategories(
                     where: CategoryListWhere
                     search: CategorySearchInput
+                    sort: CategoryListSort
                     limit: Int
                     after: String
                     before: String

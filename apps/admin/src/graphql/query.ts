@@ -373,14 +373,15 @@ export const createProducts = gql`
 `;
 
 export const listSubcategories = gql`
-    query listCategories($parentId: String) {
+    query listCategories($parent: RefInput!) {
         categories {
-            listCategories(where: { parentId: $parentId }) {
+            listCategories(where: { parent: $parent }) {
                 data {
                     id
                     name
-                    parentId
-                    subcategories
+                    parent {
+                        id
+                    }
                 }
                 error {
                     message
@@ -397,8 +398,10 @@ export const createCategory = gql`
                 data {
                     id
                     name
-                    parentId
-                    subcategories
+                    parent {
+                        id
+                        name
+                    }
                 }
                 error {
                     message
@@ -411,12 +414,14 @@ export const createCategory = gql`
 export const listParentCategories = gql`
     query listCategories {
         categories {
-            listCategories(where: { parentId: null }) {
+            listCategories(where: { parent: null }) {
                 data {
                     id
                     name
-                    parentId
-                    subcategories
+                    parent {
+                        id
+                        name
+                    }
                 }
                 error {
                     message
@@ -433,8 +438,10 @@ export const listAllCategories = gql`
                 data {
                     id
                     name
-                    parentId
-                    subcategories
+                    parent {
+                        id
+                        name
+                    }
                 }
                 error {
                     message
@@ -463,8 +470,10 @@ export const updateCategory = gql`
                 data {
                     id
                     name
-                    parentId
-                    subcategories
+                    parent {
+                        id
+                        name
+                    }
                 }
                 error {
                     message

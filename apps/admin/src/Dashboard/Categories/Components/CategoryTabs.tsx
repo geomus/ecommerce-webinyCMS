@@ -9,7 +9,7 @@ import Box from "@material-ui/core/Box";
 import { listParentCategories } from "../../../graphql/query";
 import { LinearProgress } from "@material-ui/core";
 import { useQuery } from "@apollo/client";
-import CategoryListTable from "./CategoryTable";
+import CategoryTable from "./CategoryTable";
 import CategoryBtnCreate from "./CategoryBtnCreate";
 
 function TabPanel(props) {
@@ -89,10 +89,10 @@ export default function listParentsCategories() {
                     ))}
                 </Tabs>
             </AppBar>
-            <CategoryBtnCreate className={classes.btnCategoryCreate} parentCategories={data.categories.listCategories.data} />
+            <CategoryBtnCreate className={classes.btnCategoryCreate} />
             {data.categories.listCategories.data.map((category, index) => (
                 <TabPanel key={category.id} value={value} index={index}>
-                    <CategoryListTable categoryId={category.id} />
+                    <CategoryTable categoryId={category.id} />
                 </TabPanel>
             ))}
         </div>

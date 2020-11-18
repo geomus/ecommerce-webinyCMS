@@ -6,7 +6,7 @@ export default ({ createBase }) => {
     const Category = pipe(
         withName("Category"),
         withFields(() => ({
-            name: string({ validation: validation.create("maxLength:20") }),
+            name: string({ validation: validation.create("maxLength:30") }),
             parent: ref({ instanceOf: Category, value: null })
         }))
     )(createBase());

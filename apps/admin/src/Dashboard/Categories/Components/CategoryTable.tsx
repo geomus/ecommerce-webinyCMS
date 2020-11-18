@@ -12,8 +12,8 @@ import Switch from "@material-ui/core/Switch";
 import { useQuery } from "@apollo/client";
 import { listSubcategories } from "../../../graphql/query";
 import { LinearProgress } from "@material-ui/core";
-import CategoryListTableToolbar from "./CategoryTableToolbar";
-import CategoryListTableHead from "./CategoryTableHead";
+import CategoryTableToolbar from "./CategoryTableToolbar";
+import CategoryTableHead from "./CategoryTableHead";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function CategoryListTable({ categoryId }) {
+export default function CategoryTable({ categoryId }) {
     const classes = useStyles();
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
@@ -79,8 +79,11 @@ export default function CategoryListTable({ categoryId }) {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+    const parent = {
+        id: categoryId
+    };
     const { loading, error, data } = useQuery(listSubcategories, {
-        variables: { parentId: categoryId }
+        variables: { parent: parent }
     });
 
     if (loading) {
@@ -129,7 +132,7 @@ export default function CategoryListTable({ categoryId }) {
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <CategoryListTableToolbar numSelected={selected.length} />
+                <CategoryTableToolbar numSelected={selected.length} />
                 <TableContainer>
                     <Table
                         className={classes.table}
@@ -137,7 +140,7 @@ export default function CategoryListTable({ categoryId }) {
                         size={dense ? "small" : "medium"}
                         aria-label="Category list table"
                     >
-                        <CategoryListTableHead
+                        <CategoryTableHead
                             classes={classes}
                             numSelected={selected.length}
                             order={order}
@@ -154,11 +157,6 @@ export default function CategoryListTable({ categoryId }) {
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                             <TableCell component="th" scope="row">
                                                 {row.name.replace(/^\w/, (c) => c.toUpperCase())}
-                                            </TableCell>
-                                            <TableCell component="th" align="center" scope="row">
-                                                {row.subcategories
-                                                    ? row.subcategories.length
-                                                    : "Sin subcategorías"}
                                             </TableCell>
                                         </TableRow>
                                     );

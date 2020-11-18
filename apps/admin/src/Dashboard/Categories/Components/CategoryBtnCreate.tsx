@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme, withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
@@ -10,8 +10,14 @@ import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
 import { TransitionProps } from "@material-ui/core/transitions";
 import AddIcon from "@material-ui/icons/Add";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import InputBase from "@material-ui/core/InputBase";
 import {
     Checkbox,
     FormControlLabel,
@@ -20,9 +26,46 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createCategory, updateCategory, listAllCategories, listParentCategories } from "../../../graphql/query";
-import { useMutation } from "@apollo/client";
+import { createCategory, listAllCategories, listParentCategories } from "../../../graphql/query";
+import { useMutation, useQuery } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+
+const BootstrapInput = withStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            "label + &": {
+                marginTop: theme.spacing(3)
+            }
+        },
+        input: {
+            borderRadius: 4,
+            position: "relative",
+            backgroundColor: theme.palette.background.paper,
+            border: "1px solid #ced4da",
+            fontSize: 16,
+            padding: "10px 26px 10px 12px",
+            transition: theme.transitions.create(["border-color", "box-shadow"]),
+            // Use the system font instead of the default Roboto font.
+            fontFamily: [
+                "-apple-system",
+                "BlinkMacSystemFont",
+                '"Segoe UI"',
+                "Roboto",
+                '"Helvetica Neue"',
+                "Arial",
+                "sans-serif",
+                '"Apple Color Emoji"',
+                '"Segoe UI Emoji"',
+                '"Segoe UI Symbol"'
+            ].join(","),
+            "&:focus": {
+                borderRadius: 4,
+                borderColor: "#80bdff",
+                boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)"
+            }
+        }
+    })
+)(InputBase);
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,6 +78,9 @@ const useStyles = makeStyles((theme: Theme) =>
                 marginLeft: "auto",
                 marginRight: "auto"
             }
+        },
+        margin: {
+            margin: theme.spacing(1)
         },
         paper: {
             marginTop: theme.spacing(3),
@@ -66,23 +112,36 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog({ className, parentCategories }) {
-  console.log(parentCategories);
-  
+export default function FullScreenDialog({ className }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [checked, setChecked] = useState(false);
     const [name, setName] = useState("");
-    const [parentId, setParentId] = useState(null);
-    const [subcategories, setSubcategories] = useState(null);
+    const [parent, setParent] = useState("");
+    const [categories, setCategories] = useState([]);
 
     const [addCategory] = useMutation(createCategory, {
         refetchQueries: () => [{ query: listAllCategories && listParentCategories }]
     });
-    
-    const[patchCategory] = useMutation(updateCategory);
 
+    const { data, loading, error } = useQuery(listAllCategories);
+    if (loading) {
+        return (
+            <h1>
+                {" "}
+                <LinearProgress />{" "}
+            </h1>
+        );
+    }
+
+    if (error) {
+        console.dir(error);
+        return <h1> error </h1>;
+    }
+    const handleChangeParent = (event) => {
+        setParent(event.target.value);        
+    };
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -98,20 +157,18 @@ export default function FullScreenDialog({ className, parentCategories }) {
     const handleName = (e) => {
         setName(e.target.value);
     };
-    const handleparentId = (e) => {
-        setParentId(e.target.value);
-    };
     const handleChangeCheckbox = (e) => {
+        setCategories(data.categories.listCategories.data);
         setChecked(e.target.checked);
-        setSubcategories(e.target.checked);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const category = {
             name: name,
-            parentId: Number(parentId),
-            subcategories: subcategories
+            parent: {
+                id: parent
+            }
         };
         await addCategory({ variables: { data: category } });
         setTimeout(function () {
@@ -160,14 +217,6 @@ export default function FullScreenDialog({ className, parentCategories }) {
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <TextField
-                                        id="parentIdCategory"
-                                        label="Porcentaje"
-                                        type="number"
-                                        onChange={handleparentId}
-                                    />
-                                </FormGroup>
-                                <FormGroup>
                                     <FormControlLabel
                                         control={
                                             <Checkbox
@@ -179,6 +228,36 @@ export default function FullScreenDialog({ className, parentCategories }) {
                                         label="¿Pertenece a otra categoría?"
                                     />
                                 </FormGroup>
+                                {checked ? (
+                                    <FormGroup>
+                                        <FormControl className={classes.margin}>
+                                            <InputLabel id="parent-category-label">
+                                                Parent`s Category
+                                            </InputLabel>
+                                            <Select
+                                                labelId="parent-category-label"
+                                                id="parent-category"
+                                                value={parent}
+                                                onChange={handleChangeParent}
+                                                input={<BootstrapInput />}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                {categories.map((category) => {
+                                                    return (
+                                                        <MenuItem key={category.id} value={category.id}>
+                                                            {category.name}
+                                                        </MenuItem>
+                                                    );
+                                                })}
+                                            </Select>
+                                        </FormControl>
+                                    </FormGroup>
+                                ) : (
+                                    ""
+                                )}
+
                                 <Button variant="contained" color="primary" type="submit">
                                     {" "}
                                     GUARDAR
