@@ -7,7 +7,7 @@ export default ({ createBase }) => {
         withName("Category"),
         withFields(() => ({
             name: string({ validation: validation.create("maxLength:30") }),
-            parent: ref({ instanceOf: Category, value: null })
+            parent: ref({ instanceOf: Category, value: null, autoDelete: true })
         }))
     )(createBase());
     return Category;

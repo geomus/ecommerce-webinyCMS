@@ -6,7 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { listParentCategories } from "../../../graphql/query";
+import { listAllCategories } from "../../../graphql/query";
 import { LinearProgress } from "@material-ui/core";
 import { useQuery } from "@apollo/client";
 import CategoryTable from "./CategoryTable";
@@ -59,8 +59,7 @@ export default function listParentsCategories() {
     const classes = useStyles();
     const [value, setValue] = useState(0);
 
-
-    const { loading, error, data } = useQuery(listParentCategories);
+    const { loading, error, data } = useQuery(listAllCategories);
 
     if (loading) {
         return (
@@ -80,19 +79,18 @@ export default function listParentsCategories() {
         setValue(newValue);
     };
 
+    const categories = data.categories.listCategories.data;
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                    {data.categories.listCategories.data.map((category, index) => (
-                        <Tab key={category.id} label={category.name} {...a11yProps({ index })} />
-                    ))}
+                    <Tab label="Categorías" />
                 </Tabs>
             </AppBar>
-            <CategoryBtnCreate className={classes.btnCategoryCreate} />
+            <CategoryBtnCreate className={classes.btnCategoryCreate} categories={categories} />
             {data.categories.listCategories.data.map((category, index) => (
                 <TabPanel key={category.id} value={value} index={index}>
-                    <CategoryTable categoryId={category.id} />
+                    <CategoryTable />
                 </TabPanel>
             ))}
         </div>

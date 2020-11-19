@@ -16,7 +16,6 @@ import { TransitionProps } from "@material-ui/core/transitions";
 import AddIcon from "@material-ui/icons/Add";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import InputBase from "@material-ui/core/InputBase";
 import {
     Checkbox,
@@ -26,8 +25,8 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createCategory, listAllCategories, listParentCategories } from "../../../graphql/query";
-import { useMutation, useQuery } from "@apollo/client";
+import { createCategory, listAllCategories } from "../../../graphql/query";
+import { useMutation } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 const BootstrapInput = withStyles((theme: Theme) =>
@@ -112,35 +111,20 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog({ className }) {
+export default function FullScreenDialog({ className, categories }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [checked, setChecked] = useState(false);
     const [name, setName] = useState("");
     const [parent, setParent] = useState("");
-    const [categories, setCategories] = useState([]);
 
     const [addCategory] = useMutation(createCategory, {
-        refetchQueries: () => [{ query: listAllCategories && listParentCategories }]
+        refetchQueries: () => [{ query: listAllCategories }]
     });
 
-    const { data, loading, error } = useQuery(listAllCategories);
-    if (loading) {
-        return (
-            <h1>
-                {" "}
-                <LinearProgress />{" "}
-            </h1>
-        );
-    }
-
-    if (error) {
-        console.dir(error);
-        return <h1> error </h1>;
-    }
     const handleChangeParent = (event) => {
-        setParent(event.target.value);        
+        setParent(event.target.value);
     };
     const handleClickOpen = () => {
         setOpen(true);
@@ -158,7 +142,6 @@ export default function FullScreenDialog({ className }) {
         setName(e.target.value);
     };
     const handleChangeCheckbox = (e) => {
-        setCategories(data.categories.listCategories.data);
         setChecked(e.target.checked);
     };
 
@@ -246,8 +229,13 @@ export default function FullScreenDialog({ className }) {
                                                 </MenuItem>
                                                 {categories.map((category) => {
                                                     return (
-                                                        <MenuItem key={category.id} value={category.id}>
-                                                            {category.name}
+                                                        <MenuItem
+                                                            key={category.id}
+                                                            value={category.id}
+                                                        >
+                                                            {category.name.replace(/^\w/, (c) =>
+                                                                c.toUpperCase()
+                                                            )}
                                                         </MenuItem>
                                                     );
                                                 })}

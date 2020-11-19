@@ -10,10 +10,11 @@ import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { useQuery } from "@apollo/client";
-import { listSubcategories } from "../../../graphql/query";
+import { listAllCategories } from "../../../graphql/query";
 import { LinearProgress } from "@material-ui/core";
 import CategoryTableToolbar from "./CategoryTableToolbar";
 import CategoryTableHead from "./CategoryTableHead";
+import CategoryDeleteBtn from "./CategoryDelete";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -70,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function CategoryTable({ categoryId }) {
+export default function CategoryTable() {
     const classes = useStyles();
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
@@ -79,12 +80,7 @@ export default function CategoryTable({ categoryId }) {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const parent = {
-        id: categoryId
-    };
-    const { loading, error, data } = useQuery(listSubcategories, {
-        variables: { parent: parent }
-    });
+    const { loading, error, data } = useQuery(listAllCategories);
 
     if (loading) {
         return (
@@ -154,9 +150,19 @@ export default function CategoryTable({ categoryId }) {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                        <TableRow hover role="checkbox" tabIndex={1} key={row.id}>
+                                            <TableCell component="th" scope="row">
+                                                {row.parent
+                                                    ? row.parent.name.replace(/^\w/, (c) =>
+                                                          c.toUpperCase()
+                                                      )
+                                                    : ""}
+                                            </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.name.replace(/^\w/, (c) => c.toUpperCase())}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <CategoryDeleteBtn row={row} />
                                             </TableCell>
                                         </TableRow>
                                     );
