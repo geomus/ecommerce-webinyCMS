@@ -1,16 +1,28 @@
 import { gql } from "@apollo/client";
 
 export const products = gql`
-    {
+    query listProducts {
         products {
             listProducts {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isFeatured
                     isPublished
                 }
@@ -25,11 +37,23 @@ export const product = gql`
             getProduct(id: $id) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isFeatured
                     isPublished
                 }
@@ -44,11 +68,23 @@ export const productsFilter = gql`
             listProducts(where: { name: $name, isPublished: true }) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isPublished
                     isFeatured
                 }
@@ -63,11 +99,23 @@ export const createProduct = gql`
             createProduct(data: $data) {
                 data {
                     id
+                    sku
                     name
                     slug
                     description
                     priceBase
                     prices
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     images
                     tags
                     isPublished
@@ -87,12 +135,24 @@ export const searchProducts = gql`
             listProducts(search: $searchVariable) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     prices
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isFeatured
                     isPublished
                 }
@@ -131,11 +191,23 @@ export const updateProduct = gql`
             updateProduct(id: $id, data: $data) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                 }
             }
         }
@@ -379,9 +451,13 @@ export const listSubcategories = gql`
                 data {
                     id
                     name
+                    enabled
                     parent {
                         id
+                        name
+                        enabled
                     }
+                    isEnabledInHierarchy
                 }
                 error {
                     message
@@ -398,9 +474,11 @@ export const createCategory = gql`
                 data {
                     id
                     name
+                    enabled
                     parent {
                         id
                         name
+                        enabled
                     }
                 }
                 error {
@@ -411,17 +489,20 @@ export const createCategory = gql`
     }
 `;
 
-export const listParentCategories = gql`
+export const listEnabledCategories = gql`
     query listCategories {
         categories {
-            listCategories(where: { parent: null }) {
+            listCategories(where: { enabled: true }) {
                 data {
                     id
                     name
+                    enabled
                     parent {
                         id
                         name
+                        enabled
                     }
+                    isEnabledInHierarchy
                 }
                 error {
                     message
@@ -438,10 +519,13 @@ export const listAllCategories = gql`
                 data {
                     id
                     name
+                    enabled
                     parent {
                         id
                         name
+                        enabled
                     }
+                    isEnabledInHierarchy
                 }
                 error {
                     message
@@ -470,9 +554,11 @@ export const updateCategory = gql`
                 data {
                     id
                     name
+                    enabled
                     parent {
                         id
                         name
+                        enabled
                     }
                 }
                 error {

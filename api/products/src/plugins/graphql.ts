@@ -97,6 +97,8 @@ const plugin: GraphQLSchemaPlugin = {
                 id: ID
                 name: String
                 parent: Category
+                enabled: Boolean
+                isEnabledInHierarchy: Boolean
             }
 
             type Product {
@@ -107,7 +109,7 @@ const plugin: GraphQLSchemaPlugin = {
                 description: String
                 priceBase: Float
                 prices: [String]
-                category: [Category]
+                categories: [Category]
                 images: [String]
                 tags: [String]
                 isPublished: Boolean
@@ -126,6 +128,7 @@ const plugin: GraphQLSchemaPlugin = {
                 id: ID
                 name: String
                 parent: RefInput
+                enabled: Boolean
             }
 
             input ProductInput {
@@ -135,7 +138,7 @@ const plugin: GraphQLSchemaPlugin = {
                 slug: String
                 description: String
                 priceBase: Int
-                category: [RefInput]
+                categories: [CategoryInput]
                 prices: [String]
                 images: [String]
                 tags: [String]
@@ -147,7 +150,7 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 isPublished: Boolean
                 sku: String
-                category: [CategoryInput]
+                categories: [CategoryInput]
             }
 
             input PriceListWhere {
@@ -158,16 +161,20 @@ const plugin: GraphQLSchemaPlugin = {
                 id: ID
                 name: String
                 parent: RefInput
+                enabled: Boolean
+                isEnabledInHierarchy: Boolean
             }
 
             input ProductListSort {
                 name: Int
                 isPublished: Boolean
+                categories: [CategoryInput]
                 createdOn: Int
             }
 
             input CategoryListSort {
                 name: Int
+                enabled: Boolean
             }
 
             input ProductSearchInput {

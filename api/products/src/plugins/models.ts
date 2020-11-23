@@ -1,5 +1,5 @@
 // @ts-ignore
-import { withStorage, withCrudLogs, withSoftDelete, withFields, pipe} from "@webiny/commodo";
+import { withStorage, withCrudLogs, withSoftDelete, withFields, pipe } from "@webiny/commodo";
 import { withUser } from "@webiny/api-security";
 import product from "./models/product.model";
 import price from "./models/price.model";
@@ -20,7 +20,6 @@ export default () => ({
                 withFields({
                     id: context.commodo.fields.id()
                 }),
-
                 withStorage({ driver }),
                 withUser(context),
                 withSoftDelete(),
@@ -29,9 +28,9 @@ export default () => ({
         };
 
         context.models = {
-            Product: product({ createBase,  }),
-            Price: price({ createBase  }),
-            Category: category({ createBase  }),
+            Product: product({ createBase, context }),
+            Price: price({ createBase }),
+            Category: category({ createBase, context }),
             createBase
         };
     }

@@ -1,10 +1,10 @@
 // @ts-ignore
-import { withFields, withName, string, boolean, number, pipe, withProps, onSet, ref } from "@webiny/commodo";
+import { withFields, withName, string, boolean, number, pipe, withProps, onSet, fields } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 import slugify from "slugify";
 
-export default ({ createBase, context }) =>
-    pipe(
+export default ({ createBase, context }) => {
+    const Product = pipe(
         withName("Product"),
         withFields((instance) => ({
             sku: string(),
@@ -18,7 +18,7 @@ export default ({ createBase, context }) =>
             prices: string({
                 list: true
             }),
-            category: ref({ instanceOf: context.models.Category, list: true }),
+            categories: fields({ list: true, instanceOf: context.models.Category }),
             images: string({ list: true }),
             tags: string({ list: true }),
             isPublished: boolean({ value: true }),
@@ -30,3 +30,5 @@ export default ({ createBase, context }) =>
             }
         })
     )(createBase());
+    return Product;
+};

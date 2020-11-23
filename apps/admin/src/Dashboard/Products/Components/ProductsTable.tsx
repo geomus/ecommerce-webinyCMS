@@ -1,26 +1,24 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@material-ui/core/Switch";
 import { useQuery } from "@apollo/client";
-import { products } from '../../../graphql/query'
-import { Chip, LinearProgress } from '@material-ui/core';
-import ProductsTableToolbar from './ProductsTableToolbar';
-import ProductsTableHead from './ProductsTableHead';
-import ProductsBtnPublished from './ProductsBtnPublished';
-import ProductsBtnEdit from './ProductsBtnEdit';
-import ProductsBtnDelete from './ProductsBtnDelete';
-import ProductsBtnFeatured from './ProductsBtnFeatured';
-
-
+import { products } from "../../../graphql/query";
+import { Chip, LinearProgress } from "@material-ui/core";
+import ProductsTableToolbar from "./ProductsTableToolbar";
+import ProductsTableHead from "./ProductsTableHead";
+import ProductsBtnPublished from "./ProductsBtnPublished";
+import ProductsBtnEdit from "./ProductsBtnEdit";
+import ProductsBtnDelete from "./ProductsBtnDelete";
+import ProductsBtnFeatured from "./ProductsBtnFeatured";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -33,7 +31,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-    return order === 'desc'
+    return order === "desc"
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -42,7 +40,9 @@ function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
-        if (order !== 0) { return order };
+        if (order !== 0) {
+            return order;
+        }
         return a[1] - b[1];
     });
     return stabilizedThis.map((el) => el[0]);
@@ -50,25 +50,25 @@ function stableSort(array, comparator) {
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '100%',
+        width: "100%"
     },
     paper: {
-        width: '100%',
-        marginBottom: theme.spacing(2),
+        width: "100%",
+        marginBottom: theme.spacing(2)
     },
     table: {
-        minWidth: 750,
+        minWidth: 750
     },
     visuallyHidden: {
         border: 0,
-        clip: 'rect(0 0 0 0)',
+        clip: "rect(0 0 0 0)",
         height: 1,
         margin: -1,
-        overflow: 'hidden',
+        overflow: "hidden",
         padding: 0,
-        position: 'absolute',
+        position: "absolute",
         top: 20,
-        width: 1,
+        width: 1
     },
     cellImgProduct: {
         width: "8%"
@@ -85,8 +85,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductsTable() {
     const classes = useStyles();
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
+    const [order, setOrder] = React.useState("asc");
+    const [orderBy, setOrderBy] = React.useState("calories");
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(true);
@@ -96,25 +96,27 @@ export default function ProductsTable() {
 
     if (loading) {
         return (
-            <h1> <LinearProgress /> </h1>
-        )
+            <h1>
+                {" "}
+                <LinearProgress />{" "}
+            </h1>
+        );
     }
 
     if (error) {
-        console.dir(error)
+        console.dir(error);
         return <h1> error </h1>;
     }
-    const rows = []
-    data.products.listProducts.data.map(product => rows.push(product))
-   
-    const dataForExport = []
-    data.products.listProducts.data.map(product => dataForExport.push(Object.values(product)))
+    const rows = [];
+    data.products.listProducts.data.map((product) => rows.push(product));
+
+    const dataForExport = [];
+    data.products.listProducts.data.map((product) => dataForExport.push(Object.values(product)));
     console.log(dataForExport);
-    
 
     const handleRequestSort = (event, property) => {
-        const isAsc = orderBy === property && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc');
+        const isAsc = orderBy === property && order === "asc";
+        setOrder(isAsc ? "desc" : "asc");
         setOrderBy(property);
     };
 
@@ -140,18 +142,17 @@ export default function ProductsTable() {
         setDense(event.target.checked);
     };
 
-
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <ProductsTableToolbar numSelected={selected.length} data={dataForExport}/>
+                <ProductsTableToolbar numSelected={selected.length} data={dataForExport} />
                 <TableContainer>
                     <Table
                         className={classes.table}
                         aria-labelledby="tableTitle"
-                        size={dense ? 'small' : 'medium'}
+                        size={dense ? "small" : "medium"}
                         aria-label="Products table"
                     >
                         <ProductsTableHead
@@ -167,17 +168,17 @@ export default function ProductsTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
-
                                     return (
-                                        <TableRow
-                                            hover
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            key={row.id}
-                                        >
-
-                                            <TableCell align="center" className={classes.cellImgProduct}>
-                                                <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                                            <TableCell
+                                                align="center"
+                                                className={classes.cellImgProduct}
+                                            >
+                                                <img
+                                                    src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
+                                                    className={classes.imgProduct}
+                                                    alt="Foto producto"
+                                                />
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.name}
@@ -187,10 +188,41 @@ export default function ProductsTable() {
                                                     ${row.priceBase}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell align="center">{row.tags &&
-                                            row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} 
-                                            color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}
+                                            <TableCell align="center">
+                                                {row.tags &&
+                                                    row.tags.map((tag, i) => (
+                                                        <Chip
+                                                            variant="outlined"
+                                                            className={classes.marginTags}
+                                                            color="primary"
+                                                            label={tag}
+                                                            component="a"
+                                                            href="#chip"
+                                                            key={i + tag}
+                                                            clickable
+                                                        />
+                                                    ))}
                                             </TableCell>
+                                            {row.categories ? (
+                                                <TableCell align="center">
+                                                    {row.tags &&
+                                                        row.categories.map((category, i) => (
+                                                            <Chip
+                                                                variant="outlined"
+                                                                className={classes.marginTags}
+                                                                color="primary"
+                                                                label={category.name}
+                                                                component="a"
+                                                                href="#chip"
+                                                                key={i + category.name}
+                                                                clickable
+                                                            />
+                                                        ))}
+                                                </TableCell>
+                                            ) : (
+                                                ""
+                                            )}
+
                                             <TableCell align="center">
                                                 <ProductsBtnPublished row={row} />
                                             </TableCell>
@@ -198,7 +230,7 @@ export default function ProductsTable() {
                                                 <ProductsBtnFeatured row={row} />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <ProductsBtnEdit product={row}/>
+                                                <ProductsBtnEdit product={row} />
                                             </TableCell>
                                             <TableCell align="center">
                                                 <ProductsBtnDelete row={row} />

@@ -161,6 +161,9 @@ export default function CategoryTable() {
                                             <TableCell component="th" scope="row">
                                                 {row.name.replace(/^\w/, (c) => c.toUpperCase())}
                                             </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                {row.enabled ? "SI" : "NO"}
+                                            </TableCell>
                                             <TableCell align="center">
                                                 <CategoryDeleteBtn row={row} />
                                             </TableCell>

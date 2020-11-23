@@ -44,7 +44,6 @@ const BootstrapInput = withStyles((theme: Theme) =>
             fontSize: 16,
             padding: "10px 26px 10px 12px",
             transition: theme.transitions.create(["border-color", "box-shadow"]),
-            // Use the system font instead of the default Roboto font.
             fontFamily: [
                 "-apple-system",
                 "BlinkMacSystemFont",
@@ -117,7 +116,7 @@ export default function FullScreenDialog({ className, categories }) {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [checked, setChecked] = useState(false);
     const [name, setName] = useState("");
-    const [parent, setParent] = useState("");
+    const [parent, setParent] = useState(null);
 
     const [addCategory] = useMutation(createCategory, {
         refetchQueries: () => [{ query: listAllCategories }]
@@ -131,6 +130,7 @@ export default function FullScreenDialog({ className, categories }) {
     };
     const handleClose = (boolean) => {
         setOpen(false);
+        setChecked(false);
     };
     const handleCloseSnackbar = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === "clickaway") {
@@ -158,6 +158,9 @@ export default function FullScreenDialog({ className, categories }) {
             handleClose(false);
         }, 1200);
         setOpenSnackbar(true);
+        setTimeout(function () {
+            setOpenSnackbar(false);
+        }, 1400);
     };
 
     return (

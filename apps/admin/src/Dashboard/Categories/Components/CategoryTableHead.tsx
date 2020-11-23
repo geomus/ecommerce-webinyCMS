@@ -5,7 +5,9 @@ import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/cor
 
 const headCells = [
     { id: 'parent', disablePadding: false, disableSort: false, label: 'Categoría superior' },
-    { id: 'name', disablePadding: false, disableSort: false, label: 'Name' }
+    { id: 'name', disablePadding: false, disableSort: false, label: 'Nombre' },
+    { id: 'enabled', disablePadding: false, disableSort: false, label: 'Activa' }
+
 ];
 const ProductsTableHead = (props) => {
     const { classes, order, orderBy, onRequestSort } = props;
