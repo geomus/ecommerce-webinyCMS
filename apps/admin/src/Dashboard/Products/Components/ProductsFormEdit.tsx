@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
         width: "auto",
         marginLeft: theme.spacing(2),
         marginRight: theme.spacing(2),
+        marginTop: theme.spacing(2),
         [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
             width: 600,
             marginLeft: "auto",
@@ -208,7 +209,6 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
 
     return (
         <Container className={classes.layout}>
-            <Paper className={classes.paper}>
                 <React.Fragment>
                     <form onSubmit={onSubmit}>
                         <Grid container spacing={3}>
@@ -327,7 +327,6 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                         ¡No se ha podido editar el producto, revise sus datos!
                     </Alert>
                 </Snackbar>
-            </Paper>
         </Container>
     );
 }

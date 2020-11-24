@@ -7,6 +7,6 @@ export default ({ createBase }) =>
         withName("Property"),
         withFields(() => ({
             name: string({ validation: validation.create("maxLength:20"), value: null }),
-            valueType: string({ validation: validation.create("maxLength:100"), value: null }),
+            values: string({ validation: validation.create("maxLength:100"), value: null, list: true }),
         }))
     )(createBase());

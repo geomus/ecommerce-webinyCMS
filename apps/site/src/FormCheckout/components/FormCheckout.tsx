@@ -101,9 +101,7 @@ export default function FormCheckout() {
             priceBase: item.priceBase,
             quantity: item.quantity,
             variantsSelected: item.variantsSelected
-        }))
-        console.log(newCart);
-        
+        }))        
     }
     refactorCart(cart)
 

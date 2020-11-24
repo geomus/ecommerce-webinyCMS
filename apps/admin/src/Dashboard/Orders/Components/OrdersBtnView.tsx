@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         imgProduct: {
             width: "100%"
+        },
+        textVariants: {
+            textTransform: "uppercase"
         }
     }),
 );
@@ -42,10 +45,9 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog(row) {
+export default function FullScreenDialog({ cart }) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const cart = JSON.parse(row.cart)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -55,11 +57,13 @@ export default function FullScreenDialog(row) {
         setOpen(false);
     };
 
+    console.log(cart);
+
 
     return (
         <div>
             <IconButton aria-label="edit" color="primary" onClick={handleClickOpen}>
-                <EditIcon />
+                <VisibilityIcon />
             </IconButton>
             <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
@@ -70,34 +74,42 @@ export default function FullScreenDialog(row) {
                         <Typography variant="h6" className={classes.title}>
                             Productos comprados
                         </Typography>
-                        <Button autoFocus color="inherit" onClick={handleClose}>
-                            Guardar
-                        </Button>
                     </Toolbar>
                 </AppBar>
                 <TableContainer>
                     <Table className={classes.table} aria-label="spanning table">
                         <TableHead>
                             <TableRow>
-                                <TableCell align="center" colSpan={3}>
+                                <TableCell align="center">
                                     Detalles
                             </TableCell>
-                                <TableCell align="right">Precio</TableCell>
-                                <TableCell align="right">Subtotal</TableCell>
+                                <TableCell align="center">
+                                    Variantes
+                            </TableCell>
+                                <TableCell align="center">Qty.</TableCell>
+                                <TableCell align="center">Precio</TableCell>
+                                <TableCell align="center">Subtotal</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {cart.map((row) => (
-                                <TableRow key={row.id}>
-                                    <TableCell className={classes.cellImgProduct}>
-                                        <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
+                                <TableRow key={`${row.id}99`}>
+                                    <TableCell align="center">{row.name}</TableCell>
+                                    <TableCell align="center">
+                                        {
+                                            row.variantsSelected &&
+                                            row.variantsSelected.map((variants) =>
+
+                                                Object.entries(variants).map(([key, value], j) => <span className={classes.textVariants} key={j}><strong>{key}</strong>:{value} </span>)
+
+                                            )
+                                        }
                                     </TableCell>
-                                    <TableCell>{row.name}</TableCell>
-                                    <TableCell align="right" className={classes.cellQty}>
+                                    <TableCell align="center" className={classes.cellQty}>
                                         {row.quantity}
                                     </TableCell>
-                                    <TableCell align="right">${row.priceBase}</TableCell>
-                                    <TableCell align="right">${row.quantity * row.priceBase}</TableCell>
+                                    <TableCell align="center">${row.priceBase}</TableCell>
+                                    <TableCell align="center">${row.quantity * row.priceBase}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

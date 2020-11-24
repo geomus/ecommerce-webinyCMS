@@ -14,12 +14,15 @@ const useStyles = makeStyles({
 
 export default function ShopCartButton(props) {
     const classes = useStyles();
-    const {variantsSelected} = props
+    const {variantsSelected, variants, resetVariantsSelected} = props
 
     const prod = {
         ...props,
-        quantity: 1
+        quantity: 1,
+        variantsSelected,
+        variants:variants
     }
+    
 
     const { addToCart } = useContext(CartContext);
 
@@ -29,7 +32,7 @@ export default function ShopCartButton(props) {
                 className={classes.btnCenter}
                 variant="contained"
                 color="primary"
-                startIcon={<ShoppingCartIcon />} onClick={() => addToCart(prod, variantsSelected)}>
+                startIcon={<ShoppingCartIcon />} onClick={() => resetVariantsSelected(addToCart(prod))}>
                 ADD TO CART
             </Button>
         </React.Fragment>

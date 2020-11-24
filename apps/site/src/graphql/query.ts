@@ -15,8 +15,8 @@ export const products = gql`
                     isFeatured
                     isPublished
                     variants {
-                        name
                         propertyValues
+                        stock
                     }
                 }
             }
@@ -37,8 +37,8 @@ export const product = gql`
                     tags
                     isFeatured
                     variants {
-                        name
                         propertyValues
+                        stock
                     }
                 }
             }
@@ -56,6 +56,10 @@ export const productsFilter = gql`
                     priceBase
                     images
                     isFeatured
+                    variants {
+                        propertyValues
+                        stock
+                    }
                 }
             }
         }
@@ -175,6 +179,10 @@ export const searchProducts = gql`
                     priceBase
                     images
                     isFeatured
+                    variants {
+                        propertyValues
+                        stock
+                    }
                 }
             }
         }

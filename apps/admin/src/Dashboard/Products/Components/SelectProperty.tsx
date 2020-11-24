@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/client'
 import { listProperties } from '../../../graphql/query'
+import { TextField, Typography } from '@material-ui/core';
+import TableProductVariants from './TableProductVariants'
 
 const useStyles = makeStyles(() => ({
     root: {
         width: "100%",
-        display: "flex",
         alignItems: "flex-end",
         padding: "10px 0"
     },
@@ -21,31 +22,72 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-export default function Tags({handleChangeVariants}) {
+export default function Tags({ combineVariantsStocks, productName }) {
     const classes = useStyles();
-    const [propertyList, setPropertyList] = useState([{
-        id: null,
-        name: null
-    }])
-    
+    // const [stateCheckboxes, setStateCheckboxes] = useState({})
+    // const [propertiesSelected, setPropertiesSelected] = useState([])
+    const [properties, setProperties] = useState({})
+
+    // const handleChangeProperties = (event) => {
+    //     setStateCheckboxes({ ...stateCheckboxes, [event.target.name]: event.target.checked });
+    // };
+    //     const arrayProps = []
+    //     for (const key in stateCheckboxes) {
+    //            if (stateCheckboxes[key] === true) {
+    //             arrayProps.push(key)
+    //            }
+    //     }
+    //     setPropertiesSelected(arrayProps)
+
+
+
     const { loading, error, data } = useQuery(listProperties)
+
     useEffect(() => {
         if (!loading && data) {
-            const properties = data.properties.listProperties.data    
-            setPropertyList(properties)
+            const propertiesList = data.properties.listProperties.data
+            const newPropertiesList = {}
+            for (const property of propertiesList) {
+                newPropertiesList[property.name] = property.values
+            }
+            setProperties(newPropertiesList)
         }
     }, [loading, data])
-    
+
+    if (loading) {
+        return (
+            <h1> cargando </h1>
+        )
+    }
+    if (error) {
+        console.dir(error)
+        return <h1> error </h1>;
+    }
+
+    const updateProperties = (e) => {
+        const valueSplit = e.target.value.toUpperCase().split(",")
+        setProperties({ ...properties, [e.target.name]: valueSplit })
+    }
 
     return (
         <div>
-                    {
-                        propertyList.map((item, i) => 
-                        <div key={i} className={classes.root}>
-                            <p className={classes.textField}>{item.name}:</p>
-                            <input className={classes.inputField} type="text" name={item.name} onBlur={handleChangeVariants} />
-                        </div>)
-                    }
+            {
+                data.properties.listProperties.data.map((item, i) =>
+                    <div key={`${i}${item.name}`} className={classes.root}>
+                        <Typography className={classes.textField} variant="body1">{item.name}</Typography>
+                        <TextField
+                            key={i}
+                            // value={item.values}
+                            name={item.name}
+                            label="Variants"
+                            variant="outlined"
+                            type="text"
+                            size="small"
+                            onBlur={updateProperties}
+                        />
+                    </div>)
+            }
+            <TableProductVariants properties={properties} productName={productName} combineVariantsStocks={combineVariantsStocks} />
         </div >
     );
 }

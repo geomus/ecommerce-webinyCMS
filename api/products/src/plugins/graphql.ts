@@ -107,7 +107,7 @@ const plugin: GraphQLSchemaPlugin = {
             type Property {
                 id: ID
                 name: String
-                valueType: String
+                values: [String]
             }
             type ProductVariant {
                 id: ID
@@ -119,7 +119,7 @@ const plugin: GraphQLSchemaPlugin = {
             input PropertyInput {
                 id: ID
                 name: String
-                valueType: String
+                values: [String]
             }
             input ProductVariantInput {
                 id: ID

@@ -9,8 +9,9 @@ import TableRow from '@material-ui/core/TableRow';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { FormControl, InputLabel, Select, Typography } from "@material-ui/core"
+import {  Typography } from "@material-ui/core"
 import { CartContext } from "../../utils/context";
+import jpg from '*.jpg';
 
 
 const useStyles = makeStyles({
@@ -39,6 +40,15 @@ export default function Cart() {
     const totalCart = totalCalculator(cart)
     
     const [state, setState] = useState({});
+    const propertyKeys = []
+    for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < cart[0].variants.length; j++) {
+            const keys = Object.keys(cart[0].variants[j]);
+            propertyKeys.push(keys)            
+        }
+    }
+    console.log(propertyKeys);
+    
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -48,6 +58,8 @@ export default function Cart() {
         });
     };
 
+    console.log(cart);
+    
     return (
         <TableContainer>
             <Table className={classes.table} aria-label="cart" size="small">
@@ -70,24 +82,20 @@ export default function Cart() {
                             </TableCell>
                             <TableCell colSpan={3} padding="none" size="small">{row.name}</TableCell>
                             {
-                                row.variants &&
-                                row.variants.map((variant, i) =>
-                                    <FormControl key={i}>
-                                        <InputLabel htmlFor="age-native-simple">{variant.name}</InputLabel>
-                                        { }
-                                        <Select
-                                            native
-                                            value={state[variant.name]}
-                                            onChange={handleChange}
-                                            defaultValue={row.variantsSelected[variant.name]}
-                                        >
-                                            {
-                                                variant.propertyValues.map((data, i) => <option key={i} value={data}>{data}</option>)
-                                            }
-
-                                        </Select>
-                                    </FormControl>)
-                            }
+                        propertyKeys &&
+                        propertyKeys.map((variantProperty, i) =>
+                            <div key={`${i}variant`} >
+                                <Typography variant="body1" >{variantProperty}</Typography>
+                                <select>
+                                    {
+                                        Object.entries(row.variants[i][propertyKeys[i]]).map(([key, value], j) =>
+                                            <option key={`${key}val${j}`} defaultValue={row.variantsSelected[i][propertyKeys[i]]} onChange={handleChange} >{value}</option>
+                                            //value={state[value]} name={value}
+                                        )
+                                    }
+                                </select>
+                            </div>
+                        )}
                             <TableCell colSpan={1}>
                                 <TextField
                                     id={row.id}

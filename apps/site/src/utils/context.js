@@ -10,17 +10,17 @@ export const CartProvider = ({ children }) => {
         setCart(localCart);
     }, []);
 
-    const addToCart = (prod, variants) => {
+    const addToCart = (prod) => {
         const localCart = JSON.parse(localStorage.getItem("cart")) ?? [];
         const { id } = prod;
-        const existingProd = localCart.find((cartProd) => cartProd.id == id);
-        if (existingProd) {
-            existingProd.quantity += prod.quantity;
-        } else {
-            const productAdded = {...prod, variantsSelected: variants}
+        //const existingProd = localCart.find((cartProd) => cartProd.id == id);
+        // if (existingProd) {
+        //     existingProd.quantity += prod.quantity;
+        // } else {
+            const productAdded = {...prod}
             console.log(productAdded);
             localCart.push(productAdded);
-        }
+        // }
         localStorage.setItem("cart", JSON.stringify(localCart));
         setCart(localCart);
     };

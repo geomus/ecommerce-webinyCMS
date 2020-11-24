@@ -394,8 +394,22 @@ export const listProperties = gql`
         properties {
             listProperties {
                 data {
+                    id
                     name
-                    valueType
+                    values
+                }
+            }
+        }
+    }
+`;
+
+export const createProperties = gql`
+    mutation createProperty($data: PropertyInput!) {
+        properties {
+            createProperty(data: $data) {
+                data {
+                    name
+                    values
                 }
             }
         }

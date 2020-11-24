@@ -6,10 +6,14 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import QuickViewContent from './QuickViewContent'
 import { makeStyles } from '@material-ui/core';
+import ProductDetail from '../ProductDetail/components/ProductDetail';
 
 const useStyles = makeStyles({
   dialogContent: {
     overflow: "hidden"
+  },
+  quickView : {
+    maxWidth: 800
   }
 })
 
@@ -24,6 +28,8 @@ export default function AlertDialog(props) {
   const handleClose = () => {
     setOpen(false);
   };
+  console.log(props);
+  
 
   return (
     <div>
@@ -36,6 +42,7 @@ export default function AlertDialog(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         scroll="body"
+        maxWidth="md"
       >
         <DialogTitle id="alert-dialog-title">{"VISTA RAPIDA DEL PRODUCTO"}</DialogTitle>
         <DialogContent className={classes.dialogContent}>
