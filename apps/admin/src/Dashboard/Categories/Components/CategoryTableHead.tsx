@@ -4,15 +4,10 @@ import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/cor
 
 
 const headCells = [
-    { id: 'image', disablePadding: false, disableSort: true, label: 'Imagen' },
-    { id: 'name', disablePadding: false, disableSort: false, label: 'Producto' },
-    { id: 'price', disablePadding: false, disableSort: false, label: 'Precio' },
-    { id: 'tags', disablePadding: false, disableSort: true, label: 'Tags' },
-    { id: 'categories', disablePadding: false, disableSort: false, label: 'Categorías' },
-    { id: 'isPublished', disablePadding: false, disableSort: false, label: 'Publicado' },
-    { id: 'isFeatured', disablePadding: false, disableSort: false, label: 'Destacado' },
-    { id: 'edit', disablePadding: false, disableSort: true, label: 'Editar' },
-    { id: 'delete', disablePadding: false, disableSort: true, label: 'Eliminar' }
+    { id: 'parent', disablePadding: false, disableSort: false, label: 'Categoría superior' },
+    { id: 'name', disablePadding: false, disableSort: false, label: 'Nombre' },
+    { id: 'enabled', disablePadding: false, disableSort: false, label: 'Activa' }
+
 ];
 const ProductsTableHead = (props) => {
     const { classes, order, orderBy, onRequestSort } = props;
@@ -43,7 +38,6 @@ const ProductsTableHead = (props) => {
                                     </span>
                                 ) : null}
                             </TableSortLabel>}
-
                     </TableCell>
                 ))}
             </TableRow>

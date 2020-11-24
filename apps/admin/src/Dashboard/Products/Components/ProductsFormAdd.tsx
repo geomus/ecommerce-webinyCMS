@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
+import CategoryBtnCreate from "../../Categories/Components/CategoryBtnCreate";
 import { useMutation, useQuery } from "@apollo/client";
-import { createProduct, uploadFile, createFile, products, listPrices } from "../../../graphql/query";
+import {
+    createProduct,
+    uploadFile,
+    createFile,
+    products,
+    listPrices
+} from "../../../graphql/query";
 import FileUploadButton from "./FileUploadButton";
 import {
     Container,
@@ -16,18 +23,27 @@ import {
     Checkbox,
     Button,
     CircularProgress,
-    LinearProgress,
-
+    LinearProgress
 } from "@material-ui/core/";
+import Chip from "@material-ui/core/Chip";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
-import ProductsCheckboxPricesCategory from './ProductsCheckboxPricesCategory'
-
+import ProductsCheckboxPricesCategory from "./ProductsCheckboxPricesCategory";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: 224,
+            width: 250
+        }
+    }
+};
 const useStyles = makeStyles((theme) => ({
     layout: {
         width: "auto",
@@ -49,16 +65,26 @@ const useStyles = makeStyles((theme) => ({
             padding: theme.spacing(3)
         }
     },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+        maxWidth: 300
+    },
+    chip: {
+        margin: 2
+    },
     button: {
         marginTop: theme.spacing(3),
         marginLeft: theme.spacing(1)
     },
+    btnCategoryCreate: {
+        margin: "1rem 0 0 1.5rem"
+    }
 }));
 
-export default function ProductForm({ handleCloseDialog }) {
-    const classes = useStyles()
+export default function ProductForm({ handleCloseDialog, enabledCategories }) {
+    const classes = useStyles();
     const [files, setFiles] = useState([]);
-
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
     const [addProduct] = useMutation(createProduct, {
@@ -72,12 +98,13 @@ export default function ProductForm({ handleCloseDialog }) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState<Number>(1);
+    const [categories, setCategories] = useState([]);
     const [imagesKeys, setImagesKeys] = useState([]);
     const [tags, setTags] = useState([]);
     const [isFeatured, setIsFeatured] = useState<Boolean>(false);
 
     const [idPrices, setIdPrices] = useState([]);
-    const [checkedPrices, setCheckedPrices] = useState([{}])
+    const [checkedPrices, setCheckedPrices] = useState([{}]);
 
     const uploadImage = async (selectedFile) => {
         const getPresignedPostData = async (selectedFile): Promise<any> => {
@@ -105,12 +132,12 @@ export default function ProductForm({ handleCloseDialog }) {
                 });
             } catch (error) {
                 console.log(error);
-            };
+            }
         };
 
         try {
             const presignedPostData = await getPresignedPostData(selectedFile);
-            const { file } = selectedFile.src;            
+            const { file } = selectedFile.src;
 
             await uploadFileToS3(presignedPostData, file);
             await createFileDB({
@@ -123,11 +150,11 @@ export default function ProductForm({ handleCloseDialog }) {
                         tags: ["producto"]
                     }
                 }
-            });            
+            });
             return presignedPostData.fields.key;
         } catch (e) {
             console.log("An error occurred!", e.message);
-        };
+        }
     };
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -148,14 +175,17 @@ export default function ProductForm({ handleCloseDialog }) {
         setPrice(price);
     };
     const handleIdPrices = (event) => {
-        const idValue = event.currentTarget.id       
+        const idValue = event.currentTarget.id;
         console.log(event.target.checked);
         if (event.target.checked) {
-        const id = idPrices
-        id.push( idValue )
-        setIdPrices(id);
-        console.log(idPrices);
+            const id = idPrices;
+            id.push(idValue);
+            setIdPrices(id);
+            console.log(idPrices);
         }
+    };
+    const handleChangeCategories = (event) => {
+        setCategories(event.target.value);
     };
     const handleChangeImages = (selectedFiles) => {
         setFiles(selectedFiles);
@@ -175,53 +205,67 @@ export default function ProductForm({ handleCloseDialog }) {
         setIsLoading(true);
         e.preventDefault();
 
+        const categoriesProd = [];
+        categories.forEach((category) => {
+            enabledCategories.map((c) => {
+                if (c.name === category) {
+                    categoriesProd.push(c);
+                }
+            });
+        });
+
         for (const file of files) {
             const imageKey = await uploadImage(file);
             imagesKeys.push(imageKey);
             setImagesKeys(imagesKeys);
-        };
+        }
         const product = {
             name: name,
             description: description,
             priceBase: price,
             prices: idPrices,
+            categories: categoriesProd,
             images: imagesKeys,
             tags: tags,
-            isFeatured: isFeatured,
+            isFeatured: isFeatured
         };
-        
+
         try {
             await addProduct({ variables: { data: product } });
 
             setOpenSuccess(true);
-            setTimeout(function () { handleCloseDialog(false) }, 1200);
+            setTimeout(function () {
+                handleCloseDialog(false);
+            }, 1200);
         } catch (error) {
             console.error(error);
             setOpenError(true);
             setIsLoading(false);
         }
     };
-    
-    const { loading, error, data } =  useQuery(listPrices)
 
+    const { loading: pricesLoading, error: pricesError, data: pricesData } = useQuery(listPrices);
     useEffect(() => {
-        if(!loading && data) {
-            const objectForStatePrices = data.prices.listPrices.data.map(price => {
-                const idStatePrices = price.id + 'state'
-                const objectForStatePrices = { [idStatePrices]: false }
-                return objectForStatePrices
-            })
-            setCheckedPrices(objectForStatePrices)
+        if (!pricesLoading && pricesData) {
+            const objectForStatePrices = pricesData.prices.listPrices.data.map((price) => {
+                const idStatePrices = price.id + "state";
+                const objectForStatePrices = { [idStatePrices]: false };
+                return objectForStatePrices;
+            });
+            setCheckedPrices(objectForStatePrices);
         }
-    }, [loading, data])
+    }, [pricesLoading, pricesData]);
 
-    if (loading) {
+    if (pricesLoading) {
         return (
-            <h1> <LinearProgress /> </h1>
-        )
+            <h1>
+                {" "}
+                <LinearProgress />{" "}
+            </h1>
+        );
     }
-    if (error) {
-        console.dir(error)
+    if (pricesError) {
+        console.dir(pricesError);
         return <h1> error </h1>;
     }
 
@@ -284,10 +328,55 @@ export default function ProductForm({ handleCloseDialog }) {
                                         Precio minorista base.
                                     </FormHelperText>
                                 </FormControl>
-                                <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} data={data} />
+                                <ProductsCheckboxPricesCategory
+                                    handleIdPrices={handleIdPrices}
+                                    checkedPrices={checkedPrices}
+                                    data={pricesData}
+                                />
                             </Grid>
                             <Grid item xs={12}>
-                                <InputLabel >Imágenes</InputLabel>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="categories">Categorías</InputLabel>
+                                    <Select
+                                        labelId="categories"
+                                        id="categories"
+                                        multiple
+                                        aria-describedby="categories-helper"
+                                        value={categories}
+                                        onChange={handleChangeCategories}
+                                        input={<Input id="categories" />}
+                                        renderValue={(selected) => (
+                                            <div className={classes.chip}>
+                                                {(selected as string[]).map((value) => (
+                                                    <Chip
+                                                        key={value}
+                                                        label={value}
+                                                        className={classes.chip}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {enabledCategories.map((category) => (
+                                            <MenuItem key={category.id} value={category.name}>
+                                                {category.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    <FormHelperText id="categories-helper">
+                                        Desplegá para ver tu selección de categorías para este
+                                        producto. (¿Necesitás cargar una nueva?{" "}
+                                        <CategoryBtnCreate
+                                            className={classes.btnCategoryCreate}
+                                            categories={enabledCategories}
+                                        />
+                                        )
+                                    </FormHelperText>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel>Imágenes</InputLabel>
                                 <FileUploadButton
                                     handlerImages={handleChangeImages}
                                     images={null}
@@ -340,17 +429,27 @@ export default function ProductForm({ handleCloseDialog }) {
                                     AGREGAR
                                 </Button>
                             ) : (
-                                    <CircularProgress />
-                                )}
+                                <CircularProgress />
+                            )}
                         </FormControl>
                     </form>
                 </React.Fragment>
-                <Snackbar open={openSuccess} autoHideDuration={3000} anchorOrigin={{ horizontal: "right", vertical: "bottom" }} onClose={handleClose}>
+                <Snackbar
+                    open={openSuccess}
+                    autoHideDuration={3000}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    onClose={handleClose}
+                >
                     <Alert onClose={handleClose} severity="success">
                         ¡Producto cargado con éxito!
                     </Alert>
                 </Snackbar>
-                <Snackbar open={openError} autoHideDuration={5000} anchorOrigin={{ horizontal: "right", vertical: "bottom" }} onClose={handleClose}>
+                <Snackbar
+                    open={openError}
+                    autoHideDuration={5000}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    onClose={handleClose}
+                >
                     <Alert onClose={handleClose} severity="error">
                         ¡No se ha podido cargar el producto, revise sus datos!
                     </Alert>
