@@ -557,8 +557,6 @@ export const updateCategory = gql`
                     enabled
                     parent {
                         id
-                        name
-                        enabled
                     }
                 }
                 error {

@@ -14,6 +14,7 @@ import { listAllCategories } from "../../../graphql/query";
 import { LinearProgress } from "@material-ui/core";
 import CategoryTableToolbar from "./CategoryTableToolbar";
 import CategoryTableHead from "./CategoryTableHead";
+import CategoryBtnEdit from "./CategoryBtnEdit";
 import CategoryDeleteBtn from "./CategoryDelete";
 
 function descendingComparator(a, b, orderBy) {
@@ -68,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
     },
     marginTags: {
         marginRight: "0.5rem"
+    },
+    btnCategoryCreate: {
+        margin: "1rem 0 0 1.5rem"
     }
 }));
 
@@ -150,7 +154,7 @@ export default function CategoryTable() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     return (
-                                        <TableRow hover role="checkbox" tabIndex={1} key={row.id}>
+                                        <TableRow hover tabIndex={1} key={row.id}>
                                             <TableCell component="th" scope="row">
                                                 {row.parent
                                                     ? row.parent.name.replace(/^\w/, (c) =>
@@ -163,6 +167,9 @@ export default function CategoryTable() {
                                             </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.enabled ? "SI" : "NO"}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <CategoryBtnEdit className={classes.btnCategoryCreate} categories={data.categories.listCategories.data} row={row} />
                                             </TableCell>
                                             <TableCell align="center">
                                                 <CategoryDeleteBtn row={row} />
