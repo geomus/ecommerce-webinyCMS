@@ -108,11 +108,11 @@ export default function FullScreenDialog({className}) {
           <TextField id="namePriceCategory" label="Nombre"  onChange={handleName}/>
           </FormGroup>
           <FormGroup>
-          <TextField id="percentPriceCategory" label="Porcentaje" type="number" onChange={handlePercent} />
+          <TextField id="percentPriceCategory" label="Porcentaje" type="number" onBlur={handlePercent} />
           </FormGroup>
           <FormGroup>
           <FormControlLabel
-            control={<Checkbox checked={checked} onChange={handleChangeCheckbox} name="defaultPriceCategory" />}
+            control={<Checkbox checked={checked} onBlur={handleChangeCheckbox} name="defaultPriceCategory" />}
             label="Categoria por defecto"
           />
           </FormGroup>

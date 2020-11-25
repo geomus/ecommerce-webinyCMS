@@ -415,3 +415,26 @@ export const createProperties = gql`
         }
     }
 `;
+
+export const deleteProperties = gql`
+    mutation deleteProperty($id: ID!) {
+        properties {
+            deleteProperty(id: $id) {
+                data 
+            }
+        }
+    }
+`;
+
+export const updateProperties = gql`
+    mutation updateProperty($id: ID!, $data: PropertyInput!) {
+        properties {
+            updateProperty(id: $id, data: $data) {
+                data {
+                    name
+                    values
+                }
+            }
+        }
+    }
+`;

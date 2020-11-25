@@ -5,8 +5,9 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from "@material-ui/core/styles"
 import { ReactComponent as RbNew } from '../utils/svg/rb-new.svg'
-import { Button, Divider, FormControl, InputLabel, Select } from '@material-ui/core';
+import { Button, Divider } from '@material-ui/core';
 import ShopCartButton from '../Product/ShopCartButton';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -164,6 +165,16 @@ const QuickViewContent = (props) => {
         setVariantsSelected([])
     }
 
+    const handleDeleteChipVariant = (e) => {
+        const splitSelected = e.currentTarget.id.split(",")
+        console.log(splitSelected);
+
+        const selected = { key: splitSelected[0], value: splitSelected[1] }
+        const variantsSelectedFiltered = variantsSelected.filter(variant => {
+            return variant[selected.key] != selected.value
+        })
+        setVariantsSelected(variantsSelectedFiltered)
+    }
 
 
     return (
@@ -197,8 +208,8 @@ const QuickViewContent = (props) => {
                                         Object.entries(options[i][propertyKeys[i]]).map(([key, value], j) =>
                                             <div key={`${key}val`}>
                                                 {
-                                                    // isDisabled === true ?
-                                                    keysIsDisabled[j] === value && isDisabled[keysIsDisabled[j]] === true ?
+                                                    isDisabled[`${value}`] === true ?
+                                                        // true ?
                                                         <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
                                                         :
                                                         <Button variant="contained" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
@@ -209,6 +220,15 @@ const QuickViewContent = (props) => {
                                 </div>
                             </div>
                         )}
+                    <div>
+                        {
+                            variantsSelected &&
+                            variantsSelected.map((variable, i) =>
+                                Object.entries(variable).map(([key, value]) =>
+                                    <Chip color="secondary" key={key + i} id={`${value}`} size="small" onDelete={handleDeleteChipVariant} label={`${key}:${value}`} deleteIcon={<CancelIcon id={`${key},${value}`} key={key} />} />
+                                ))
+                        }
+                    </div>
 
                     <div>
                         {props.tags &&
@@ -216,13 +236,7 @@ const QuickViewContent = (props) => {
                                 color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
                         }
                     </div>
-                    <div>
-                        {
-                            variantsSelected &&
-                            variantsSelected.map((variable, i) =>
-                                Object.entries(variable).map(([key, value]) => <Typography variant="caption" key={i}>{key}:{value}</Typography>))
-                        }
-                    </div>
+
                     <ShopCartButton {...props} variants={options} variantsSelected={variantsSelected} resetVariantsSelected={resetVariantsSelected} />
                 </Grid>
             </Grid>

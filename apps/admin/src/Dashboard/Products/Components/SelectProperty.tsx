@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client'
 import { listProperties } from '../../../graphql/query'
 import { TextField, Typography } from '@material-ui/core';
 import TableProductVariants from './TableProductVariants'
+import VariantsBtnCreate from '../../Variants/Components/VariantsBtnCreate'
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -77,7 +78,7 @@ export default function Tags({ combineVariantsStocks, productName }) {
                         <Typography className={classes.textField} variant="body1">{item.name}</Typography>
                         <TextField
                             key={i}
-                            // value={item.values}
+                            defaultValue={item.values}
                             name={item.name}
                             label="Variants"
                             variant="outlined"
@@ -88,6 +89,9 @@ export default function Tags({ combineVariantsStocks, productName }) {
                     </div>)
             }
             <TableProductVariants properties={properties} productName={productName} combineVariantsStocks={combineVariantsStocks} />
+            <br/>
+            <VariantsBtnCreate/>
+            <br/> 
         </div >
     );
 }

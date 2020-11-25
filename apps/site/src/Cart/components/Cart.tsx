@@ -11,7 +11,6 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import {  Typography } from "@material-ui/core"
 import { CartContext } from "../../utils/context";
-import jpg from '*.jpg';
 
 
 const useStyles = makeStyles({
@@ -51,14 +50,13 @@ export default function Cart() {
     
 
     const handleChange = (event) => {
-        const name = event.target.name;
+        const name = event.currentTarget.id;
         setState({
             ...state,
             [name]: event.target.value,
         });
     };
 
-    console.log(cart);
     
     return (
         <TableContainer>
@@ -89,8 +87,8 @@ export default function Cart() {
                                 <select>
                                     {
                                         Object.entries(row.variants[i][propertyKeys[i]]).map(([key, value], j) =>
-                                            <option key={`${key}val${j}`} defaultValue={row.variantsSelected[i][propertyKeys[i]]} onChange={handleChange} >{value}</option>
-                                            //value={state[value]} name={value}
+                                            <option key={`${key}val${j}`} value={state[`${value}`]} id={`${value}`} defaultValue={row.variantsSelected[i][propertyKeys[i]]} onChange={handleChange} >{value}</option>
+                                            //
                                         )
                                     }
                                 </select>

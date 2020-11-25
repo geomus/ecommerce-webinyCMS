@@ -13,6 +13,7 @@ export default  [{
         <Menu name="products" icon={<AllInboxIcon />} label="Products">
             <Item label={"Products List"} path="/products" />
             <Item label={"Prices"} path="/prices" />
+            <Item label={"Variants"} path="/variants" />
         </Menu>
       );
     }

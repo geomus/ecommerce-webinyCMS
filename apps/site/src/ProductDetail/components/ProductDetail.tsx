@@ -9,6 +9,8 @@ import { makeStyles } from "@material-ui/core/styles"
 import { ReactComponent as RbNew } from '../../utils/svg/rb-new.svg'
 import { Button, Divider, LinearProgress } from '@material-ui/core';
 import ShopCartButton from '../../Product/ShopCartButton';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { SelectedRowCount } from '@material-ui/data-grid';
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -109,7 +111,6 @@ const ProductDetail = () => {
         return <h1> error </h1>;
     }
 
-
     interface ValueOptions {
         [key: string]: Array<string>;
     }
@@ -135,10 +136,7 @@ const ProductDetail = () => {
         return productVariants;
     }
 
-
-    const options = generateOptions(productState) 
-    console.log(options);
-      
+    const options = generateOptions(productState)
 
     function setInitalStateDisabled(value, status) {
         const elementSelected = {}
@@ -167,16 +165,22 @@ const ProductDetail = () => {
         const elementSelected = setInitalStateDisabled(filteredOptions, false)
         setIsDisabled({ ...isDisabled, ...elementSelected });
     }
-    const keysIsDisabled = Object.keys(isDisabled)
 
     const resetVariantsSelected = (addToCart) => {
         setVariantsSelected([])
     }
 
+    const handleDeleteChipVariant = (e) => {
+        const splitSelected = e.currentTarget.id.split(",")
+        console.log(splitSelected);
 
-    
-    
-    
+        const selected = { key: splitSelected[0], value: splitSelected[1] }
+        const variantsSelectedFiltered = variantsSelected.filter(variant => {
+            return variant[selected.key] != selected.value
+        })
+        setVariantsSelected(variantsSelectedFiltered)
+    }
+
 
     return (
         <Container>
@@ -209,12 +213,12 @@ const ProductDetail = () => {
                                     {
                                         Object.entries(options[i][propertyKeys[i]]).map(([key, value], j) =>
                                             <div key={`${key}val`}>
-                                                { 
-                                                // isDisabled === true ?
-                                                keysIsDisabled[j] === value && isDisabled[keysIsDisabled[j]] === true ?
-                                                    <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
-                                                    :
-                                                    <Button variant="contained" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
+                                                {
+                                                    isDisabled[`${value}`] === true ?
+                                                        // true ?
+                                                        <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
+                                                        :
+                                                        <Button variant="contained" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
                                                 }
                                             </div>
                                         )
@@ -222,20 +226,23 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                         )}
-
-                    <div>
-                        {data.products.getProduct.data.tags &&
-                            data.products.getProduct.data.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
-                                color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
-                        }
-                    </div>
                     <div>
                         {
                             variantsSelected &&
                             variantsSelected.map((variable, i) =>
-                                Object.entries(variable).map(([key, value]) => <Typography variant="caption" key={i}>{key}:{value}</Typography>))
+                                Object.entries(variable).map(([key, value]) =>
+                                    <Chip color="secondary" key={key + i} id={`${value}`} size="small" onDelete={handleDeleteChipVariant} label={`${key}:${value}`} deleteIcon={<CancelIcon id={`${key},${value}`} key={key} />} />
+                                ))
                         }
                     </div>
+                    <br />
+                    <div>
+                        {data.products.getProduct.data.tags &&
+                            data.products.getProduct.data.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
+                                color="secondary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
+                        }
+                    </div>
+
                     <ShopCartButton {...data.products.getProduct.data} variants={options} variantsSelected={variantsSelected} resetVariantsSelected={resetVariantsSelected} />
                 </Grid>
             </Grid>
