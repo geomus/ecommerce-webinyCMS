@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import {
-    updateProduct,
-    uploadFile,
-    deleteFile,
-    getFile,
-    createFile,
-    products
-} from "../../../graphql/query";
+import { useMutation } from "@apollo/client";
+import { updateProduct, uploadFile, createFile, products } from "../../../graphql/query";
 import FileUploadButton from "./FileUploadButton";
 import {
     Container,
@@ -26,6 +19,9 @@ import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Chip from "@material-ui/core/Chip";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import Tag from "@material-ui/icons/LocalOffer";
 import { makeStyles } from "@material-ui/core/styles";
 
 function Alert(props: AlertProps) {
@@ -86,14 +82,16 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
 
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
-    const oneImageKey = productImages[0];
 
-    const { error, data } = useQuery(getFile, { variables: { key: oneImageKey } });
-    if (error) {
-        console.dir(error);
-    }
+    // PARA BORRADO DE IMAGEN
+    // const oneImageKey = productImages[0];
 
-    const [deleteImage] = useMutation(deleteFile);
+    // const { error, data } = useQuery(getFile, { variables: { key: oneImageKey } });
+    // if (error) {
+    //     console.dir(error);
+    // }
+    // const [deleteImage] = useMutation(deleteFile);
+
     const [editProduct] = useMutation(updateProduct, {
         refetchQueries: () => [{ query: products }]
     });
@@ -109,18 +107,10 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const [categories, setCategories] = useState([]);
     const [imagesKeys, setImagesKeys] = useState([]);
     const [tags, setTags] = useState(product.tags);
-    const [value, setValue] = useState(product.categories);
-    // console.log(productCategories);
 
     useEffect(() => {
-        const productCategories = product.categories;
-
-        for (const c of productCategories) {
-            delete c.__typename;
-            delete c.isEnabledInHierarchy;
-            c.parent && delete c.parent.__typename;
-        }
-        setCategories(productCategories)
+        const productCategories = product.categories.map(({ name }) => name);
+        setCategories(productCategories);
     }, []);
 
     const uploadImage = async (selectedFile) => {
@@ -197,22 +187,16 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const handleChangeImages = (selectedFiles) => {
         setFiles(selectedFiles);
     };
-    const handleChangeTags = (event) => {
-        const tags = event.target.value.split(",");
-        const _tags = [];
-        tags.forEach((tag) => {
-            _tags.push(tag.trimStart());
-        });
-        setTags(_tags);
+    const handleChangeTags = (event, values) => {
+        setTags(values);
     };
 
     const onSubmit = async (e) => {
         setIsLoading(true);
         e.preventDefault();
+        e.persist();
 
         if (files.length !== 0) {
-            console.log(data);
-
             let imageKey = [];
             for (const file of files) {
                 imageKey = await uploadImage(file);
@@ -221,14 +205,24 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             }
             // await deleteImage({ variables: { id: data.files.getFile.data.id } });
         } else {
+            console.log(productImages);
             setImagesKeys(productImages);
         }
+
+        const categoriesProd = [];
+        categories.forEach((category) => {
+            enabledCategories.map((c) => {
+                if (c.name === category) {
+                    categoriesProd.push(c);
+                }
+            });
+        });
 
         const product = {
             name: name,
             description: description,
             priceBase: priceBase,
-            categories: categories,
+            categories: categoriesProd,
             images: imagesKeys,
             tags: tags
         };
@@ -320,7 +314,6 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                         value={categories}
                                         onChange={handleChangeCategories}
                                         input={<Input id="categories" />}
-                                        defaultValue={product.categories}
                                         renderValue={(selected) => (
                                             <div className={classes.chip}>
                                                 {(selected as string[]).map((value) => (
@@ -358,22 +351,40 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl>
-                                    <InputLabel htmlFor="tags">TAGs</InputLabel>
-                                    <Input
-                                        required
+                                    <Autocomplete
+                                        multiple
                                         id="tags"
-                                        type="text"
                                         aria-describedby="tags-helper"
-                                        fullWidth
-                                        autoComplete="given-tags"
-                                        startAdornment={
-                                            <InputAdornment position="start">#</InputAdornment>
+                                        options={[]}
+                                        defaultValue={tags}
+                                        freeSolo
+                                        onChange={(event, values) =>
+                                            handleChangeTags(event, values)
                                         }
-                                        onChange={handleChangeTags}
-                                        defaultValue={product.tags}
+                                        renderInput={(params) => {
+                                            return (
+                                                <TextField
+                                                    {...params}
+                                                    variant="standard"
+                                                    label="TAGs"
+                                                    fullWidth
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        startAdornment: (
+                                                            <>
+                                                                <InputAdornment position="start">
+                                                                    <Tag />
+                                                                </InputAdornment>
+                                                                {params.InputProps.startAdornment}
+                                                            </>
+                                                        )
+                                                    }}
+                                                />
+                                            );
+                                        }}
                                     />
                                     <FormHelperText id="tags-helper">
-                                        Etiquetas relacionadas. Separar por comas cada TAG.
+                                        Etiquetas relacionadas. ENTER para ingresar un TAG.
                                     </FormHelperText>
                                 </FormControl>
                             </Grid>

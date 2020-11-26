@@ -1,7 +1,5 @@
 import React from "react";
 import ProductsFormEdit from "./ProductsFormEdit";
-import { useQuery } from "@apollo/client";
-import { listAllCategories } from "../../../graphql/query";
 import { IconButton } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -12,7 +10,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import { TransitionProps } from "@material-ui/core/transitions";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -34,37 +31,10 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({ product }) {
+export default function FullScreenDialog({ product, categories }) {
     const classes = useStyles();
     const [openDialog, setOpenDialog] = React.useState(false);
 
-    const { loading: categoriesLoading, error: categoriesError, data } = useQuery(
-        listAllCategories
-    );
-
-    if (categoriesLoading) {
-        return (
-            <h1>
-                {" "}
-                <LinearProgress />{" "}
-            </h1>
-        );
-    }
-    if (categoriesError) {
-        console.dir(categoriesError);
-        return <h1> error </h1>;
-    }
-
-    const categoriesData = JSON.parse(JSON.stringify(data.categories.listCategories.data)).filter(
-        (c) => c.enabled == true
-    );
-
-    for (const c of categoriesData) {
-        delete c.__typename;
-        delete c.isEnabledInHierarchy;
-        c.parent && delete c.parent.__typename;
-    }
-    
     const handleClickOpen = () => {
         setOpenDialog(true);
     };
@@ -100,7 +70,11 @@ export default function FullScreenDialog({ product }) {
                     </Toolbar>
                 </AppBar>
                 <List>
-                    <ProductsFormEdit handleCloseDialog={handleCloseDialog} product={product} enabledCategories={categoriesData} />
+                    <ProductsFormEdit
+                        handleCloseDialog={handleCloseDialog}
+                        product={product}
+                        enabledCategories={categories}
+                    />
                 </List>
             </Dialog>
         </div>

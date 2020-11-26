@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CategoryTable() {
     const classes = useStyles();
     const [order, setOrder] = React.useState("asc");
-    const [orderBy, setOrderBy] = React.useState("calories");
+    const [orderBy, setOrderBy] = React.useState("parent");
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(true);

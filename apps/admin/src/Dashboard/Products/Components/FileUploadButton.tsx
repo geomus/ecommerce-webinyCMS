@@ -12,11 +12,9 @@ export default function FileUploadButton({ handlerImages, images }) {
 
     class ImagesOnEdit extends Component {
         render() {
-            return (
-                images.map((img) => <li key={img}>{img}</li>)
-            );
-        };
-    };
+            return images.map((img) => <li key={img}>{img}</li>);
+        }
+    }
 
     return (
         <Files
@@ -26,7 +24,7 @@ export default function FileUploadButton({ handlerImages, images }) {
             // multipleMaxCount={5}
             accept={["image/jpg", "image/jpeg", "image/png"]}
             onSuccess={([selectedFile]) => {
-                handleFiles(selectedFile);                
+                handleFiles(selectedFile);
                 handlerImages(files);
             }}
             // onError={errors => this.setState({ errors })}
@@ -48,7 +46,7 @@ export default function FileUploadButton({ handlerImages, images }) {
                                 Soltá y cargá.
                             </Typography>
                             <ol>
-                                {images ? <ImagesOnEdit /> : ""}
+                                {images && <ImagesOnEdit />}
                                 {files.map((file) => (
                                     <li key={file.name}>{file.name}</li>
                                 ))}
@@ -86,4 +84,4 @@ export default function FileUploadButton({ handlerImages, images }) {
             }}
         </Files>
     );
-};
+}

@@ -6,19 +6,15 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { useQuery } from "@apollo/client";
-import { products } from "../../../graphql/query";
-import { Chip, LinearProgress } from "@material-ui/core";
+import { products, listAllCategories } from "../../../graphql/query";
+import { LinearProgress } from "@material-ui/core";
 import ProductsTableToolbar from "./ProductsTableToolbar";
 import ProductsTableHead from "./ProductsTableHead";
-import ProductsBtnPublished from "./ProductsBtnPublished";
-import ProductsBtnEdit from "./ProductsBtnEdit";
-import ProductsBtnDelete from "./ProductsBtnDelete";
-import ProductsBtnFeatured from "./ProductsBtnFeatured";
+import ProductRow from "./ProductRow";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -92,9 +88,13 @@ export default function ProductsTable() {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { loading, error, data } = useQuery(products);
-
-    if (loading) {
+    const { loading: categoriesLoading, error: categoriesError, data: categoriesData } = useQuery(
+        listAllCategories
+    );
+    const { loading: productsLoading, error: productsError, data: productsData } = useQuery(
+        products
+    );
+    if (categoriesLoading || productsLoading) {
         return (
             <h1>
                 {" "}
@@ -102,17 +102,29 @@ export default function ProductsTable() {
             </h1>
         );
     }
-
-    if (error) {
-        console.dir(error);
+    if (categoriesError || productsError) {
+        console.dir(categoriesError);
+        console.dir(productsError);
         return <h1> error </h1>;
     }
+
+    const categories = JSON.parse(
+        JSON.stringify(categoriesData.categories.listCategories.data)
+    ).filter((c) => c.enabled == true);
+
+    for (const c of categories) {
+        delete c.__typename;
+        delete c.isEnabledInHierarchy;
+        c.parent && delete c.parent.__typename;
+    }
+
     const rows = [];
-    data.products.listProducts.data.map((product) => rows.push(product));
+    productsData.products.listProducts.data.map((product) => rows.push(product));
 
     const dataForExport = [];
-    data.products.listProducts.data.map((product) => dataForExport.push(Object.values(product)));
-    console.log(dataForExport);
+    productsData.products.listProducts.data.map((product) =>
+        dataForExport.push(Object.values(product))
+    );
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
@@ -169,70 +181,11 @@ export default function ProductsTable() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                                            <TableCell
-                                                align="center"
-                                                className={classes.cellImgProduct}
-                                            >
-                                                <img
-                                                    src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
-                                                    className={classes.imgProduct}
-                                                    alt="Foto producto"
-                                                />
-                                            </TableCell>
-                                            <TableCell component="th" scope="row">
-                                                {row.name}
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                <Typography variant="body1" component="span">
-                                                    ${row.priceBase}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                {row.tags &&
-                                                    row.tags.map((tag, i) => (
-                                                        <Chip
-                                                            variant="outlined"
-                                                            className={classes.marginTags}
-                                                            color="primary"
-                                                            label={tag}
-                                                            component="a"
-                                                            href="#chip"
-                                                            key={i + tag}
-                                                            clickable
-                                                        />
-                                                    ))}
-                                            </TableCell>
-                                            {row.categories && (
-                                                <TableCell align="center">
-                                                    {row.tags &&
-                                                        row.categories.map((category, i) => (
-                                                            <Chip
-                                                                variant="outlined"
-                                                                className={classes.marginTags}
-                                                                color="primary"
-                                                                label={category.name}
-                                                                component="a"
-                                                                href="#chip"
-                                                                key={i + category.name}
-                                                                clickable
-                                                            />
-                                                        ))}
-                                                </TableCell>
-                                            )}
-                                            <TableCell align="center">
-                                                <ProductsBtnPublished row={row} />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnFeatured row={row} />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnEdit product={row} />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnDelete row={row} />
-                                            </TableCell>
-                                        </TableRow>
+                                        <ProductRow
+                                            row={row}
+                                            categories={categories}
+                                            key={row.id}
+                                        />
                                     );
                                 })}
                             {emptyRows > 0 && (
