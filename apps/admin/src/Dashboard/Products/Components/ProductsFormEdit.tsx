@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import {
     updateProduct,
@@ -23,11 +23,23 @@ import {
     CircularProgress
 } from "@material-ui/core/";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import Chip from "@material-ui/core/Chip";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: 224,
+            width: 250
+        }
+    }
+};
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -53,10 +65,21 @@ const useStyles = makeStyles((theme) => ({
     button: {
         marginTop: theme.spacing(3),
         marginLeft: theme.spacing(1)
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+        maxWidth: 300
+    },
+    chip: {
+        margin: 2
+    },
+    btnCategoryEdit: {
+        margin: "1rem 0 0 1.5rem"
     }
 }));
 
-export default function ProductFormEdit({ handleCloseDialog, product }) {
+export default function ProductFormEdit({ handleCloseDialog, product, enabledCategories }) {
     const [files, setFiles] = useState([]);
     const productId = product.id;
     const productImages = product.images;
@@ -83,8 +106,22 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
     const [name, setName] = useState(product.name);
     const [description, setDescription] = useState(product.description);
     const [priceBase, setPriceBase] = useState<Number>(product.priceBase);
+    const [categories, setCategories] = useState([]);
     const [imagesKeys, setImagesKeys] = useState([]);
     const [tags, setTags] = useState(product.tags);
+    const [value, setValue] = useState(product.categories);
+    // console.log(productCategories);
+
+    useEffect(() => {
+        const productCategories = product.categories;
+
+        for (const c of productCategories) {
+            delete c.__typename;
+            delete c.isEnabledInHierarchy;
+            c.parent && delete c.parent.__typename;
+        }
+        setCategories(productCategories)
+    }, []);
 
     const uploadImage = async (selectedFile) => {
         const getPresignedPostData = async (selectedFile): Promise<any> => {
@@ -154,6 +191,9 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
         const priceBase = Number(event.target.value);
         setPriceBase(priceBase);
     };
+    const handleChangeCategories = (event) => {
+        setCategories(event.target.value);
+    };
     const handleChangeImages = (selectedFiles) => {
         setFiles(selectedFiles);
     };
@@ -188,6 +228,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
             name: name,
             description: description,
             priceBase: priceBase,
+            categories: categories,
             images: imagesKeys,
             tags: tags
         };
@@ -265,6 +306,43 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                                     />
                                     <FormHelperText id="price-helper">
                                         Precio minorista base.
+                                    </FormHelperText>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="categories">Categorías</InputLabel>
+                                    <Select
+                                        labelId="categories"
+                                        id="categories"
+                                        multiple
+                                        aria-describedby="categories-helper"
+                                        value={categories}
+                                        onChange={handleChangeCategories}
+                                        input={<Input id="categories" />}
+                                        defaultValue={product.categories}
+                                        renderValue={(selected) => (
+                                            <div className={classes.chip}>
+                                                {(selected as string[]).map((value) => (
+                                                    <Chip
+                                                        key={value}
+                                                        label={value}
+                                                        className={classes.chip}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {enabledCategories.map((category) => (
+                                            <MenuItem key={category.id} value={category.name}>
+                                                {category.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    <FormHelperText id="categories-helper">
+                                        Desplegá para ver tu selección de categorías para este
+                                        producto.
                                     </FormHelperText>
                                 </FormControl>
                             </Grid>

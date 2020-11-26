@@ -181,7 +181,6 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
             const id = idPrices;
             id.push(idValue);
             setIdPrices(id);
-            console.log(idPrices);
         }
     };
     const handleChangeCategories = (event) => {

@@ -114,7 +114,6 @@ export const createProduct = gql`
                             name
                             enabled
                         }
-                        isEnabledInHierarchy
                     }
                     images
                     tags
@@ -206,7 +205,6 @@ export const updateProduct = gql`
                             name
                             enabled
                         }
-                        isEnabledInHierarchy
                     }
                 }
             }
