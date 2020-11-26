@@ -29,6 +29,9 @@ import Chip from "@material-ui/core/Chip";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import Tag from "@material-ui/icons/LocalOffer";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsCheckboxPricesCategory from "./ProductsCheckboxPricesCategory";
 
@@ -181,7 +184,6 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
             const id = idPrices;
             id.push(idValue);
             setIdPrices(id);
-            console.log(idPrices);
         }
     };
     const handleChangeCategories = (event) => {
@@ -190,13 +192,8 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     const handleChangeImages = (selectedFiles) => {
         setFiles(selectedFiles);
     };
-    const handleChangeTags = (event) => {
-        const tags = event.target.value.split(",");
-        const _tags = [];
-        tags.forEach((tag) => {
-            _tags.push(tag.trimStart());
-        });
-        setTags(_tags);
+    const handleChangeTags = (event, values) => {
+        setTags(values);
     };
     const handleChangeIsFeatured = (event) => {
         setIsFeatured(event.target.checked);
@@ -204,6 +201,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     const onSubmit = async (e) => {
         setIsLoading(true);
         e.preventDefault();
+        e.persist();
 
         const categoriesProd = [];
         categories.forEach((category) => {
@@ -387,21 +385,39 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl>
-                                    <InputLabel htmlFor="tags">TAGs</InputLabel>
-                                    <Input
-                                        required
+                                    <Autocomplete
+                                        multiple
                                         id="tags"
-                                        type="text"
                                         aria-describedby="tags-helper"
-                                        fullWidth
-                                        autoComplete="given-tags"
-                                        startAdornment={
-                                            <InputAdornment position="start">#</InputAdornment>
+                                        options={[]}
+                                        freeSolo
+                                        onChange={(event, values) =>
+                                            handleChangeTags(event, values)
                                         }
-                                        onChange={handleChangeTags}
+                                        renderInput={(params) => {
+                                            return (
+                                                <TextField
+                                                    {...params}
+                                                    variant="standard"
+                                                    label="TAGs"
+                                                    fullWidth
+                                                    InputProps={{
+                                                        ...params.InputProps,
+                                                        startAdornment: (
+                                                            <>
+                                                                <InputAdornment position="start">
+                                                                    <Tag />
+                                                                </InputAdornment>
+                                                                {params.InputProps.startAdornment}
+                                                            </>
+                                                        )
+                                                    }}
+                                                />
+                                            );
+                                        }}
                                     />
                                     <FormHelperText id="tags-helper">
-                                        Etiquetas relacionadas. Separar por comas cada TAG.
+                                        Etiquetas relacionadas. ENTER para ingresar un TAG.
                                     </FormHelperText>
                                 </FormControl>
                             </Grid>

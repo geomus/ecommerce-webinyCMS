@@ -70,7 +70,7 @@ export default function FullScreenDialog() {
     for (const c of categoriesData) {
         delete c.__typename;
         delete c.isEnabledInHierarchy;
-        c.parent ? delete c.parent.__typename : "";
+        c.parent && delete c.parent.__typename;
     }
 
     return (

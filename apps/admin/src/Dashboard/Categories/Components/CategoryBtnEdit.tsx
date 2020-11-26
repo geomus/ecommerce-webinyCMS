@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme, withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,10 +13,10 @@ import Slide from "@material-ui/core/Slide";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import { TransitionProps } from "@material-ui/core/transitions";
-import AddIcon from "@material-ui/icons/Add";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import InputBase from "@material-ui/core/InputBase";
+import EditIcon from "@material-ui/icons/Edit";
 import {
     Checkbox,
     FormControlLabel,
@@ -25,7 +25,7 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createCategory, listAllCategories } from "../../../graphql/query";
+import { updateCategory, listAllCategories } from "../../../graphql/query";
 import { useMutation } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
@@ -110,22 +110,29 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog({ className, categories }) {
+export default function FullScreenDialog({ className, categories, row }) {
+    const categoryId = row.id;
+
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [checked, setChecked] = useState(false);
-    const [enabled, setEnabled] = useState(true);
+    const [enabled, setEnabled] = useState(row.enabled);
+    const [name, setName] = useState(row.name);
+    const [parent, setParent] = useState(row.parent);
 
-    const [name, setName] = useState("");
-    const [parent, setParent] = useState(null);
+    useEffect(() => {
+        if (row.parent) {
+            setChecked(true);
+        }
+    }, []);
 
-    const [addCategory] = useMutation(createCategory, {
+    const [patchCategory] = useMutation(updateCategory, {
         refetchQueries: () => [{ query: listAllCategories }]
     });
 
     const handleChangeEnabled = (event) => {
-        setEnabled(event.target.value);
+        setEnabled(event.target.checked);
     };
     const handleChangeParent = (event) => {
         setParent(event.target.value);
@@ -136,6 +143,7 @@ export default function FullScreenDialog({ className, categories }) {
     const handleClose = (boolean) => {
         setOpen(false);
         setChecked(false);
+        setEnabled(false);
     };
     const handleCloseSnackbar = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === "clickaway") {
@@ -159,27 +167,31 @@ export default function FullScreenDialog({ className, categories }) {
             },
             enabled: enabled
         };
-        await addCategory({ variables: { data: category } });
-        setTimeout(function () {
-            handleClose(false);
-        }, 1200);
-        setOpenSnackbar(true);
-        setTimeout(function () {
-            setOpenSnackbar(false);
-        }, 1400);
+
+        try {
+            await patchCategory({ variables: { id: categoryId, data: category } });
+            setTimeout(function () {
+                handleClose(false);
+            }, 1200);
+            setOpenSnackbar(true);
+            setTimeout(function () {
+                setOpenSnackbar(false);
+            }, 1400);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
         <React.Fragment>
-            <Button
-                variant="contained"
+            <IconButton
+                aria-label="edit"
                 color="primary"
-                startIcon={<AddIcon />}
-                className={className}
                 onClick={handleClickOpen}
+                className={className}
             >
-                NUEVA
-            </Button>
+                <EditIcon />
+            </IconButton>
             <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
@@ -192,7 +204,7 @@ export default function FullScreenDialog({ className, categories }) {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            Nueva categoría de producto
+                            Editar categoría
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -205,6 +217,7 @@ export default function FullScreenDialog({ className, categories }) {
                                         id="nameCategory"
                                         label="Nombre"
                                         onChange={handleName}
+                                        defaultValue={row.name}
                                         required
                                     />
                                 </FormGroup>
@@ -242,6 +255,7 @@ export default function FullScreenDialog({ className, categories }) {
                                                 labelId="parent-category-label"
                                                 id="parent-category"
                                                 value={parent}
+                                                defaultValue={parent}
                                                 onChange={handleChangeParent}
                                                 input={<BootstrapInput />}
                                             >
