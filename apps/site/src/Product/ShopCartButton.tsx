@@ -14,13 +14,13 @@ const useStyles = makeStyles({
 
 export default function ShopCartButton(props) {
     const classes = useStyles();
-    const {variantsSelected, variants, resetVariantsSelected} = props
+    const {variantsSelected, listVariants, resetVariantsSelected, enabled} = props
 
     const prod = {
         ...props,
         quantity: 1,
         variantsSelected,
-        variants:variants
+        listVariants:listVariants
     }
     
 
@@ -32,6 +32,7 @@ export default function ShopCartButton(props) {
                 className={classes.btnCenter}
                 variant="contained"
                 color="primary"
+                disabled={enabled}
                 startIcon={<ShoppingCartIcon />} onClick={() => resetVariantsSelected(addToCart(prod))}>
                 ADD TO CART
             </Button>

@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from "@material-ui/core/styles"
 import { ReactComponent as RbNew } from '../utils/svg/rb-new.svg'
-import { Button, Divider } from '@material-ui/core';
+import { Button, Divider, Tooltip } from '@material-ui/core';
 import ShopCartButton from '../Product/ShopCartButton';
 import CancelIcon from '@material-ui/icons/Cancel';
 
@@ -44,54 +44,58 @@ const QuickViewContent = (props) => {
     const [variantsSelected, setVariantsSelected] = useState([]);
     const [productState, setProductState] = useState([])
     const [propertyKeys, setPropertyKeys] = useState([])
-    const [isDisabled, setIsDisabled] = useState({
-        default: true
-    })
+    const [isDisabled, setIsDisabled] = useState({})
+    const [enabledTooltip, setEnabledTooltip] = useState(false)
+    const [limitVariants, setLimitVariants] = useState(false)
+    const [shopCartButtonEnabled, setShopCartButtonEnabled] = useState(false)
 
     useEffect(() => {
         const productData = props.variants
-        const propertyKeys = Object.keys(JSON.parse(productData[0].propertyValues))
-        setPropertyKeys(propertyKeys)
-        const newProductData = []
-        for (const key in productData) {
-            const dataObjectProduct = {
-                propertyValues: JSON.parse(productData[key].propertyValues),
-                stock: productData[key].stock
+        if (productData[0]) {
+            console.log(props.variants);
+            
+            setShopCartButtonEnabled(true)
+            const propertyKeys = Object.keys(JSON.parse(productData[0].propertyValues))
+            setPropertyKeys(propertyKeys)
+            const newProductData = []
+            for (const key in productData) {
+                const dataObjectProduct = {
+                    propertyValues: JSON.parse(productData[key].propertyValues),
+                    stock: productData[key].stock
+                }
+                newProductData.push(dataObjectProduct);
             }
-            newProductData.push(dataObjectProduct);
-        }
-        setProductState(newProductData)
+            setProductState(newProductData)
 
 
-        interface ValueOptions {
-            [key: string]: Array<string>;
-        }
+            interface ValueOptions {
+                [key: string]: Array<string>;
+            }
 
-        function generateOptions(variants) {
-            const options: ValueOptions = {};
-            for (const variant of variants) {
-                for (const key in variant.propertyValues) {
-                    const value = variant.propertyValues[key];
-                    if (!options[key]) {
-                        options[key] = [];
-                    }
-                    if (!options[key].includes(value)) {
-                        options[key].push(value);
+            function generateOptions(variants) {
+                const options: ValueOptions = {};
+                for (const variant of variants) {
+                    for (const key in variant.propertyValues) {
+                        const value = variant.propertyValues[key];
+                        if (!options[key]) {
+                            options[key] = [];
+                        }
+                        if (!options[key].includes(value)) {
+                            options[key].push(value);
+                        }
                     }
                 }
+                const productVariants = []
+                for (const key in options) {
+                    const element = { [key]: options[key] };
+                    productVariants.push(element);
+                }
+                return productVariants;
             }
-            const productVariants = []
-            for (const key in options) {
-                const element = { [key]: options[key] };
-                productVariants.push(element);
-            }
-            return productVariants;
+            const options = generateOptions(newProductData)
+            const elementSelected = setInitalStateDisabled(options, true)
+            setIsDisabled({ ...elementSelected });
         }
-
-
-        const options = generateOptions(newProductData)
-        const elementSelected = setInitalStateDisabled(options, true)
-        setIsDisabled({ default: true, ...elementSelected });
     }, [props])
 
     const handleChange = (event) => {
@@ -101,6 +105,11 @@ const QuickViewContent = (props) => {
             [name]: event.target.value,
         });
     };
+
+    let options
+    if (productState) {
+        options = generateOptions(productState)
+    }
 
     interface ValueOptions {
         [key: string]: Array<string>;
@@ -127,11 +136,6 @@ const QuickViewContent = (props) => {
         return productVariants;
     }
 
-
-    const options = generateOptions(productState)
-    console.log(options);
-
-
     function setInitalStateDisabled(value, status) {
         const elementSelected = {}
         for (let i = 0; i < value.length; i++) {
@@ -147,19 +151,23 @@ const QuickViewContent = (props) => {
 
     const handleVariant = (e) => {
         const selected = { key: e.currentTarget.id, value: e.target.innerText }
-
         setVariantsSelected([...variantsSelected, { [e.currentTarget.id]: e.target.innerText }])
         const filteredVariants = productState.filter((variant) => {
-            return variant.propertyValues[selected.key] == selected.value && variant.stock > 0;
+            return variant.propertyValues[selected.key].toUpperCase() == selected.value && variant.stock > 0;
 
         });
 
         const filteredOptions = generateOptions(filteredVariants);
-
         const elementSelected = setInitalStateDisabled(filteredOptions, false)
         setIsDisabled({ ...isDisabled, ...elementSelected });
+        setEnabledTooltip(true)
+
+        if (variantsSelected.length === propertyKeys.length - 1) {
+            setLimitVariants(true)
+            setShopCartButtonEnabled(false)
+        }
+
     }
-    const keysIsDisabled = Object.keys(isDisabled)
 
     const resetVariantsSelected = (addToCart) => {
         setVariantsSelected([])
@@ -167,13 +175,20 @@ const QuickViewContent = (props) => {
 
     const handleDeleteChipVariant = (e) => {
         const splitSelected = e.currentTarget.id.split(",")
-        console.log(splitSelected);
-
         const selected = { key: splitSelected[0], value: splitSelected[1] }
+        setShopCartButtonEnabled(true)
         const variantsSelectedFiltered = variantsSelected.filter(variant => {
             return variant[selected.key] != selected.value
         })
+
         setVariantsSelected(variantsSelectedFiltered)
+        console.log(variantsSelected.length);
+
+        if (variantsSelected.length == 1) {
+            const elementSelected = setInitalStateDisabled(options, true)
+            setIsDisabled({ ...elementSelected });
+        }
+        setLimitVariants(false)
     }
 
 
@@ -209,10 +224,14 @@ const QuickViewContent = (props) => {
                                             <div key={`${key}val`}>
                                                 {
                                                     isDisabled[`${value}`] === true ?
-                                                        // true ?
-                                                        <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
+                                                        enabledTooltip ?
+                                                            <Tooltip title="Sin Stock" arrow>
+                                                                <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant} disabled={limitVariants}>{value}</Button>
+                                                            </Tooltip>
+                                                            :
+                                                            <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant} disabled={limitVariants}>{value}</Button>
                                                         :
-                                                        <Button variant="contained" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
+                                                        <Button variant="contained" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant} disabled={limitVariants}>{value}</Button>
                                                 }
                                             </div>
                                         )
@@ -220,6 +239,7 @@ const QuickViewContent = (props) => {
                                 </div>
                             </div>
                         )}
+                    <br />
                     <div>
                         {
                             variantsSelected &&
@@ -229,7 +249,7 @@ const QuickViewContent = (props) => {
                                 ))
                         }
                     </div>
-
+                    <br />
                     <div>
                         {props.tags &&
                             props.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
@@ -237,7 +257,7 @@ const QuickViewContent = (props) => {
                         }
                     </div>
 
-                    <ShopCartButton {...props} variants={options} variantsSelected={variantsSelected} resetVariantsSelected={resetVariantsSelected} />
+                    <ShopCartButton {...props} listVariants={options} variantsSelected={variantsSelected} resetVariantsSelected={resetVariantsSelected} enabled={shopCartButtonEnabled} />
                 </Grid>
             </Grid>
         </Container>

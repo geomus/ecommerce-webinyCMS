@@ -35,7 +35,8 @@ export default function TableProductVariants({ productName, properties, combineV
     const classes = useStyles();
     const [openDialog, setOpenDialog] = useState(false);
     const [stock, setStock] = useState([])
-
+ console.log(properties);
+ 
 
     const handleClickOpen = async () => {
         // funcion generadora de tabla con las variantes totales
@@ -61,7 +62,7 @@ export default function TableProductVariants({ productName, properties, combineV
     function createBaseVariants(key, values) {
         return values.map((value) => {
             const variant = {};
-            variant[key] = value;
+            variant[key] = value.toUpperCase();
             return variant;
         });
     }
@@ -79,7 +80,7 @@ export default function TableProductVariants({ productName, properties, combineV
         const newVariant = {
             propertyValues : {...variant},
         };
-        newVariant.propertyValues[key] = value;
+        newVariant.propertyValues[key] = value.toUpperCase();
         return newVariant;
     }
 

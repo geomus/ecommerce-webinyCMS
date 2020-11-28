@@ -23,7 +23,7 @@ const apolloGatewayServices = {
     LAMBDA_SERVICE_API_ORDERS: "${apiOrders.name}"
 };
 const mercadoPagoEnv = {
-    GRAPHQL_API_URL: process.env.GRAPHQL_API_URL,
+    GRAPHQL_API_URL: process.env.GRAPHQL_PLAYGROUND,
     USER_TOKEN: process.env.USER_TOKEN,
     BACK_URL_MERCADO_PAGO: process.env.BACK_URL_MERCADO_PAGO
 }

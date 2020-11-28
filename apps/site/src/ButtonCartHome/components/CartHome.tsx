@@ -47,6 +47,7 @@ export default function Cart() {
             [name]: event.target.value,
         });
     };
+console.log(cart);
 
     return (
         <TableContainer>
@@ -68,7 +69,12 @@ export default function Cart() {
                             <TableCell colSpan={2} padding="none" className={classes.cellImgProduct}>
                                 <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
-                            <TableCell colSpan={3} padding="none" size="small">{row.name}</TableCell>
+                            <TableCell colSpan={2} padding="none" size="small">{row.name}</TableCell>
+                            <TableCell colSpan={2} padding="none" size="small">{
+                                row.variantsSelected &&
+                            row.variantsSelected.map((variant,i) => 
+                            Object.entries(variant).map(([key,value]) => <div key={`${value}`}><span >{key}:{value}</span><br/></div>))}
+                            </TableCell>
                             <TableCell colSpan={1}>
                                 <TextField
                                     id={row.id}

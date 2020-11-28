@@ -106,11 +106,11 @@ export default function ProductsTable() {
     }
     const rows = []
     data.products.listProducts.data.map(product => rows.push(product))
-   
+
     const dataForExport = []
     data.products.listProducts.data.map(product => dataForExport.push(Object.values(product)))
     console.log(dataForExport);
-    
+
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -140,13 +140,17 @@ export default function ProductsTable() {
         setDense(event.target.checked);
     };
 
+    const totalCalculatorStock = (variants) => {
+        const suma = variants.reduce((acc, variant) => { return acc += variant.stock }, 0)
+        return suma
+    }
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <ProductsTableToolbar numSelected={selected.length} data={dataForExport}/>
+                <ProductsTableToolbar numSelected={selected.length} data={dataForExport} />
                 <TableContainer>
                     <Table
                         className={classes.table}
@@ -167,6 +171,7 @@ export default function ProductsTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
+                                    console.log(row);
 
                                     return (
                                         <TableRow
@@ -187,9 +192,14 @@ export default function ProductsTable() {
                                                     ${row.priceBase}
                                                 </Typography>
                                             </TableCell>
+                                            <TableCell align="center">
+                                                <Typography variant="body1" component="span">
+                                                    {totalCalculatorStock(row.variants)}
+                                                </Typography>
+                                            </TableCell>
                                             <TableCell align="center">{row.tags &&
-                                            row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} 
-                                            color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}
+                                                row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
+                                                    color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}
                                             </TableCell>
                                             <TableCell align="center">
                                                 <ProductsBtnPublished row={row} />
@@ -198,7 +208,7 @@ export default function ProductsTable() {
                                                 <ProductsBtnFeatured row={row} />
                                             </TableCell>
                                             <TableCell align="center">
-                                                <ProductsBtnEdit product={row}/>
+                                                <ProductsBtnEdit product={row} />
                                             </TableCell>
                                             <TableCell align="center">
                                                 <ProductsBtnDelete row={row} />

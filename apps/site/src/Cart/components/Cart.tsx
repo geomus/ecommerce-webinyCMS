@@ -41,8 +41,8 @@ export default function Cart() {
     const [state, setState] = useState({});
     const propertyKeys = []
     for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < cart[0].variants.length; j++) {
-            const keys = Object.keys(cart[0].variants[j]);
+        for (let j = 0; j < cart[0].listVariants.length; j++) {
+            const keys = Object.keys(cart[0].listVariants[j]);
             propertyKeys.push(keys)            
         }
     }
@@ -86,7 +86,7 @@ export default function Cart() {
                                 <Typography variant="body1" >{variantProperty}</Typography>
                                 <select>
                                     {
-                                        Object.entries(row.variants[i][propertyKeys[i]]).map(([key, value], j) =>
+                                        Object.entries(row.listVariants[i][propertyKeys[i]]).map(([key, value], j) =>
                                             <option key={`${key}val${j}`} value={state[`${value}`]} id={`${value}`} defaultValue={row.variantsSelected[i][propertyKeys[i]]} onChange={handleChange} >{value}</option>
                                             //
                                         )

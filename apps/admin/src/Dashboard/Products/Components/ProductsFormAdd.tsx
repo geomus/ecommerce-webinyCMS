@@ -81,6 +81,8 @@ export default function ProductForm({ handleCloseDialog }) {
     const [checkedPrices, setCheckedPrices] = useState([{}])
 
     const [productVariants, setProductVariants] = useState([])
+    const [properties, setProperties] = useState({})
+
 
     const uploadImage = async (selectedFile) => {
         const getPresignedPostData = async (selectedFile): Promise<any> => {
@@ -303,13 +305,13 @@ export default function ProductForm({ handleCloseDialog }) {
                                             Precio minorista base.
                                     </FormHelperText>
                                     </FormControl>
-                                    <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} data={data} />
+                                    <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} setCheckedPrices={setCheckedPrices} />
                                 </Grid>
                             </Grid>
                             <Grid item lg={6}>
                                 <Grid item xs={12}>
                                     <FormControl>
-                                        <FormHelperText id="price-helper">
+                                        <FormHelperText id="variants-helper">
                                             Selecciona las variantes del producto. (Separadas por comas)
                                     </FormHelperText>
                                         <SelectProperty productName={name} combineVariantsStocks={combineVariantsStocks} />

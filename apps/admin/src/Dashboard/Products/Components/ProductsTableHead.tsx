@@ -7,6 +7,7 @@ const headCells = [
     { id: 'image', disablePadding: false, disableSort: true, label: 'Imagen' },
     { id: 'name', disablePadding: false, disableSort: false, label: 'Producto' },
     { id: 'price', disablePadding: false, disableSort: false, label: 'Precio' },
+    { id: 'stock', disablePadding: false, disableSort: false, label: 'Stock' },
     { id: 'tags', disablePadding: false, disableSort: true, label: 'Tags' },
     { id: 'isPublished', disablePadding: false, disableSort: false, label: 'Publicado' },
     { id: 'isFeatured', disablePadding: false, disableSort: false, label: 'Destacado' },

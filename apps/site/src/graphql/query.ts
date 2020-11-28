@@ -188,3 +188,32 @@ export const searchProducts = gql`
         }
     }
 `;
+export const getStockProductVariant = gql`
+    query getProduct($id: ID!) {
+        products {
+            getProduct(id: $id) {
+                data {
+                    variants {
+                        stock
+                        propertyValues
+                    }
+                }
+            }
+        }
+    }
+`;
+
+export const updateStockProductVariant = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    variants {
+                        stock
+                        propertyValues
+                    }
+                }
+            }
+        }
+    }
+`;

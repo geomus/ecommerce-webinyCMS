@@ -9,12 +9,13 @@ export const products = gql`
                     name
                     description
                     priceBase
+                    prices
                     images
                     tags
                     isFeatured
                     isPublished
                     variants {
-                        name
+                        stock
                         propertyValues
                     }
                 }
@@ -32,12 +33,13 @@ export const product = gql`
                     name
                     description
                     priceBase
+                    prices
                     images
                     tags
                     isFeatured
                     isPublished
                     variants {
-                        name
+                        stock
                         propertyValues
                     }
                 }
@@ -55,12 +57,13 @@ export const productsFilter = gql`
                     name
                     description
                     priceBase
+                    prices
                     images
                     tags
                     isPublished
                     isFeatured
                     variants {
-                        name
+                        stock
                         propertyValues
                     }
                 }
@@ -86,7 +89,7 @@ export const createProduct = gql`
                     isFeatured
                     variantProperties
                     variants {
-                        name
+                        stock
                         propertyValues
                     }
                 }
@@ -420,7 +423,7 @@ export const deleteProperties = gql`
     mutation deleteProperty($id: ID!) {
         properties {
             deleteProperty(id: $id) {
-                data 
+                data
             }
         }
     }
@@ -438,3 +441,6 @@ export const updateProperties = gql`
         }
     }
 `;
+
+
+

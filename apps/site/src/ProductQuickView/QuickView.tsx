@@ -28,7 +28,6 @@ export default function AlertDialog(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(props);
   
 
   return (
