@@ -10,11 +10,12 @@ import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { useQuery } from "@apollo/client";
-import { products, listAllCategories } from "../../../graphql/query";
+import { listAllCategories } from "../../../graphql/query";
 import { LinearProgress } from "@material-ui/core";
-import ProductsTableToolbar from "./ProductsTableToolbar";
-import ProductsTableHead from "./ProductsTableHead";
-import ProductRow from "./ProductRow";
+import CategoryTableToolbar from "./CategoryTableToolbar";
+import CategoryTableHead from "./CategoryTableHead";
+import CategoryBtnEdit from "./CategoryBtnEdit";
+import CategoryDeleteBtn from "./CategoryDelete";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -66,35 +67,26 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1
     },
-    cellImgProduct: {
-        width: "8%"
-    },
-    imgProduct: {
-        width: "70%",
-        borderRadius: "50%",
-        boxShadow: "3px 3px 15px rgba(0,0,0,0.15)"
-    },
     marginTags: {
         marginRight: "0.5rem"
+    },
+    btnCategoryCreate: {
+        margin: "1rem 0 0 1.5rem"
     }
 }));
 
-export default function ProductsTable() {
+export default function CategoryTable() {
     const classes = useStyles();
     const [order, setOrder] = React.useState("asc");
-    const [orderBy, setOrderBy] = React.useState("calories");
+    const [orderBy, setOrderBy] = React.useState("parent");
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { loading: categoriesLoading, error: categoriesError, data: categoriesData } = useQuery(
-        listAllCategories
-    );
-    const { loading: productsLoading, error: productsError, data: productsData } = useQuery(
-        products
-    );
-    if (categoriesLoading || productsLoading) {
+    const { loading, error, data } = useQuery(listAllCategories);
+
+    if (loading) {
         return (
             <h1>
                 {" "}
@@ -102,36 +94,20 @@ export default function ProductsTable() {
             </h1>
         );
     }
-    if (categoriesError || productsError) {
-        console.dir(categoriesError);
-        console.dir(productsError);
+
+    if (error) {
+        console.dir(error);
         return <h1> error </h1>;
     }
 
-    const categories = JSON.parse(
-        JSON.stringify(categoriesData.categories.listCategories.data)
-    ).filter((c) => c.enabled == true);
-
-    for (const c of categories) {
-        delete c.__typename;
-        delete c.isEnabledInHierarchy;
-        c.parent && delete c.parent.__typename;
-    }
-
     const rows = [];
-    productsData.products.listProducts.data.map((product) => rows.push(product));
-
-    const dataForExport = [];
-    productsData.products.listProducts.data.map((product) =>
-        dataForExport.push(Object.values(product))
-    );
+    data.categories.listCategories.data.map((subcat) => rows.push(subcat));
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
         setOrder(isAsc ? "desc" : "asc");
         setOrderBy(property);
     };
-
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelecteds = rows.map((n) => n.name);
@@ -140,39 +116,31 @@ export default function ProductsTable() {
         }
         setSelected([]);
     };
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
     const handleChangeDense = (event) => {
         setDense(event.target.checked);
     };
-
-    const totalCalculatorStock = (variants) => {
-        const suma = variants.reduce((acc, variant) => { return acc += variant.stock }, 0)
-        return suma
-    }
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <ProductsTableToolbar numSelected={selected.length} data={dataForExport} />
+                <CategoryTableToolbar numSelected={selected.length} />
                 <TableContainer>
                     <Table
                         className={classes.table}
                         aria-labelledby="tableTitle"
                         size={dense ? "small" : "medium"}
-                        aria-label="Products table"
+                        aria-label="Category list table"
                     >
-                        <ProductsTableHead
+                        <CategoryTableHead
                             classes={classes}
                             numSelected={selected.length}
                             order={order}
@@ -186,11 +154,27 @@ export default function ProductsTable() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     return (
-                                        <ProductRow
-                                            row={row}
-                                            categories={categories}
-                                            key={row.id}
-                                        />
+                                        <TableRow hover tabIndex={1} key={row.id}>
+                                            <TableCell component="th" scope="row">
+                                                {row.parent
+                                                    ? row.parent.name.replace(/^\w/, (c) =>
+                                                          c.toUpperCase()
+                                                      )
+                                                    : ""}
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                {row.name.replace(/^\w/, (c) => c.toUpperCase())}
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
+                                                {row.enabled ? "SI" : "NO"}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <CategoryBtnEdit className={classes.btnCategoryCreate} categories={data.categories.listCategories.data} row={row} />
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <CategoryDeleteBtn row={row} />
+                                            </TableCell>
+                                        </TableRow>
                                     );
                                 })}
                             {emptyRows > 0 && (

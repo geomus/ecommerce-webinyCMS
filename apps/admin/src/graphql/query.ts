@@ -1,17 +1,29 @@
 import { gql } from "@apollo/client";
 
 export const products = gql`
-    {
+    query listProducts {
         products {
             listProducts {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     prices
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isFeatured
                     isPublished
                     variants {
@@ -30,12 +42,24 @@ export const product = gql`
             getProduct(id: $id) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     prices
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isFeatured
                     isPublished
                     variants {
@@ -54,12 +78,24 @@ export const productsFilter = gql`
             listProducts(where: { name: $name, isPublished: true }) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     prices
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isPublished
                     isFeatured
                     variants {
@@ -78,11 +114,22 @@ export const createProduct = gql`
             createProduct(data: $data) {
                 data {
                     id
+                    sku
                     name
                     slug
                     description
                     priceBase
                     prices
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                    }
                     images
                     tags
                     isPublished
@@ -107,12 +154,24 @@ export const searchProducts = gql`
             listProducts(search: $searchVariable) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     prices
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isFeatured
                     isPublished
                 }
@@ -151,11 +210,22 @@ export const updateProduct = gql`
             updateProduct(id: $id, data: $data) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                    }
                 }
             }
         }
@@ -403,6 +473,27 @@ export const listProperties = gql`
                 }
             }
         }
+    }`
+export const listSubcategories = gql`
+    query listCategories($parent: RefInput!) {
+        categories {
+            listCategories(where: { parent: $parent }) {
+                data {
+                    id
+                    name
+                    enabled
+                    parent {
+                        id
+                        name
+                        enabled
+                    }
+                    isEnabledInHierarchy
+                }
+                error {
+                    message
+                }
+            }
+        }
     }
 `;
 
@@ -416,6 +507,27 @@ export const createProperties = gql`
                 }
             }
         }
+        }
+        `
+export const createCategory = gql`
+    mutation createCategory($data: CategoryInput!) {
+        categories {
+            createCategory(data: $data) {
+                data {
+                    id
+                    name
+                    enabled
+                    parent {
+                        id
+                        name
+                        enabled
+                    }
+                }
+                error {
+                    message
+                }
+            }
+        }
     }
 `;
 
@@ -424,6 +536,27 @@ export const deleteProperties = gql`
         properties {
             deleteProperty(id: $id) {
                 data
+            }
+        }
+    }`
+export const listEnabledCategories = gql`
+    query listCategories {
+        categories {
+            listCategories(where: { enabled: true }) {
+                data {
+                    id
+                    name
+                    enabled
+                    parent {
+                        id
+                        name
+                        enabled
+                    }
+                    isEnabledInHierarchy
+                }
+                error {
+                    message
+                }
             }
         }
     }
@@ -439,8 +572,58 @@ export const updateProperties = gql`
                 }
             }
         }
+    }`
+export const listAllCategories = gql`
+    query listCategories {
+        categories {
+            listCategories {
+                data {
+                    id
+                    name
+                    enabled
+                    parent {
+                        id
+                        name
+                        enabled
+                    }
+                    isEnabledInHierarchy
+                }
+                error {
+                    message
+                }
+            }
+        }
     }
 `;
 
+export const deleteCategory = gql`
+    mutation deleteCategory($id: ID!) {
+        categories {
+            deleteCategory(id: $id) {
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
 
-
+export const updateCategory = gql`
+    mutation updateCategory($id: ID!, $data: CategoryInput!) {
+        categories {
+            updateCategory(id: $id, data: $data) {
+                data {
+                    id
+                    name
+                    enabled
+                    parent {
+                        id
+                    }
+                }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;

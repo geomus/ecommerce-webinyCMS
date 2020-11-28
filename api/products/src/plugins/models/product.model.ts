@@ -1,12 +1,12 @@
 // @ts-ignore
-import {withFields,withName,string,boolean,number, pipe, withProps, onSet, ref} from "@webiny/commodo";
+import { withFields, withName, string, boolean, number, pipe, withProps, onSet, fields, ref } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 import slugify from "slugify";
 
-export default ({ createBase, context }) => 
-pipe(
-    withName("Product"),
-    withFields((instance) => ({
+export default ({ createBase, context }) => {
+    const Product = pipe(
+        withName("Product"),
+        withFields((instance) => ({
             sku: string(),
             name: onSet((value) => {
                 instance.slug = slugify(value).toLowerCase();
@@ -16,8 +16,9 @@ pipe(
             description: string({ validation: validation.create("maxLength:500") }),
             priceBase: number(),
             prices: string({
-                list: true,
+                list: true
             }),
+            categories: fields({ list: true, instanceOf: context.models.Category }),
             images: string({ list: true }),
             tags: string({ list: true }),
             isPublished: boolean({ value: true }), 
@@ -32,5 +33,7 @@ pipe(
             get shortDescription() {
                 return this.description ? this.description.substring(0, 100) + "..." : "";
             }
-        }),
-        )(createBase());
+        })
+    )(createBase());
+    return Product;
+};

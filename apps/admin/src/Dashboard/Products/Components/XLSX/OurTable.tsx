@@ -11,13 +11,13 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
-import { Backdrop, CircularProgress, Dialog, IconButton, Snackbar } from "@material-ui/core";
+import { CircularProgress, Dialog, IconButton, Snackbar } from "@material-ui/core";
 import { DialogActions } from "@material-ui/core";
 import { DialogContent } from "@material-ui/core";
 import { DialogContentText } from "@material-ui/core";
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { useMutation } from '@apollo/client'
-import { createProducts, products } from '../../../../graphql/query'
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import { useMutation } from "@apollo/client";
+import { createProducts, products } from "../../../../graphql/query";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -43,7 +43,7 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
 
     const [bulkInsertProducts] = useMutation(createProducts, {
         refetchQueries: () => [{ query: products }]
-    })
+    });
 
     const formatObjectKeys = {};
     Object.assign(formatObjectKeys, objectKeys);
@@ -59,9 +59,9 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState({
         open: false,
-        message: ''
+        message: ""
     });
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleFormatData = () => {
         const finalData = [];
@@ -121,22 +121,22 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
     };
 
     const handleImportData = async () => {
-        setIsLoading(true)
-        const dataProductsImported = await handleFormatData()
+        setIsLoading(true);
+        const dataProductsImported = await handleFormatData();
 
         try {
-            await bulkInsertProducts({ variables: { data: dataProductsImported } })
-            setOpenSnackbar({ open: true, message: "La operacion fue exitosa" })
+            await bulkInsertProducts({ variables: { data: dataProductsImported } });
+            setOpenSnackbar({ open: true, message: "La operacion fue exitosa" });
         } catch (error) {
-            console.error(error)
-            setOpenSnackbar({ open: true, message: "Falló la operación" })
+            console.error(error);
+            setOpenSnackbar({ open: true, message: "Falló la operación" });
         }
-    }
+    };
     const handleCloseSnackbar = (event?: React.SyntheticEvent, reason?: string) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
-        handleCloseDialog(false)
+        handleCloseDialog(false);
     };
     return (
         <React.Fragment>
@@ -193,10 +193,7 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    {
-                        isLoading &&
-                        <CircularProgress />
-                    }
+                    {isLoading && <CircularProgress />}
                     <Button onClick={handleClose} size="small" variant="contained" color="primary">
                         No
                     </Button>
@@ -210,14 +207,18 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
                         Si
                     </Button>
                 </DialogActions>
-                {
-                openSnackbar &&
-                <Snackbar open={openSnackbar.open} autoHideDuration={2000} onClose={handleCloseSnackbar} anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
-                    <Alert onClose={handleCloseSnackbar} severity="info">
-                        {openSnackbar.message}
-                    </Alert>
-                </Snackbar>
-            }
+                {openSnackbar && (
+                    <Snackbar
+                        open={openSnackbar.open}
+                        autoHideDuration={2000}
+                        onClose={handleCloseSnackbar}
+                        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    >
+                        <Alert onClose={handleCloseSnackbar} severity="info">
+                            {openSnackbar.message}
+                        </Alert>
+                    </Snackbar>
+                )}
             </Dialog>
             <IconButton aria-label="addMany" color="default" onClick={handleClickOpen}>
                 GUARDAR
