@@ -9,10 +9,15 @@ export const products = gql`
                     name
                     description
                     priceBase
+                    prices
                     images
                     tags
                     isFeatured
                     isPublished
+                    variants {
+                        stock
+                        propertyValues
+                    }
                 }
             }
         }
@@ -28,10 +33,15 @@ export const product = gql`
                     name
                     description
                     priceBase
+                    prices
                     images
                     tags
                     isFeatured
                     isPublished
+                    variants {
+                        stock
+                        propertyValues
+                    }
                 }
             }
         }
@@ -47,10 +57,15 @@ export const productsFilter = gql`
                     name
                     description
                     priceBase
+                    prices
                     images
                     tags
                     isPublished
                     isFeatured
+                    variants {
+                        stock
+                        propertyValues
+                    }
                 }
             }
         }
@@ -72,6 +87,11 @@ export const createProduct = gql`
                     tags
                     isPublished
                     isFeatured
+                    variantProperties
+                    variants {
+                        stock
+                        propertyValues
+                    }
                 }
                 error {
                     data
@@ -209,7 +229,7 @@ export const deleteFile = gql`
 export const getFile = gql`
     query getFile($key: String!) {
         files {
-            getFile(where:{key: $key}){
+            getFile(where: { key: $key }) {
                 data {
                     id
                     name
@@ -371,3 +391,56 @@ export const createProducts = gql`
         }
     }
 `;
+
+export const listProperties = gql`
+    query listProperties {
+        properties {
+            listProperties {
+                data {
+                    id
+                    name
+                    values
+                }
+            }
+        }
+    }
+`;
+
+export const createProperties = gql`
+    mutation createProperty($data: PropertyInput!) {
+        properties {
+            createProperty(data: $data) {
+                data {
+                    name
+                    values
+                }
+            }
+        }
+    }
+`;
+
+export const deleteProperties = gql`
+    mutation deleteProperty($id: ID!) {
+        properties {
+            deleteProperty(id: $id) {
+                data
+            }
+        }
+    }
+`;
+
+export const updateProperties = gql`
+    mutation updateProperty($id: ID!, $data: PropertyInput!) {
+        properties {
+            updateProperty(id: $id, data: $data) {
+                data {
+                    name
+                    values
+                }
+            }
+        }
+    }
+`;
+
+
+

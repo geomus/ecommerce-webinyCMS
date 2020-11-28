@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from "@apollo/client";
-import { product } from '../../graphql/query'
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from "@material-ui/core/styles"
-import { ReactComponent as RbNew } from '../../utils/svg/rb-new.svg'
-import { Button, Divider, LinearProgress, Tooltip } from '@material-ui/core';
-import ShopCartButton from '../../Product/ShopCartButton';
+import { ReactComponent as RbNew } from '../utils/svg/rb-new.svg'
+import { Button, Divider, Tooltip } from '@material-ui/core';
+import ShopCartButton from '../Product/ShopCartButton';
 import CancelIcon from '@material-ui/icons/Cancel';
 
 const useStyles = makeStyles({
@@ -22,13 +20,16 @@ const useStyles = makeStyles({
         width: '100%'
     },
     marginTags: {
-        marginRight: "0.5rem"
+        marginRight: "0.3rem"
     },
     ribbonNew: {
         position: 'absolute',
         top: 0,
         right: 0,
         width: 70
+    },
+    lineHeight: {
+        padding: ".5rem 0"
     },
     variantsRow: {
         display: "flex",
@@ -37,82 +38,77 @@ const useStyles = makeStyles({
     }
 });
 
-const ProductDetail = () => {
+const QuickViewContent = (props) => {
+    const [state, setState] = useState({});
     const classes = useStyles();
     const [variantsSelected, setVariantsSelected] = useState([]);
     const [productState, setProductState] = useState([])
     const [propertyKeys, setPropertyKeys] = useState([])
     const [isDisabled, setIsDisabled] = useState({})
+    const [enabledTooltip, setEnabledTooltip] = useState(false)
     const [limitVariants, setLimitVariants] = useState(false)
     const [shopCartButtonEnabled, setShopCartButtonEnabled] = useState(false)
-    const [enabledTooltip, setEnabledTooltip] = useState(false)
-
-    const params = new URLSearchParams(window.location.search)
-    const id = params.get('id')
-
-    const { loading, error, data } = useQuery(product, { variables: { id } });
-
 
     useEffect(() => {
-        if (!loading && data) {
-            const productData = data.products.getProduct.data.variants
-            if (productData[0]) {
-                setShopCartButtonEnabled(true)
-                const propertyKeys = Object.keys(JSON.parse(productData[0].propertyValues))
-                setPropertyKeys(propertyKeys)
-                const newProductData = []
-                for (const key in productData) {
-                    const dataObjectProduct = {
-                        propertyValues: JSON.parse(productData[key].propertyValues),
-                        stock: productData[key].stock
-                    }
-                    newProductData.push(dataObjectProduct);
+        const productData = props.variants
+        if (productData[0]) {
+            console.log(props.variants);
+            
+            setShopCartButtonEnabled(true)
+            const propertyKeys = Object.keys(JSON.parse(productData[0].propertyValues))
+            setPropertyKeys(propertyKeys)
+            const newProductData = []
+            for (const key in productData) {
+                const dataObjectProduct = {
+                    propertyValues: JSON.parse(productData[key].propertyValues),
+                    stock: productData[key].stock
                 }
-                setProductState(newProductData)
+                newProductData.push(dataObjectProduct);
+            }
+            setProductState(newProductData)
 
 
-                interface ValueOptions {
-                    [key: string]: Array<string>;
-                }
+            interface ValueOptions {
+                [key: string]: Array<string>;
+            }
 
-                function generateOptions(variants) {
-                    const options: ValueOptions = {};
-                    for (const variant of variants) {
-                        for (const key in variant.propertyValues) {
-                            const value = variant.propertyValues[key];
-                            if (!options[key]) {
-                                options[key] = [];
-                            }
-                            if (!options[key].includes(value)) {
-                                options[key].push(value);
-                            }
+            function generateOptions(variants) {
+                const options: ValueOptions = {};
+                for (const variant of variants) {
+                    for (const key in variant.propertyValues) {
+                        const value = variant.propertyValues[key];
+                        if (!options[key]) {
+                            options[key] = [];
+                        }
+                        if (!options[key].includes(value)) {
+                            options[key].push(value);
                         }
                     }
-                    const productVariants = []
-                    for (const key in options) {
-                        const element = { [key]: options[key] };
-                        productVariants.push(element);
-                    }
-                    return productVariants;
                 }
-
-
-                const options = generateOptions(newProductData)
-                const elementSelected = setInitalStateDisabled(options, true)
-                setIsDisabled({ ...elementSelected });
+                const productVariants = []
+                for (const key in options) {
+                    const element = { [key]: options[key] };
+                    productVariants.push(element);
+                }
+                return productVariants;
             }
+            const options = generateOptions(newProductData)
+            const elementSelected = setInitalStateDisabled(options, true)
+            setIsDisabled({ ...elementSelected });
         }
-    }, [loading, data])
+    }, [props])
 
-    if (loading) {
-        return (
-            <h1> <LinearProgress /> </h1>
-        )
-    }
+    const handleChange = (event) => {
+        const name = event.target.name;
+        setState({
+            ...state,
+            [name]: event.target.value,
+        });
+    };
 
-    if (error) {
-        console.dir(error)
-        return <h1> error </h1>;
+    let options
+    if (productState) {
+        options = generateOptions(productState)
     }
 
     interface ValueOptions {
@@ -140,11 +136,6 @@ const ProductDetail = () => {
         return productVariants;
     }
 
-    let options
-    if (productState) {
-        options = generateOptions(productState)
-    }
-
     function setInitalStateDisabled(value, status) {
         const elementSelected = {}
         for (let i = 0; i < value.length; i++) {
@@ -160,7 +151,6 @@ const ProductDetail = () => {
 
     const handleVariant = (e) => {
         const selected = { key: e.currentTarget.id, value: e.target.innerText }
-
         setVariantsSelected([...variantsSelected, { [e.currentTarget.id]: e.target.innerText }])
         const filteredVariants = productState.filter((variant) => {
             return variant.propertyValues[selected.key].toUpperCase() == selected.value && variant.stock > 0;
@@ -168,7 +158,6 @@ const ProductDetail = () => {
         });
 
         const filteredOptions = generateOptions(filteredVariants);
-
         const elementSelected = setInitalStateDisabled(filteredOptions, false)
         setIsDisabled({ ...isDisabled, ...elementSelected });
         setEnabledTooltip(true)
@@ -177,6 +166,7 @@ const ProductDetail = () => {
             setLimitVariants(true)
             setShopCartButtonEnabled(false)
         }
+
     }
 
     const resetVariantsSelected = (addToCart) => {
@@ -192,6 +182,7 @@ const ProductDetail = () => {
         })
 
         setVariantsSelected(variantsSelectedFiltered)
+        console.log(variantsSelected.length);
 
         if (variantsSelected.length == 1) {
             const elementSelected = setInitalStateDisabled(options, true)
@@ -204,25 +195,24 @@ const ProductDetail = () => {
     return (
         <Container>
             <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                    <img src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}`} alt="Product" className={classes.imgFluid} />
-                    {data.products.getProduct.data.isFeatured ? <RbNew className={classes.ribbonNew} /> : ''}
+                <Grid item xs={12} md={7}>
+                    <img src={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}`} alt="Product" className={classes.imgFluid} />
+                    {props.isFeatured ? <RbNew className={classes.ribbonNew} /> : ''}
                 </Grid>
-                <Grid item xs={12} md={6} className={classes.detailProduct}>
+                <Grid item xs={12} md={5} className={classes.detailProduct}>
                     <Typography variant="body1" gutterBottom>
                         Categoria del producto
                     </Typography>
                     <Divider />
-                    <Typography variant="h5" gutterBottom>
-                        {data.products.getProduct.data.name}
+                    <Typography variant="h6" gutterBottom>
+                        {props.name}
                     </Typography>
-                    <Typography variant="h5" gutterBottom>
-                        ${data.products.getProduct.data.priceBase}
+                    <Typography className={classes.lineHeight} variant="h5" gutterBottom>
+                        ${props.priceBase}
                     </Typography>
-                    <Typography variant="body1" gutterBottom>
-                        {data.products.getProduct.data.description}
+                    <Typography className={classes.lineHeight} variant="body1" gutterBottom>
+                        {props.description}
                     </Typography>
-
                     {
                         propertyKeys &&
                         propertyKeys.map((variantProperty, i) =>
@@ -241,7 +231,7 @@ const ProductDetail = () => {
                                                             :
                                                             <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant} disabled={limitVariants}>{value}</Button>
                                                         :
-                                                        <Button variant="contained" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
+                                                        <Button variant="contained" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant} disabled={limitVariants}>{value}</Button>
                                                 }
                                             </div>
                                         )
@@ -249,6 +239,7 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                         )}
+                    <br />
                     <div>
                         {
                             variantsSelected &&
@@ -260,18 +251,18 @@ const ProductDetail = () => {
                     </div>
                     <br />
                     <div>
-                        {data.products.getProduct.data.tags &&
-                            data.products.getProduct.data.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
-                                color="secondary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
+                        {props.tags &&
+                            props.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
+                                color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
                         }
                     </div>
 
-                    <ShopCartButton {...data.products.getProduct.data} listVariants={options} variantsSelected={variantsSelected} resetVariantsSelected={resetVariantsSelected} enabled={shopCartButtonEnabled} />
+                    <ShopCartButton {...props} listVariants={options} variantsSelected={variantsSelected} resetVariantsSelected={resetVariantsSelected} enabled={shopCartButtonEnabled} />
                 </Grid>
             </Grid>
         </Container>
     );
 }
 
-export default ProductDetail;
+export default QuickViewContent;
 

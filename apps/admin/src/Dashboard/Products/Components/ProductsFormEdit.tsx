@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import {
     updateProduct,
@@ -6,7 +6,8 @@ import {
     deleteFile,
     getFile,
     createFile,
-    products
+    products,
+    listPrices
 } from "../../../graphql/query";
 import FileUploadButton from "./FileUploadButton";
 import {
@@ -24,6 +25,9 @@ import {
 } from "@material-ui/core/";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
+import ProductsCheckboxPricesCategory from './ProductsCheckboxPricesCategory'
+import SelectProperty from './SelectProperty'
+
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -34,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
         width: "auto",
         marginLeft: theme.spacing(2),
         marginRight: theme.spacing(2),
+        marginTop: theme.spacing(2),
         [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
             width: 600,
             marginLeft: "auto",
@@ -57,6 +62,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ProductFormEdit({ handleCloseDialog, product }) {
+    console.log(product);
+    
     const [files, setFiles] = useState([]);
     const productId = product.id;
     const productImages = product.images;
@@ -64,6 +71,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
     const oneImageKey = productImages[0];
+
 
     const { error, data } = useQuery(getFile, { variables: { key: oneImageKey } });
     if (error) {
@@ -85,6 +93,11 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
     const [priceBase, setPriceBase] = useState<Number>(product.priceBase);
     const [imagesKeys, setImagesKeys] = useState([]);
     const [tags, setTags] = useState(product.tags);
+
+    const [idPrices, setIdPrices] = useState([]);
+    const [checkedPrices, setCheckedPrices] = useState([{}])
+
+    const [productVariants, setProductVariants] = useState([])
 
     const uploadImage = async (selectedFile) => {
         const getPresignedPostData = async (selectedFile): Promise<any> => {
@@ -154,6 +167,17 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
         const priceBase = Number(event.target.value);
         setPriceBase(priceBase);
     };
+
+    const handleIdPrices = (event) => {
+        const idValue = event.currentTarget.id
+        console.log(event.target.checked);
+        if (event.target.checked) {
+            const id = idPrices
+            id.push(idValue)
+            setIdPrices(id);
+            console.log(idPrices);
+        }
+    };
     const handleChangeImages = (selectedFiles) => {
         setFiles(selectedFiles);
     };
@@ -165,6 +189,17 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
         });
         setTags(_tags);
     };
+    const combineVariantsStocks = (variants, stock, setOpenDialog) => {
+        for (let i = 0; i < variants.length; i++) {
+            variants[i].propertyValues = JSON.stringify(variants[i].propertyValues)
+            variants[i].stock = Number(stock[i])
+        }
+        setOpenDialog(false)
+        setProductVariants(variants);
+    }
+    const handleProperties = (properties, setPropertiesSelected) => {
+        setPropertiesSelected(properties)
+    }
 
     const onSubmit = async (e) => {
         setIsLoading(true);
@@ -188,8 +223,10 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
             name: name,
             description: description,
             priceBase: priceBase,
+            prices: idPrices,
             images: imagesKeys,
-            tags: tags
+            tags: tags,
+            variants: productVariants
         };
 
         try {
@@ -208,7 +245,6 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
 
     return (
         <Container className={classes.layout}>
-            <Paper className={classes.paper}>
                 <React.Fragment>
                     <form onSubmit={onSubmit}>
                         <Grid container spacing={3}>
@@ -269,6 +305,9 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
+                                    <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} setCheckedPrices={setCheckedPrices} />
+                                </Grid>
+                            <Grid item xs={12}>
                                 <InputLabel>Imágenes</InputLabel>
                                 <FileUploadButton
                                     handlerImages={handleChangeImages}
@@ -278,6 +317,14 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                                     Imágenes del producto (MÁX. 5).
                                 </FormHelperText>
                             </Grid>
+                            <Grid item xs={12}>
+                                    <FormControl>
+                                        <FormHelperText id="variants-helper">
+                                            Selecciona las variantes del producto. (Separadas por comas)
+                                    </FormHelperText>
+                                        <SelectProperty productName={name} combineVariantsStocks={combineVariantsStocks} />
+                                    </FormControl>
+                                </Grid>
                             <Grid item xs={12} sm={6}>
                                 <FormControl>
                                     <InputLabel htmlFor="tags">TAGs</InputLabel>
@@ -327,7 +374,6 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                         ¡No se ha podido editar el producto, revise sus datos!
                     </Alert>
                 </Snackbar>
-            </Paper>
         </Container>
     );
 }

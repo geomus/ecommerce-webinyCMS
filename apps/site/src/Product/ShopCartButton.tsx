@@ -7,18 +7,22 @@ import { CartContext } from "../utils/context";
 
 const useStyles = makeStyles({
     btnCenter: {
-        width:'100%',
+        width: '100%',
         margin: "auto",
     }
 })
 
 export default function ShopCartButton(props) {
     const classes = useStyles();
+    const {variantsSelected, listVariants, resetVariantsSelected, enabled} = props
 
     const prod = {
         ...props,
-        quantity: 1
+        quantity: 1,
+        variantsSelected,
+        listVariants:listVariants
     }
+    
 
     const { addToCart } = useContext(CartContext);
 
@@ -28,7 +32,8 @@ export default function ShopCartButton(props) {
                 className={classes.btnCenter}
                 variant="contained"
                 color="primary"
-                startIcon={<ShoppingCartIcon />} onClick={() => addToCart(prod)}>
+                disabled={enabled}
+                startIcon={<ShoppingCartIcon />} onClick={() => resetVariantsSelected(addToCart(prod))}>
                 ADD TO CART
             </Button>
         </React.Fragment>

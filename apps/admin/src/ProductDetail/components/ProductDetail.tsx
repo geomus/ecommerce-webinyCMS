@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from "@material-ui/core/styles"
 import { ReactComponent as RbNew } from '../../utils/svg/rb-new.svg'
-import { Divider } from '@material-ui/core';
+import { Divider, FormControl, InputLabel, Select } from '@material-ui/core';
 import ShopCartButton from '../../Product/ShopCartButton';
 
 const dataProducts = [{
@@ -48,6 +48,10 @@ const useStyles = makeStyles({
 
 const ProductDetail = () => {
     const classes = useStyles();
+    const [state, setState] = React.useState({
+        age: '',
+        name: 'hai',
+      });
 
     return (
         <Container>
@@ -70,10 +74,34 @@ const ProductDetail = () => {
                     <Typography variant="body1" gutterBottom>
                         {dataProducts[0].description}
                     </Typography>
+                    <FormControl>
+                        <InputLabel htmlFor="age-native-simple">Color</InputLabel>
+                        <Select
+                            native
+                            value={state.age}
+                        >
+                            <option aria-label="None" value="" />
+                            <option value={10}>Rojo</option>
+                            <option value={20}>Azul</option>
+                            <option value={30}>Verde</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl>
+                        <InputLabel htmlFor="age-native-simple">Talle</InputLabel>
+                        <Select
+                            native
+                            value={state.age}
+                        >
+                            <option aria-label="None" value="" />
+                            <option value={10}>Rojo</option>
+                            <option value={20}>Azul</option>
+                            <option value={30}>Verde</option>
+                        </Select>
+                    </FormControl>
                     <div>
-                        { dataProducts[0].tags &&
-                        dataProducts[0].tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} 
-                        color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
+                        {dataProducts[0].tags &&
+                            dataProducts[0].tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
+                                color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
                         }
                     </div>
                     <ShopCartButton />

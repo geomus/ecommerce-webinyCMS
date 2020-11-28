@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,6 +17,7 @@ import OrdersTableToolbar from './OrdersTableToolbar';
 import OrdersTableHead from './OrdersTableHead';
 import OrdersBtnView from './OrdersBtnView';
 import OrdersBtnDisable from './OrdersBtnDelete';
+
 
 
 
@@ -102,6 +103,10 @@ export default function OrdersTable() {
     }
     const rows = []
     data.orders.listOrders.data.map(order => rows.push(order))
+    
+    function totalCalculator(items) {
+        return items.map((item) => item.priceBase * item.quantity).reduce((sum, i) => sum + i, 0);
+    }
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -159,6 +164,7 @@ export default function OrdersTable() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     const cart = JSON.parse(row.cart)
+                                    const totalCart = totalCalculator(cart)                                   
 
                                     return (
                                         <TableRow
@@ -167,18 +173,23 @@ export default function OrdersTable() {
                                             tabIndex={-1}
                                             key={row.id}
                                         >
-                                            <TableCell component="th" scope="row">
+                                            <TableCell align="center" component="th" scope="row">
                                                 {row.name}
                                             </TableCell>
-                                            <TableCell component="th" scope="row">
+                                            <TableCell align="center" component="th" scope="row">
                                                 {row.lastName}
                                             </TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="center">
                                                 <Typography variant="body2" component="span">
                                                     {row.createdOn}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="center">
+                                                <Typography variant="body2" component="span">
+                                                    ${totalCart}
+                                                </Typography>
+                                            </TableCell>
+                                            {/* <TableCell align="left">
                                                 <Typography variant="body2" component="span">
                                                     {row.phone}
                                                 </Typography>
@@ -202,25 +213,24 @@ export default function OrdersTable() {
                                                 <Typography variant="body2" component="span">
                                                     {row.zip}
                                                 </Typography>
-                                            </TableCell>
-                                            <TableCell align="left">
+                                            </TableCell> */}
+                                            <TableCell align="center">
                                                 <Typography variant="body2" component="span">
                                                     {row.pay}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="center">
                                                 <Typography variant="body2" component="span">
                                                     {row.shipping}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell align="left">
+                                            <TableCell align="center">
                                                 <Typography variant="body2" component="span">
                                                     {row.status}
                                                 </Typography>
                                             </TableCell>
                                             <TableCell align="center">
-                                                {/* <OrdersBtnView row={row} /> */}
-                                                {console.log(cart)}
+                                                <OrdersBtnView cart={cart} />
                                             </TableCell>
                                             <TableCell align="center">
                                                 <OrdersBtnDisable row={row} />

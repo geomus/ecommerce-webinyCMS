@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useTheme } from '@material-ui/core/styles';
-import Cart from '../../Cart/components/Cart'
+import Cart from './CartHome'
 import { Button, makeStyles } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Fab from '@material-ui/core/Fab';

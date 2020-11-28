@@ -6,20 +6,16 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { useQuery } from "@apollo/client";
-import { products } from '../../../graphql/query'
-import { Chip, LinearProgress } from '@material-ui/core';
-import ProductsTableToolbar from './ProductsTableToolbar';
-import ProductsTableHead from './ProductsTableHead';
-import ProductsBtnPublished from './ProductsBtnPublished';
-import ProductsBtnEdit from './ProductsBtnEdit';
-import ProductsBtnDelete from './ProductsBtnDelete';
-import ProductsBtnFeatured from './ProductsBtnFeatured';
-
+import { listProperties } from '../../../graphql/query'
+import { LinearProgress } from '@material-ui/core';
+import VariantsTableToolbar from './VariantsTableToolbar';
+import VariantsTableHead from './VariantsTableHead';
+import VariantsBtnDelete from './VariantsDelete'
+import VariantsBtnEdit from './VariantsBtnEdit'
 
 
 function descendingComparator(a, b, orderBy) {
@@ -57,33 +53,12 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
     },
     table: {
-        minWidth: 750,
-    },
-    visuallyHidden: {
-        border: 0,
-        clip: 'rect(0 0 0 0)',
-        height: 1,
-        margin: -1,
-        overflow: 'hidden',
-        padding: 0,
-        position: 'absolute',
-        top: 20,
-        width: 1,
-    },
-    cellImgProduct: {
-        width: "8%"
-    },
-    imgProduct: {
-        width: "70%",
-        borderRadius: "50%",
-        boxShadow: "3px 3px 15px rgba(0,0,0,0.15)"
-    },
-    marginTags: {
-        marginRight: "0.5rem"
+        maxWidth: 750,
+        margin: "auto"
     }
 }));
 
-export default function ProductsTable() {
+export default function VariantsTable() {
     const classes = useStyles();
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -92,7 +67,8 @@ export default function ProductsTable() {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { loading, error, data } = useQuery(products);
+
+    const { loading, error, data } = useQuery(listProperties);
 
     if (loading) {
         return (
@@ -104,20 +80,15 @@ export default function ProductsTable() {
         console.dir(error)
         return <h1> error </h1>;
     }
+    
     const rows = []
-    data.products.listProducts.data.map(product => rows.push(product))
-
-    const dataForExport = []
-    data.products.listProducts.data.map(product => dataForExport.push(Object.values(product)))
-    console.log(dataForExport);
-
+    data.properties.listProperties.data.map(price => rows.push(price))
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
-
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const newSelecteds = rows.map((n) => n.name);
@@ -126,39 +97,32 @@ export default function ProductsTable() {
         }
         setSelected([]);
     };
-
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
     const handleChangeDense = (event) => {
         setDense(event.target.checked);
     };
 
-    const totalCalculatorStock = (variants) => {
-        const suma = variants.reduce((acc, variant) => { return acc += variant.stock }, 0)
-        return suma
-    }
-
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+    
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
-                <ProductsTableToolbar numSelected={selected.length} data={dataForExport} />
+                <VariantsTableToolbar numSelected={selected.length} />
                 <TableContainer>
                     <Table
                         className={classes.table}
                         aria-labelledby="tableTitle"
                         size={dense ? 'small' : 'medium'}
-                        aria-label="Products table"
+                        aria-label="PricesList table"
                     >
-                        <ProductsTableHead
+                        <VariantsTableHead
                             classes={classes}
                             numSelected={selected.length}
                             order={order}
@@ -171,8 +135,6 @@ export default function ProductsTable() {
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
-                                    console.log(row);
-
                                     return (
                                         <TableRow
                                             hover
@@ -180,38 +142,17 @@ export default function ProductsTable() {
                                             tabIndex={-1}
                                             key={row.id}
                                         >
-
-                                            <TableCell align="center" className={classes.cellImgProduct}>
-                                                <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
-                                            </TableCell>
                                             <TableCell component="th" scope="row">
                                                 {row.name}
                                             </TableCell>
-                                            <TableCell align="left">
-                                                <Typography variant="body1" component="span">
-                                                    ${row.priceBase}
-                                                </Typography>
+                                            <TableCell component="th"align="center" scope="row">
+                                                {row.values}
                                             </TableCell>
                                             <TableCell align="center">
-                                                <Typography variant="body1" component="span">
-                                                    {totalCalculatorStock(row.variants)}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell align="center">{row.tags &&
-                                                row.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
-                                                    color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)}
+                                                <VariantsBtnEdit variant={row}/>
                                             </TableCell>
                                             <TableCell align="center">
-                                                <ProductsBtnPublished row={row} />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnFeatured row={row} />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnEdit product={row} />
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <ProductsBtnDelete row={row} />
+                                                <VariantsBtnDelete variant={row} />
                                             </TableCell>
                                         </TableRow>
                                     );

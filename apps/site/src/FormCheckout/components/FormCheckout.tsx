@@ -94,6 +94,16 @@ export default function FormCheckout() {
     const handleChangeShipping = (event) => {
         setShipping(event.target.value);
     };
+    const refactorCart = (cart) => {
+        const newCart = cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            priceBase: item.priceBase,
+            quantity: item.quantity,
+            variantsSelected: item.variantsSelected
+        }))        
+    }
+    refactorCart(cart)
 
     const generatePreference = async (cartItem, userToken) => {
         const response = await fetch(
