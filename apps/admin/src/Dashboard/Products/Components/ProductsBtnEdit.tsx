@@ -70,11 +70,7 @@ export default function FullScreenDialog({ product, categories }) {
                     </Toolbar>
                 </AppBar>
                 <List>
-                    <ProductsFormEdit
-                        handleCloseDialog={handleCloseDialog}
-                        product={product}
-                        enabledCategories={categories}
-                    />
+                    <ProductsFormEdit handleCloseDialog={handleCloseDialog} product={product} enabledCategories={categories}/>
                 </List>
             </Dialog>
         </div>
