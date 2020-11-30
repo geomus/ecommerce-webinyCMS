@@ -68,7 +68,7 @@ export default function ProductRow({ row, categories }) {
                         />
                     ))}
             </TableCell>
-            {row.categories && (
+            {row.categories ? (
                 <TableCell align="center">
                     {row.tags &&
                         row.categories.map((category, i) => (
@@ -84,7 +84,10 @@ export default function ProductRow({ row, categories }) {
                             />
                         ))}
                 </TableCell>
-            )}
+            ) : 
+            <TableCell align="center">
+                Uncategorized
+                </TableCell>}
             <TableCell align="center">
                 <ProductsBtnPublished row={row} />
             </TableCell>
