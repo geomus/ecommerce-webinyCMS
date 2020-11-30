@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2),
         marginTop: theme.spacing(2),
         [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-            width: 800,
+            width: 1200,
             marginLeft: "auto",
             marginRight: "auto"
         }
@@ -291,11 +291,27 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     }
 
     return (
-        <Container className={classes.layout}>
+        <Container maxWidth="lg" className={classes.layout}>
                 <React.Fragment>
                     <form onSubmit={onSubmit}>
+                    <FormControl>
+                            {!isLoading ? (
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    startIcon=""
+                                    type="submit"
+                                >
+                                    GUARDAR
+                                </Button>
+                            ) : (
+                                <CircularProgress />
+                            )}
+                        </FormControl>
+                        <br/>
+                        <br/>
                         <Grid container spacing={3}>
-                            <Grid item lg={6}>
+                            <Grid item lg={4}>
                                 <Grid item xs={12}>
                                     <FormControl>
                                         <InputLabel htmlFor="name">Nombre</InputLabel>
@@ -352,7 +368,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                     <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} setCheckedPrices={setCheckedPrices} />
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item lg={4}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel id="categories">Categorías</InputLabel>
                                     <Select
@@ -389,19 +405,9 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                             className={classes.btnCategoryCreate}
                                             categories={enabledCategories}
                                         />
-                                        )
+                                        
                                     </FormHelperText>
                                 </FormControl>
-                            </Grid>
-                            <Grid item lg={6}>
-                                <Grid item xs={12}>
-                                    <FormControl>
-                                        <FormHelperText id="variants-helper">
-                                            Selecciona las variantes del producto. (Separadas por comas)
-                                    </FormHelperText>
-                                        <SelectProperty productName={name} combineVariantsStocks={combineVariantsStocks} />
-                                    </FormControl>
-                                </Grid>
                                 <Grid item xs={12}>
                                     <InputLabel >Imágenes</InputLabel>
                                     <FileUploadButton
@@ -411,6 +417,16 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                     <FormHelperText id="images-helper">
                                         Imágenes del producto (MÁX. 5).
                                 </FormHelperText>
+                                </Grid>
+                            </Grid>
+                            <Grid item lg={4}>
+                                <Grid item xs={12}>
+                                    <FormControl>
+                                        <FormHelperText id="variants-helper">
+                                            Selecciona las variantes del producto. (Separadas por comas)
+                                    </FormHelperText>
+                                        <SelectProperty productName={name} combineVariantsStocks={combineVariantsStocks} />
+                                    </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                 <FormControl>
@@ -464,20 +480,6 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <FormControl>
-                            {!isLoading ? (
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    startIcon=""
-                                    type="submit"
-                                >
-                                    AGREGAR
-                                </Button>
-                            ) : (
-                                <CircularProgress />
-                            )}
-                        </FormControl>
                     </form>
                 </React.Fragment>
                 <Snackbar
