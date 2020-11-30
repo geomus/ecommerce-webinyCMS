@@ -11,6 +11,7 @@ export const CartProvider = ({ children }) => {
     }, []);
 
     const addToCart = (prod) => {
+        console.log(prod);
         const localCart = JSON.parse(localStorage.getItem("cart")) ?? [];
 
         const { id } = prod;

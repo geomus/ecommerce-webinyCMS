@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 export const products = gql`
     {
         products {
-            listProducts(where: {isPublished: true}) {
+            listProducts(where: { isPublished: true }) {
                 data {
                     id
                     name
@@ -14,6 +14,10 @@ export const products = gql`
                     tags
                     isFeatured
                     isPublished
+                    variants {
+                        propertyValues
+                        stock
+                    }
                 }
             }
         }
@@ -32,6 +36,10 @@ export const product = gql`
                     images
                     tags
                     isFeatured
+                    variants {
+                        propertyValues
+                        stock
+                    }
                 }
             }
         }
@@ -48,6 +56,10 @@ export const productsFilter = gql`
                     priceBase
                     images
                     isFeatured
+                    variants {
+                        propertyValues
+                        stock
+                    }
                 }
             }
         }
@@ -167,6 +179,39 @@ export const searchProducts = gql`
                     priceBase
                     images
                     isFeatured
+                    variants {
+                        propertyValues
+                        stock
+                    }
+                }
+            }
+        }
+    }
+`;
+export const getStockProductVariant = gql`
+    query getProduct($id: ID!) {
+        products {
+            getProduct(id: $id) {
+                data {
+                    variants {
+                        stock
+                        propertyValues
+                    }
+                }
+            }
+        }
+    }
+`;
+
+export const updateStockProductVariant = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    variants {
+                        stock
+                        propertyValues
+                    }
                 }
             }
         }

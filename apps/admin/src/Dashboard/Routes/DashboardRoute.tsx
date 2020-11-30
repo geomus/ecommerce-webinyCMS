@@ -6,6 +6,8 @@ import Helmet from 'react-helmet'
 import OrdersTable from '../Orders/Components/OrdersTable';
 import ProductsTable from '../Products/Components/ProductsTable';
 import PricesListTabs from '../PricesList/Components/PricesListTabs';
+import VariantsTable from '../Variants/Components/VariantsTable';
+import CategoryTab from '../Categories/Components/CategoryTabs';
 
 export default [{
   type: "route",
@@ -55,7 +57,43 @@ export default [{
           <Helmet>
             <title>Prices List</title>
           </Helmet>
-          <PricesListTabs/>
+          <PricesListTabs />
+        </AdminLayout>
+      }
+    />
+  )
+} as RoutePlugin,
+{
+  type: "route",
+  name: "route-variants",
+  route: (
+    <Route
+      exact
+      path="/variants"
+      render={() =>
+        <AdminLayout>
+          <Helmet>
+            <title>Variants</title>
+          </Helmet>
+          <VariantsTable />
+        </AdminLayout>
+      }
+    />
+  )
+} as RoutePlugin,
+{
+  type: "route",
+  name: "route-products-categories",
+  route: (
+    <Route
+      exact
+      path="/categories"
+      render={() =>
+        <AdminLayout>
+          <Helmet>
+            <title>Product`s Categories</title>
+          </Helmet>
+          <CategoryTab />
         </AdminLayout>
       }
     />

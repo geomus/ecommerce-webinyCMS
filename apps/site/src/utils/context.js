@@ -12,14 +12,15 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (prod) => {
         const localCart = JSON.parse(localStorage.getItem("cart")) ?? [];
-
         const { id } = prod;
-        const existingProd = localCart.find((cartProd) => cartProd.id == id);
-        if (existingProd) {
-            existingProd.quantity += prod.quantity;
-        } else {
-            localCart.push(prod);
-        }
+        //const existingProd = localCart.find((cartProd) => cartProd.id == id);
+        // if (existingProd) {
+        //     existingProd.quantity += prod.quantity;
+        // } else {
+            const productAdded = {...prod}
+            console.log(productAdded);
+            localCart.push(productAdded);
+        // }
         localStorage.setItem("cart", JSON.stringify(localCart));
         setCart(localCart);
     };

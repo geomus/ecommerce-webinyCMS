@@ -23,7 +23,7 @@ const apolloGatewayServices = {
     LAMBDA_SERVICE_API_ORDERS: "${apiOrders.name}"
 };
 const mercadoPagoEnv = {
-    GRAPHQL_API_URL: process.env.GRAPHQL_API_URL,
+    GRAPHQL_API_URL: process.env.GRAPHQL_PLAYGROUND,
     USER_TOKEN: process.env.USER_TOKEN,
     BACK_URL_MERCADO_PAGO: process.env.BACK_URL_MERCADO_PAGO
 }
@@ -523,7 +523,23 @@ module.exports = () => ({
                                     "PATCH",
                                     "DELETE"
                                 ]
-                            }
+                            },
+                            "/mercado-pago/generate-preference": {
+                                ttl: 0,
+                                forward: {
+                                    headers: ["Accept", "Accept-Language"]
+                                },
+                                allowedHttpMethods: [
+                                    "GET",
+                                    "HEAD",
+                                    "OPTIONS",
+                                    "PUT",
+                                    "POST",
+                                    "PATCH",
+                                    "DELETE"
+                                ]
+                            },
+                            
                         }
                     }
                 ]

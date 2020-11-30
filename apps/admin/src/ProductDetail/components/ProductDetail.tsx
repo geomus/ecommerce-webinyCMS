@@ -1,14 +1,29 @@
 import React from 'react';
-import { useQuery } from "@apollo/client";
-import { product } from '../../graphql/query'
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import { makeStyles } from "@material-ui/core/styles"
-import {ReactComponent as RbNew} from '../../utils/svg/rb-new.svg'
-import { Divider, LinearProgress } from '@material-ui/core';
+import { ReactComponent as RbNew } from '../../utils/svg/rb-new.svg'
+import { Divider, FormControl, InputLabel, Select } from '@material-ui/core';
 import ShopCartButton from '../../Product/ShopCartButton';
+
+const dataProducts = [{
+    id: "1",
+    name: "Cafetera Moulinex Dolce Gusto Edited",
+    priceBase: 100,
+    tags: [
+        "tag1",
+        "tag2",
+        "tag3",
+    ],
+    description: "Cafetera Dolce Gusto Lumio. La cafetera Dolce Gusto Lumio es de variedad automática que ha llegado con un diseño radical al que nos tenía acostumbrados Dolce Gusto.En este post te contamos todo lo que necesitas saber sobre ella, desde sus características técnicas hasta la calidad de las cápsulas o priceBase.",
+    images: [
+        "https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+    ],
+    isFeatured: true,
+    isPublished: true
+}]
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -33,45 +48,63 @@ const useStyles = makeStyles({
 
 const ProductDetail = () => {
     const classes = useStyles();
+    const [state, setState] = React.useState({
+        age: '',
+        name: 'hai',
+      });
 
-    const { loading, error, data } = useQuery(product, { variables: { id: "5f984c67b7db96000753789e" } });
-    if (loading) {
-        return (
-            <h1> <LinearProgress /> </h1>
-        )
-    }
-
-    if (error) {
-        console.dir(error)
-        return <h1> error </h1>;
-    }
-
-    const tags = data.products.getProduct.data.tags
     return (
         <Container>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                    <img src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}`} alt="Product" className={classes.imgFluid} />
-                    { data.products.getProduct.data.isFeatured ? <RbNew className={classes.ribbonNew}/> : ''}
+                    <img src={dataProducts[0].images[0]} alt="Product" className={classes.imgFluid} />
+                    {dataProducts[0].isFeatured ? <RbNew className={classes.ribbonNew} /> : ''}
                 </Grid>
                 <Grid item xs={12} md={6} className={classes.detailProduct}>
                     <Typography variant="body1" gutterBottom>
                         Categoria del producto
                     </Typography>
-                    <Divider/>
+                    <Divider />
                     <Typography variant="h5" gutterBottom>
-                        {data.products.getProduct.data.name}
+                        {dataProducts[0].name}
                     </Typography>
                     <Typography variant="h5" gutterBottom>
-                        ${data.products.getProduct.data.price}
+                        ${dataProducts[0].priceBase}
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                    {data.products.getProduct.data.description}
+                        {dataProducts[0].description}
                     </Typography>
+                    <FormControl>
+                        <InputLabel htmlFor="age-native-simple">Color</InputLabel>
+                        <Select
+                            native
+                            value={state.age}
+                        >
+                            <option aria-label="None" value="" />
+                            <option value={10}>Rojo</option>
+                            <option value={20}>Azul</option>
+                            <option value={30}>Verde</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl>
+                        <InputLabel htmlFor="age-native-simple">Talle</InputLabel>
+                        <Select
+                            native
+                            value={state.age}
+                        >
+                            <option aria-label="None" value="" />
+                            <option value={10}>Rojo</option>
+                            <option value={20}>Azul</option>
+                            <option value={30}>Verde</option>
+                        </Select>
+                    </FormControl>
                     <div>
-                        {tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags} color="primary" label={tag} component="a" href="#chip" key={i+tag}clickable /> )}
+                        {dataProducts[0].tags &&
+                            dataProducts[0].tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
+                                color="primary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
+                        }
                     </div>
-                    <ShopCartButton/>
+                    <ShopCartButton />
                 </Grid>
             </Grid>
         </Container>

@@ -3,6 +3,9 @@ import { withStorage, withCrudLogs, withSoftDelete, withFields, pipe } from "@we
 import { withUser } from "@webiny/api-security";
 import product from "./models/product.model";
 import price from "./models/price.model";
+import property from "./models/property.model"
+import productVariant from "./models/productVariant.model"
+import category from "./models/category.model";
 
 export default () => ({
     name: "context-models",
@@ -19,7 +22,6 @@ export default () => ({
                 withFields({
                     id: context.commodo.fields.id()
                 }),
-
                 withStorage({ driver }),
                 withUser(context),
                 withSoftDelete(),
@@ -28,8 +30,11 @@ export default () => ({
         };
 
         context.models = {
-            Product: product({ createBase,  }),
+            Product: product({ createBase, context }),
             Price: price({ createBase  }),
+            Property: property({ createBase  }),
+            ProductVariant: productVariant({ createBase, context  }),
+            Category: category({ createBase, context }),
             createBase
         };
     }

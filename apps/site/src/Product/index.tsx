@@ -9,6 +9,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { ReactComponent as RbNew } from '../utils/svg/rb-new.svg'
+import QuickView from '../ProductQuickView/QuickView'
+import { Button } from '@material-ui/core';
 
 
 
@@ -71,7 +73,9 @@ export default function Product(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <ShopCartButton {...props} />
+                {/* <ShopCartButton {...props} /> */}
+                <Button variant="contained" href={`/wonder-slug/product-detail?id=${props.id}`}>COMPRAR</Button>
+                <QuickView {...props}/>
             </CardActions>
         </Card>
     );

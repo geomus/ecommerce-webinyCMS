@@ -94,10 +94,20 @@ export default function FormCheckout() {
     const handleChangeShipping = (event) => {
         setShipping(event.target.value);
     };
+    const refactorCart = (cart) => {
+        const newCart = cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            priceBase: item.priceBase,
+            quantity: item.quantity,
+            variantsSelected: item.variantsSelected
+        }))        
+    }
+    refactorCart(cart)
 
     const generatePreference = async (cartItem, userToken) => {
         const response = await fetch(
-            "https://jpzs2agr52.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
+            `${process.env.REACT_APP_API_URL}/mercado-pago/generate-preference`,
             {
                 method: "POST",
                 body: JSON.stringify({ cart: cartItem, token: userToken }),
