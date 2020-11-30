@@ -124,8 +124,18 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
 
     const [productVariants, setProductVariants] = useState([])
     useEffect(() => {
-        const productCategories = product.categories.map(({ name }) => name);
-        setCategories(productCategories);
+        if (product.categories) {
+            const productCategories = product.categories.map(({ name }) => name);
+            setCategories(productCategories);
+        }
+        if (product.variants) {
+            const variants = []
+            for (let i = 0; i < product.variants.length; i++) {
+                const obj = {propertyValues: product.variants[i].propertyValues, stock:product.variants[i].stock }
+                variants.push(obj)
+            }
+            setProductVariants(variants)
+        }
     }, []);
 
     const uploadImage = async (selectedFile) => {
@@ -265,6 +275,8 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             tags: tags,
             variants: productVariants
         };
+        console.log(product);
+
 
         try {
             await editProduct({ variables: { id: productId, data: product } });
@@ -345,40 +357,42 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                             <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} setCheckedPrices={setCheckedPrices} />
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl className={classes.formControl}>
-                                <InputLabel id="categories">Categorías</InputLabel>
-                                <Select
-                                    labelId="categories"
-                                    id="categories"
-                                    multiple
-                                    aria-describedby="categories-helper"
-                                    value={categories}
-                                    onChange={handleChangeCategories}
-                                    input={<Input id="categories" />}
-                                    renderValue={(selected) => (
-                                        <div className={classes.chip}>
-                                            {(selected as string[]).map((value) => (
-                                                <Chip
-                                                    key={value}
-                                                    label={value}
-                                                    className={classes.chip}
-                                                />
-                                            ))}
-                                        </div>
-                                    )}
-                                    MenuProps={MenuProps}
-                                >
-                                    {enabledCategories.map((category) => (
-                                        <MenuItem key={category.id} value={category.name}>
-                                            {category.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                <FormHelperText id="categories-helper">
-                                    Desplegá para ver tu selección de categorías para este
-                                    producto.
+                            {categories &&
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="categories">Categorías</InputLabel>
+                                    <Select
+                                        labelId="categories"
+                                        id="categories"
+                                        multiple
+                                        aria-describedby="categories-helper"
+                                        value={categories}
+                                        onChange={handleChangeCategories}
+                                        input={<Input id="categories" />}
+                                        renderValue={(selected) => (
+                                            <div className={classes.chip}>
+                                                {(selected as string[]).map((value) => (
+                                                    <Chip
+                                                        key={value}
+                                                        label={value}
+                                                        className={classes.chip}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                        MenuProps={MenuProps}
+                                    >
+                                        {enabledCategories.map((category) => (
+                                            <MenuItem key={category.id} value={category.name}>
+                                                {category.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    <FormHelperText id="categories-helper">
+                                        Desplegá para ver tu selección de categorías para este
+                                        producto.
                                     </FormHelperText>
-                            </FormControl>
+                                </FormControl>
+                            }
                         </Grid>
                         <Grid item xs={12}>
                             <InputLabel>Imágenes</InputLabel>

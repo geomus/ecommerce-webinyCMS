@@ -48,6 +48,9 @@ const plugin: GraphQLSchemaPlugin = {
                 previous: String
             }
             type PropertyCursors {
+                next: String
+                previous: String
+            }
             type CategoryCursors {
                 next: String
                 previous: String
