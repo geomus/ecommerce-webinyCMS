@@ -1,5 +1,6 @@
 import adminTemplate from "@webiny/app-template-admin-full";
 import "./App.scss";
+import theme from "theme";
 import ProductDetail from './ProductDetail';
 import ListProducts from './ListProducts';
 import ButtonCartHome from './ButtonCartHome';
@@ -12,6 +13,7 @@ import PBGroupEcommerce from './plugins/PBGroupEcommerce';
 import DashboardMenu from './Dashboard/Menus/DashboardMenu';
 import DashboardRoute from './Dashboard/Routes/DashboardRoute';
 import LogoAdmin from './plugins/LogoAdmin';
+// import Header from './Header';
 
 export default adminTemplate({
     cognito: {
@@ -28,6 +30,7 @@ export default adminTemplate({
         PayResult(),
         ProductSearch(),
         SliderListProducts(),
+        theme(),
         DashboardMenu,
         DashboardRoute,
         PBGroupEcommerce,

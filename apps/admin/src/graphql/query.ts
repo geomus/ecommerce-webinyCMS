@@ -443,6 +443,20 @@ export const createPrice = gql`
     }
 `;
 
+export const getHeaderData = gql`
+    query PbGetHeader {
+        pageBuilder {
+            getSettings {
+                data {
+                    name
+                    logo {
+                        src
+                    }
+                }
+            }
+        }
+    }
+`
 export const createProducts = gql`
     mutation createProducts($data: [ProductInput!]!) {
         products {
