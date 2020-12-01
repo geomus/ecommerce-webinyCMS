@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { orderExternalID, updateOrder } from "../../graphql/query";
-import { CartContext } from "../../utils/context";
+import { CartContext } from "theme/components/utils/context";
 import { Backdrop, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { updateStockProductVariant } from "../../graphql/query"

@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 import createApp from "./App";
 import { ApolloProvider } from '@apollo/client'
 import client from './graphql/conection'
-import { CartProvider } from "./utils/context";
+import { CartProvider } from "theme/components/utils/context";
 
 const App = createApp();
 

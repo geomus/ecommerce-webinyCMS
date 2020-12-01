@@ -27,46 +27,33 @@ const useStyles = makeStyles({
 });
 
 
-const localCart = JSON.parse(localStorage.getItem("cart")) ?? [];
+const localCart = [
+    {
+        id: "1",
+        name: "Product 1",
+        quantity: 2,
+        priceBase: 2000
+    },
+    {
+        id: "2",
+        name: "Product 2",
+        quantity: 1,
+        priceBase: 5000
+    },
+    {
+        id: "3",
+        name: "Product 3",
+        quantity: 1,
+        priceBase: 4000
+    }
+];
 
 export default function SpanningTable() {
     const classes = useStyles();
 
     const [cart, setCart] = useState(localCart)
 
-
-    const emptyCart = () => {
-        localStorage.setItem("cart", JSON.stringify([]))
-        return setCart([])
-    }
-
-    const updateQtyItem = (e) => {
-        const id = e.currentTarget.id
-        const newQty = e.target.value
-
-        const cartModified = cart.map(item => {
-            if (item.id === id) {
-                item.quantity = newQty
-            }
-            return item
-        })
-
-        localStorage.setItem("cart", JSON.stringify(cartModified))
-        return setCart(cartModified)
-    }
-
-    const deleteItemCart = (e) => {
-        const id = e.currentTarget.id
-        const cartFiltered = cart.filter(item => item.id !== id)
-        localStorage.setItem("cart", JSON.stringify(cartFiltered))
-        return setCart(cartFiltered)
-    }
-
-    function totalCalculator(items) {
-        return items.map((item) => item.priceBase * item.quantity).reduce((sum, i) => sum + i, 0);
-    }
-
-    const totalCart = totalCalculator(cart)
+    const totalCart = "$2000"
 
     return (
         <TableContainer>
@@ -85,7 +72,7 @@ export default function SpanningTable() {
                     {cart.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell className={classes.cellImgProduct}>
-                                <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
+                                <img src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg" className={classes.imgProduct} alt="Foto producto" />
                             </TableCell>
                             <TableCell>{row.name}</TableCell>
                             <TableCell align="right" className={classes.cellQty}>
@@ -96,13 +83,12 @@ export default function SpanningTable() {
                                     variant="outlined"
                                     type="number"
                                     size="small"
-                                    onChange={updateQtyItem}
                                 />
                             </TableCell>
                             <TableCell align="right">${row.priceBase}</TableCell>
                             <TableCell align="right">${row.quantity * row.priceBase}</TableCell>
                             <TableCell align="right">
-                                <Button value={row.id} id={row.id} onClick={deleteItemCart}>
+                                <Button value={row.id} id={row.id} >
                                     <HighlightOffIcon />
                                 </Button>
                             </TableCell>
@@ -121,7 +107,7 @@ export default function SpanningTable() {
                             </Typography>
                         </TableCell>
                         <TableCell align="right">
-                            <Button variant="contained" color="secondary" onClick={emptyCart}>
+                            <Button variant="contained" color="secondary" >
                                 VACIAR
                             </Button>
                         </TableCell>

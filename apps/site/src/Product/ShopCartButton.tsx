@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Button from '@material-ui/core/Button';
-import { CartContext } from "../utils/context";
+import { CartContext } from "theme/components/utils/context";
 
 
 const useStyles = makeStyles({

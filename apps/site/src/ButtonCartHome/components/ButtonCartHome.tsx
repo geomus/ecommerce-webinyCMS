@@ -6,7 +6,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Fab from '@material-ui/core/Fab';
 import Badge from '@material-ui/core/Badge';
 import Drawer from "@material-ui/core/Drawer";
-import { CartContext } from "../../utils/context";
+import { CartContext } from "theme/components/utils/context";
 
 
 export default function ButtonCartHome() {

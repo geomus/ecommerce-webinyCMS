@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import Button from '@material-ui/core/Button';
-import { CartContext } from "../utils/context";
 
 
 const useStyles = makeStyles({
@@ -19,7 +18,6 @@ export default function ShopCartButton(props) {
         quantity: 1
     }
 
-    const { addToCart } = useContext(CartContext);
 
     return (
         <React.Fragment >
@@ -27,7 +25,7 @@ export default function ShopCartButton(props) {
                 className={classes.btnCenter}
                 variant="contained"
                 color="primary"
-                startIcon={<ShoppingCartIcon />} onClick={() => addToCart(prod)}>
+                startIcon={<ShoppingCartIcon />}>
                 ADD TO CART
             </Button>
         </React.Fragment>
