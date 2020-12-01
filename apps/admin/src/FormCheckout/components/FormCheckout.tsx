@@ -1,8 +1,4 @@
-import React, { useState, useContext } from 'react';
-import { useMutation } from "@apollo/client";
-import { CartContext } from "../../utils/context";
-import { createOrder } from '../../graphql/query';
-
+import React, { useState} from 'react';
 import { TextField, Grid, Button, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PaymentIcon from '@material-ui/icons/Payment';
@@ -49,131 +45,41 @@ const shippingMethods = [
 ];
 
 export default function FormCheckout() {
-    const [addOrder] = useMutation(createOrder);
-
-
     const classes = useStyles();
 
-    const [name, setName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
-    const [state, setState] = useState('');
-    const [city, setCity] = useState('');
-    const [zip, setZip] = useState('');
-    const [pay, setPay] = useState('');
-    const [shipping, setShipping] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const { cart } = useContext(CartContext);
-    const token = process.env.PUBLIC_KEY_MERCADO_PAGO;
+    const [pay] = useState('');
+    const [shipping] = useState('');
+    const [isLoading] = useState(false);
 
-    const handleChangeName = (event) => {
-        setName(event.target.value);
-    };
-    const handleChangeLastName = (event) => {
-        setLastName(event.target.value);
-    };
-    const handleChangePhone = (event) => {
-        setPhone(event.target.value);
-    };
-    const handleChangeAddress = (event) => {
-        setAddress(event.target.value);
-    };
-    const handleChangeState = (event) => {
-        setState(event.target.value);
-    };
-    const handleChangeCity = (event) => {
-        setCity(event.target.value);
-    };
-    const handleChangeZip = (event) => {
-        setZip(event.target.value);
-    };
-    const handleChangePay = (event) => {
-        setPay(event.target.value);
-    };
-    const handleChangeShipping = (event) => {
-        setShipping(event.target.value);
-    };
-    const generatePreference = async (cartItem, userToken) => {
-        const response = await fetch(
-            "https://jpzs2agr52.execute-api.us-east-1.amazonaws.com/prod/mercado-pago/generate-preference",
-            {
-                method: "POST",
-                body: JSON.stringify({ cart: cartItem, token: userToken }),
-            }
-        );
-        const body = await response.json()
-        console.log(body.data);
-
-        return body.data
-    };
-
-    const executePayment = async (url, order) => {
-        const { data } = await addOrder({ variables: { data: order } });
-        const orderGenerate = data.orders.createOrder.data;
-        await localStorage.setItem('orderId', JSON.stringify(orderGenerate.id));
-
-        return window.location.href = url;
-    };
-
-    const onSubmit = async (e) => {
-        setIsLoading(true);
-        e.preventDefault();
-
-        const order = {
-            name: name,
-            lastName: lastName,
-            phone: phone,
-            address: address,
-            state: state,
-            city: city,
-            zip: zip,
-            pay: pay,
-            idPreference: null,
-            shipping: shipping,
-            cart: JSON.stringify(cart)
-        };
-
-        if (pay === 'Mercado Pago') {
-            //Pedir la preferencia
-            const preferenceData = await generatePreference(cart, token)
-            order.idPreference = preferenceData.id
-            //createOrder
-            await executePayment(preferenceData.init_point, order)
-        } else {
-            await executePayment('http://localhost:3000/wonder-slug/pending', order)
-        };
-    };
-
-
+    
     return (
-        <form className={classes.root} onSubmit={onSubmit}>
+        <form className={classes.root} >
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                    <TextField fullWidth required id="firstName" name="firstName" label="Nombre" onChange={handleChangeName} />
+                    <TextField fullWidth required id="firstName" name="firstName" label="Nombre"  />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField fullWidth required id="lastName" name="lastName" label="Apellido" onChange={handleChangeLastName} />
+                    <TextField fullWidth required id="lastName" name="lastName" label="Apellido"  />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField fullWidth required id="phone" name="phone" label="Telefono" onChange={handleChangePhone} />
+                    <TextField fullWidth required id="phone" name="phone" label="Telefono"  />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField fullWidth required id="address" name="address" label="Direccion" onChange={handleChangeAddress} />
+                    <TextField fullWidth required id="address" name="address" label="Direccion"  />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <TextField fullWidth required id="state" name="state" label="Estado" onChange={handleChangeState} />
+                    <TextField fullWidth required id="state" name="state" label="Estado"  />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <TextField fullWidth required id="city" name="city" label="Ciudad" onChange={handleChangeCity} />
+                    <TextField fullWidth required id="city" name="city" label="Ciudad"  />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <TextField fullWidth required id="zipCode" name="zipCode" label="C.P." onChange={handleChangeZip} />
+                    <TextField fullWidth required id="zipCode" name="zipCode" label="C.P."  />
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Métodos de pago</FormLabel>
-                        <RadioGroup aria-label="payments" name="payments1" value={pay} onChange={handleChangePay}>
+                        <RadioGroup aria-label="payments" name="payments1" value={pay} >
                             {
                                 paymentMethods.map((pay) => (
                                     <FormControlLabel value={pay.name} control={<Radio />} label={pay.name} key={pay.id + pay.name} />
@@ -184,7 +90,7 @@ export default function FormCheckout() {
                 <Grid item xs={6}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Métodos de envío</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender1" value={shipping} onChange={handleChangeShipping}>
+                        <RadioGroup aria-label="gender" name="gender1" value={shipping} >
                             {
                                 shippingMethods.map((pay) => (
                                     <FormControlLabel value={pay.name} control={<Radio />} label={pay.name} key={Math.random() * pay.id} />
