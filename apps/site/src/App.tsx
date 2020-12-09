@@ -11,11 +11,23 @@ import PayResult from './PayResult';
 import SliderListProducts from './SliderListProducts';
 import SignInRoute from './SignIn/routes'
 import SignUpRoute from './SignUp/routes'
+import React from "react";
+import { CartProvider } from "theme/components/utils/context";
+import client from "./graphql/conection";
+import { ApolloProvider } from "@apollo/client";
 
 
 export default (params: SiteAppOptions = {}) => {
     const plugins = params.plugins || [];
     plugins.push(ProductDetail(), ProductSearch(), ListProducts(), ButtonCartHome(), Cart(), FormCheckout(), PayResult(), SliderListProducts(),
-    SignInRoute, SignUpRoute, theme());
-    return createSite({ ...params, plugins });
+        SignInRoute, SignUpRoute, theme());
+    const MainApp = createSite({ ...params, plugins });
+    const App = () => (
+        <ApolloProvider client={client}>
+            <CartProvider>
+                <MainApp />
+            </CartProvider>
+        </ApolloProvider>
+    );
+    return App;
 };
