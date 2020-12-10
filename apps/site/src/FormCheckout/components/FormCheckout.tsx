@@ -65,7 +65,7 @@ export default function FormCheckout() {
     const [shipping, setShipping] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const { cart } = useContext(CartContext)
-    const token = process.env.PUBLIC_KEY_MERCADO_PAGO;
+    const token = 'TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039';
 
     const handleChangeName = (event) => {
         setName(event.target.value);
@@ -150,7 +150,7 @@ export default function FormCheckout() {
             //createOrder
             await executePayment(preferenceData.init_point, order)
         } else {
-            await executePayment('http://localhost:3000/wonder-slug/pending', order)
+            await executePayment('https://dsc5kyynzacr1.cloudfront.net/wonder-slug/pending', order)
         }
     }
 

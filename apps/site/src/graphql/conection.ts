@@ -13,7 +13,7 @@ const authLink = setContext((_, { headers }) => {
         return {
             headers: {
                 ...headers,
-                Authorization: tokenValue.replace(/['"]+/g, '')
+                Authorization: "c6507168fded758647102f273616362fe06b65053ebbdc7b"
             }
         };
     }

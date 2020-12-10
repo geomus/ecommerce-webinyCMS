@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import {  Typography } from "@material-ui/core"
+import { Typography } from "@material-ui/core"
 import { CartContext } from "theme/components/utils/context";
 
 
@@ -36,17 +36,18 @@ export default function Cart() {
 
     const { cart, emptyCart, updateQtyItem, deleteItemCart, totalCalculator } = useContext(CartContext);
 
-    const totalCart = totalCalculator(cart)
-    
     const [state, setState] = useState({});
+
+    const totalCart = totalCalculator(cart)
+
+
     const propertyKeys = []
-    for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < cart[0].listVariants.length; j++) {
-            const keys = Object.keys(cart[0].listVariants[j]);
-            propertyKeys.push(keys)            
+    for (let i = 0; i < cart.length; i++) {
+        for (let j = 0; j < cart[i].listVariants.length; j++) {
+            const keys = Object.keys(cart[i].listVariants[j]);
+            propertyKeys.push(keys)
         }
     }
-    console.log(propertyKeys);
     
 
     const handleChange = (event) => {
@@ -57,7 +58,6 @@ export default function Cart() {
         });
     };
 
-    
     return (
         <TableContainer>
             <Table className={classes.table} aria-label="cart" size="small">
@@ -80,20 +80,20 @@ export default function Cart() {
                             </TableCell>
                             <TableCell colSpan={3} padding="none" size="small">{row.name}</TableCell>
                             {
-                        propertyKeys &&
-                        propertyKeys.map((variantProperty, i) =>
-                            <div key={`${i}variant`} >
-                                <Typography variant="body1" >{variantProperty}</Typography>
-                                <select>
-                                    {
-                                        Object.entries(row.listVariants[i][propertyKeys[i]]).map(([key, value], j) =>
-                                            <option key={`${key}val${j}`} value={state[`${value}`]} id={`${value}`} defaultValue={row.variantsSelected[i][propertyKeys[i]]} onChange={handleChange} >{value}</option>
-                                            //
-                                        )
-                                    }
-                                </select>
-                            </div>
-                        )}
+                                propertyKeys &&
+                                propertyKeys.map((variantProperty, i) =>
+                                    <div key={`${i}variant`} >
+                                        <Typography variant="body1" >{variantProperty}</Typography>
+                                        <select>
+                                            {
+                                                Object.entries(row.listVariants[i][propertyKeys[i]]).map(([key, value], j) =>
+                                                    <option key={`${key}val${j}`} value={state[`${value}`]} id={`${value}`} defaultValue={row.variantsSelected[i][propertyKeys[i]]} onChange={handleChange} >{value}</option>
+                                                    //
+                                                )
+                                            }
+                                        </select>
+                                    </div>
+                                )}
                             <TableCell colSpan={1}>
                                 <TextField
                                     id={row.id}
