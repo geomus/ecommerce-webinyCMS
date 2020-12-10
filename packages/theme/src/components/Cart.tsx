@@ -56,7 +56,19 @@ export default function Cart() {
                                 </Button>
                             </TableCell>
                             <TableCell colSpan={2} padding="none" className={classes.cellImgProduct}>
-                                <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
+                                {
+                                    row.images ?
+                                        <img
+                                            src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
+                                            className={classes.imgProduct}
+                                            alt="Foto producto"
+                                        /> :
+                                        <img
+                                            src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                            className={classes.imgProduct}
+                                            alt="Foto producto"
+                                        />
+                                }
                             </TableCell>
                             <TableCell colSpan={3} padding="none" size="small">{row.name}</TableCell>
                             <TableCell colSpan={1}>

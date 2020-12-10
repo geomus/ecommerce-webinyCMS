@@ -34,11 +34,19 @@ export default function ProductRow({ row, categories }) {
     return (
         <TableRow hover role="checkbox" tabIndex={-1}>
             <TableCell align="center" className={classes.cellImgProduct}>
-                <img
-                    src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
-                    className={classes.imgProduct}
-                    alt="Foto producto"
-                />
+                {
+                    row.images ?
+                        <img
+                            src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
+                            className={classes.imgProduct}
+                            alt="Foto producto"
+                        /> :
+                        <img
+                            src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                            className={classes.imgProduct}
+                            alt="Foto producto"
+                        />
+                }
             </TableCell>
             <TableCell component="th" scope="row">
                 {row.name}
@@ -84,9 +92,9 @@ export default function ProductRow({ row, categories }) {
                             />
                         ))}
                 </TableCell>
-            ) : 
-            <TableCell align="center">
-                Uncategorized
+            ) :
+                <TableCell align="center">
+                    Uncategorized
                 </TableCell>}
             <TableCell align="center">
                 <ProductsBtnPublished row={row} />

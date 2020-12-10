@@ -37,7 +37,7 @@ export default function Cart() {
     const { cart, emptyCart, updateQtyItem, deleteItemCart, totalCalculator } = useContext(CartContext);
 
     const totalCart = totalCalculator(cart)
-    
+
     const [state, setState] = useState({});
 
     const handleChange = (event) => {
@@ -47,7 +47,7 @@ export default function Cart() {
             [name]: event.target.value,
         });
     };
-console.log(cart);
+    console.log(cart);
 
     return (
         <TableContainer>
@@ -67,13 +67,25 @@ console.log(cart);
                                 </Button>
                             </TableCell>
                             <TableCell colSpan={2} padding="none" className={classes.cellImgProduct}>
-                                <img src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`} className={classes.imgProduct} alt="Foto producto" />
+                                {
+                                    row.images ?
+                                        <img
+                                            src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
+                                            className={classes.imgProduct}
+                                            alt="Foto producto"
+                                        /> :
+                                        <img
+                                            src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                            className={classes.imgProduct}
+                                            alt="Foto producto"
+                                        />
+                                }
                             </TableCell>
                             <TableCell colSpan={2} padding="none" size="small">{row.name}</TableCell>
                             <TableCell colSpan={2} padding="none" size="small">{
                                 row.variantsSelected &&
-                            row.variantsSelected.map((variant,i) => 
-                            Object.entries(variant).map(([key,value]) => <div key={`${value}`}><span >{key}:{value}</span><br/></div>))}
+                                row.variantsSelected.map((variant, i) =>
+                                    Object.entries(variant).map(([key, value]) => <div key={`${value}`}><span >{key}:{value}</span><br /></div>))}
                             </TableCell>
                             <TableCell colSpan={1}>
                                 <TextField

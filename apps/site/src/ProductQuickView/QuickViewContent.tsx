@@ -196,7 +196,10 @@ const QuickViewContent = (props) => {
         <Container>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={7}>
-                    <img src={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}`} alt="Product" className={classes.imgFluid} />
+                   { props.images ?
+                    <img src={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}`} alt="Product" className={classes.imgFluid} /> :
+                    <img src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg" alt="Product" className={classes.imgFluid} />
+                    }
                     {props.isFeatured ? <RbNew className={classes.ribbonNew} /> : ''}
                 </Grid>
                 <Grid item xs={12} md={5} className={classes.detailProduct}>
