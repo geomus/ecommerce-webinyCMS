@@ -85,6 +85,7 @@ export const getOrder = gql`
                     shipping
                     status
                     cart
+                    totalOrder
                 }
             }
         }
@@ -136,6 +137,7 @@ export const orderExternalID = gql`
                     status
                     shipping
                     cart
+                    totalOrder
                 }
             }
         }
