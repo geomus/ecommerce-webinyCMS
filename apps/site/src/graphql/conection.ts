@@ -7,7 +7,12 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-    const tokenValue = "5caa603604c57c8a7478a22713db10722e7263d64a4d4b5a";
+    // ENV = dev
+    const tokenValue = "c6507168fded758647102f273616362fe06b65053ebbdc7b";
+
+
+    //ENV = local
+    //const tokenValue = "5caa603604c57c8a7478a22713db10722e7263d64a4d4b5a";
    
     if (tokenValue) {
         return {
