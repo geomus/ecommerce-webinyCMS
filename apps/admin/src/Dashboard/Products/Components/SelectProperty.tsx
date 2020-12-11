@@ -93,7 +93,7 @@ export default function Tags({ combineVariantsStocks, productName }) {
             }
             <TableProductVariants properties={properties} productName={productName} combineVariantsStocks={combineVariantsStocks} />
             <br/>
-            <VariantsBtnCreate/>
+            {/* <VariantsBtnCreate/> */}
             <br/> 
         </div >
     );

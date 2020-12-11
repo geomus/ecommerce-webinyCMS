@@ -1,7 +1,7 @@
-import React, { useEffect, useContext, useState } from "react";
+/* eslint-disable @typescript-eslint/camelcase */
+import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { orderExternalID, updateOrder, getOrder, updateStockProductVariant } from "../../graphql/query";
-import { CartContext } from "theme/components/utils/context";
 import { Backdrop, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom'
@@ -32,23 +32,19 @@ interface Order {
     shipping: String;
     status: String;
     cart: string;
-    totalCart: Number;
+    totalOrder: Number;
 }
 
-export default function PayResult(paramsObj: any, order: Order) {
+export default function PayResult(order: Order) {
     const classes = useStyles();
+    const [orderId, setOrderId] = useState('')
     const [updateStockMutation] = useMutation(updateStockProductVariant)
-    const orderId = localStorage.getItem('orderId').replace(/['"]+/g, '');
-    paramsObj = [];
-    const queryString = useLocation()
-    const parameters = queryString.search.slice(1).split("&")
-    const paramsObjs = {}
-    for (let i = 0; i < parameters.length; i++) {
-        const parameter = parameters[i];
-        const parameterSplited = parameter.split("=")
-        paramsObjs[parameterSplited[0]] = parameterSplited[1]
-    }
 
+    useEffect(() => {
+        const orderId = localStorage.getItem('orderId').replace(/['"]+/g, '');
+        setOrderId(orderId)       
+    }, []);
+    
     // const [patchOrder] = useMutation(updateOrder);
 
     // const updateStatus = (order: Order) => {
@@ -59,10 +55,21 @@ export default function PayResult(paramsObj: any, order: Order) {
     // };
 
     const orderProcess = async () => {
+        const queryString = useLocation()
+        const parameters = queryString.search.slice(1).split("&")
+        const paramsObjs = {
+            preference_id: '',
+            collection_status: ''
+        }
+        for (let i = 0; i < parameters.length; i++) {
+            const parameter = parameters[i];
+            const parameterSplited = parameter.split("=")
+            paramsObjs[parameterSplited[0]] = parameterSplited[1]
+        }
         // check for external payment (MercadoPago)
         if (paramsObjs.preference_id) {
             const idPreference = paramsObjs.preference_id;
-            status = paramsObjs.collection_status;
+            const status = paramsObjs.collection_status;
 
             const { loading, error, data } = useQuery(orderExternalID, { variables: { idPreference } });
 
@@ -172,7 +179,6 @@ export default function PayResult(paramsObj: any, order: Order) {
         return true;
     }
 
-            console.log(order);
 
     return (
         <React.Fragment>
@@ -219,7 +225,7 @@ export default function PayResult(paramsObj: any, order: Order) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <button onClick={updateStock}>Update</button>
+            {/* <button onClick={updateStock}>Update</button> */}
         </React.Fragment>
     )
 }
