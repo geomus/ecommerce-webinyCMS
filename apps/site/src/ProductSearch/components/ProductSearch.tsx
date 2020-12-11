@@ -95,7 +95,11 @@ const ProductSearch = () => {
                 {
                     productsSearch.map((item) => (
                         <a key={item.id} className={classes.productInline} href={`/wonder-slug/product-detail?id=${item.id}`}>
-                            <img className={classes.imgProductInline} src={`${process.env.REACT_APP_API_URL}/files/${item.images[0]}`} alt="producto" width={50} />
+                            {item.images ?
+                                <img className={classes.imgProductInline} src={`${process.env.REACT_APP_API_URL}/files/${item.images[0]}`} alt="producto" width={50} />
+                                :
+                                <img className={classes.imgProductInline} src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg" alt="producto" width={50} />
+                            }
                             <span >{item.name}</span>
                         </a>
                     ))
