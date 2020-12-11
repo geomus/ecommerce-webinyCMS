@@ -5,10 +5,12 @@ import Grid from '@material-ui/core/Grid';
 import { LinearProgress } from '@material-ui/core';
 import { products } from '../../graphql/query'
 import { searchProducts } from '../../graphql/query'
+import { useLocation } from 'react-router-dom'
 
 const ProductsList = () => {
-    const params = new URLSearchParams(window.location.search)
-    const searchQuery = params.get('search')
+    const location = useLocation()
+    const searchQuery = location.search.split("=")[1];
+    
     let searchVariable
     let queryGQL
 
@@ -46,7 +48,7 @@ const ProductsList = () => {
             {
                 data ?
                 data.products.listProducts.data.map((prod) => (
-                    <Grid item xs={6} sm={6} md={3} lg={2} key={prod.id}>
+                    <Grid item xs={6} sm={6} md={3} key={prod.id}>
                         <Product {...prod} />
                     </Grid>
                 )) : 
