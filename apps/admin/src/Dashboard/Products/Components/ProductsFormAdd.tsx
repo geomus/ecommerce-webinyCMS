@@ -32,9 +32,8 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import Tag from "@material-ui/icons/LocalOffer";
 import { makeStyles } from "@material-ui/core/styles";
-import ProductsCheckboxPricesCategory from './ProductsCheckboxPricesCategory'
-import SelectProperty from './SelectProperty'
-
+import ProductsCheckboxPricesCategory from "./ProductsCheckboxPricesCategory";
+import SelectProperty from "./SelectProperty";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -110,9 +109,8 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     const [idPrices, setIdPrices] = useState([]);
     const [checkedPrices, setCheckedPrices] = useState([{}]);
 
-    const [productVariants, setProductVariants] = useState([])
-    const [properties, setProperties] = useState({})
-
+    const [productVariants, setProductVariants] = useState([]);
+    const [properties, setProperties] = useState({});
 
     const uploadImage = async (selectedFile) => {
         const getPresignedPostData = async (selectedFile): Promise<any> => {
@@ -183,12 +181,11 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         setPrice(price);
     };
     const handleIdPrices = (event) => {
-        const idValue = event.currentTarget.id
+        const idValue = event.currentTarget.id;
         if (event.target.checked) {
-            const id = idPrices
-            id.push(idValue)
+            const id = idPrices;
+            id.push(idValue);
             setIdPrices(id);
-            console.log(idPrices);
         }
     };
     const handleChangeCategories = (event) => {
@@ -205,15 +202,15 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     };
     const combineVariantsStocks = (variants, stock, setOpenDialog) => {
         for (let i = 0; i < variants.length; i++) {
-            variants[i].propertyValues = JSON.stringify(variants[i].propertyValues)
-            variants[i].stock = Number(stock[i])
+            variants[i].propertyValues = JSON.stringify(variants[i].propertyValues);
+            variants[i].stock = Number(stock[i]);
         }
-        setOpenDialog(false)
+        setOpenDialog(false);
         setProductVariants(variants);
-    }
+    };
     const handleProperties = (properties, setPropertiesSelected) => {
-        setPropertiesSelected(properties)
-    }
+        setPropertiesSelected(properties);
+    };
 
     const onSubmit = async (e) => {
         setIsLoading(true);
@@ -246,9 +243,6 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
             variants: productVariants
         };
 
-        console.log(product);
-
-
         try {
             await addProduct({ variables: { data: product } });
 
@@ -263,17 +257,17 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         }
     };
 
-    const { loading, error, data } = useQuery(listPrices)
+    const { loading, error, data } = useQuery(listPrices);
 
     const { loading: pricesLoading, error: pricesError, data: pricesData } = useQuery(listPrices);
     useEffect(() => {
         if (!loading && data) {
-            const objectForStatePrices = data.prices.listPrices.data.map(price => {
-                const idStatePrices = price.id + 'state'
-                const objectForStatePrices = { [idStatePrices]: false }
-                return objectForStatePrices
-            })
-            setCheckedPrices(objectForStatePrices)
+            const objectForStatePrices = data.prices.listPrices.data.map((price) => {
+                const idStatePrices = price.id + "state";
+                const objectForStatePrices = { [idStatePrices]: false };
+                return objectForStatePrices;
+            });
+            setCheckedPrices(objectForStatePrices);
         }
     }, [pricesLoading, pricesData]);
 
@@ -292,143 +286,149 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
 
     return (
         <Container maxWidth="lg" className={classes.layout}>
-                <React.Fragment>
-                    <form onSubmit={onSubmit}>
+            <React.Fragment>
+                <form onSubmit={onSubmit}>
                     <FormControl>
-                            {!isLoading ? (
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    startIcon=""
-                                    type="submit"
-                                >
-                                    GUARDAR
-                                </Button>
-                            ) : (
-                                <CircularProgress />
-                            )}
-                        </FormControl>
-                        <br/>
-                        <br/>
-                        <Grid container spacing={3}>
-                            <Grid item lg={4}>
-                                <Grid item xs={12}>
-                                    <FormControl>
-                                        <InputLabel htmlFor="name">Nombre</InputLabel>
-                                        <Input
-                                            required
-                                            id="name"
-                                            type="text"
-                                            aria-describedby="name-helper"
-                                            fullWidth
-                                            autoFocus
-                                            autoComplete="given-name"
-                                            onChange={handleChangeName}
-                                        />
-                                        <FormHelperText id="name-helper">
-                                            Nombre visible del producto a cargar.
-                                    </FormHelperText>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <InputLabel htmlFor="description">Descripción</InputLabel>
+                        {!isLoading ? (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                startIcon=""
+                                type="submit"
+                            >
+                                GUARDAR
+                            </Button>
+                        ) : (
+                            <CircularProgress />
+                        )}
+                    </FormControl>
+                    <br />
+                    <br />
+                    <Grid container spacing={3}>
+                        <Grid item lg={4}>
+                            <Grid item xs={12}>
+                                <FormControl>
+                                    <InputLabel htmlFor="name">Nombre</InputLabel>
                                     <Input
                                         required
-                                        id="description"
+                                        id="name"
                                         type="text"
-                                        aria-describedby="description-helper"
+                                        aria-describedby="name-helper"
                                         fullWidth
-                                        autoComplete="given-description"
-                                        multiline
-                                        onChange={handleChangeDescp}
+                                        autoFocus
+                                        autoComplete="given-name"
+                                        onChange={handleChangeName}
                                     />
-                                    <FormHelperText id="description-helper">
-                                        Breve descripción del producto.
-                                </FormHelperText>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <FormControl>
-                                        <InputLabel htmlFor="price">Precio</InputLabel>
-                                        <Input
-                                            required
-                                            id="price"
-                                            type="number"
-                                            aria-describedby="price-helper"
-                                            fullWidth
-                                            autoComplete="given-price"
-                                            startAdornment={
-                                                <InputAdornment position="start">$</InputAdornment>
-                                            }
-                                            onChange={handleChangePrice}
-                                        />
-                                        <FormHelperText id="price-helper">
-                                            Precio minorista base.
-                                    </FormHelperText>
-                                    </FormControl>
-                                    <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} setCheckedPrices={setCheckedPrices} />
-                                </Grid>
-                            </Grid>
-                            <Grid item lg={4}>
-                                <FormControl className={classes.formControl}>
-                                    <InputLabel id="categories">Categorías</InputLabel>
-                                    <Select
-                                        labelId="categories"
-                                        id="categories"
-                                        multiple
-                                        aria-describedby="categories-helper"
-                                        value={categories}
-                                        onChange={handleChangeCategories}
-                                        input={<Input id="categories" />}
-                                        renderValue={(selected) => (
-                                            <div className={classes.chip}>
-                                                {(selected as string[]).map((value) => (
-                                                    <Chip
-                                                        key={value}
-                                                        label={value}
-                                                        className={classes.chip}
-                                                    />
-                                                ))}
-                                            </div>
-                                        )}
-                                        MenuProps={MenuProps}
-                                    >
-                                        {enabledCategories.map((category) => (
-                                            <MenuItem key={category.id} value={category.name}>
-                                                {category.name}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                    <FormHelperText id="categories-helper">
-                                        Desplegá para ver tu selección de categorías para este
-                                        producto. (¿Necesitás cargar una nueva?{" "}
-                                        <CategoryBtnCreate
-                                            className={classes.btnCategoryCreate}
-                                            categories={enabledCategories}
-                                        />
-                                        
+                                    <FormHelperText id="name-helper">
+                                        Nombre visible del producto a cargar.
                                     </FormHelperText>
                                 </FormControl>
-                                <Grid item xs={12}>
-                                    <InputLabel >Imágenes</InputLabel>
-                                    <FileUploadButton
-                                        handlerImages={handleChangeImages}
-                                        images={null}
-                                    />
-                                    <FormHelperText id="images-helper">
-                                        Imágenes del producto (MÁX. 5).
-                                </FormHelperText>
-                                </Grid>
                             </Grid>
-                            <Grid item lg={4}>
-                                <Grid item xs={12}>
-                                    <FormControl>
-                                        <FormHelperText id="variants-helper">
-                                            Selecciona las variantes del producto. (Separadas por comas)
+                            <Grid item xs={12}>
+                                <InputLabel htmlFor="description">Descripción</InputLabel>
+                                <Input
+                                    required
+                                    id="description"
+                                    type="text"
+                                    aria-describedby="description-helper"
+                                    fullWidth
+                                    autoComplete="given-description"
+                                    multiline
+                                    onChange={handleChangeDescp}
+                                />
+                                <FormHelperText id="description-helper">
+                                    Breve descripción del producto.
+                                </FormHelperText>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl>
+                                    <InputLabel htmlFor="price">Precio</InputLabel>
+                                    <Input
+                                        required
+                                        id="price"
+                                        type="number"
+                                        aria-describedby="price-helper"
+                                        fullWidth
+                                        autoComplete="given-price"
+                                        startAdornment={
+                                            <InputAdornment position="start">$</InputAdornment>
+                                        }
+                                        onChange={handleChangePrice}
+                                    />
+                                    <FormHelperText id="price-helper">
+                                        Precio minorista base.
                                     </FormHelperText>
-                                        <SelectProperty productName={name} combineVariantsStocks={combineVariantsStocks} />
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
+                                </FormControl>
+                                <ProductsCheckboxPricesCategory
+                                    handleIdPrices={handleIdPrices}
+                                    checkedPrices={checkedPrices}
+                                    setCheckedPrices={setCheckedPrices}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid item lg={4}>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="categories">Categorías</InputLabel>
+                                <Select
+                                    labelId="categories"
+                                    id="categories"
+                                    multiple
+                                    aria-describedby="categories-helper"
+                                    value={categories}
+                                    onChange={handleChangeCategories}
+                                    input={<Input id="categories" />}
+                                    renderValue={(selected) => (
+                                        <div className={classes.chip}>
+                                            {(selected as string[]).map((value) => (
+                                                <Chip
+                                                    key={value}
+                                                    label={value}
+                                                    className={classes.chip}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                    MenuProps={MenuProps}
+                                >
+                                    {enabledCategories.map((category) => (
+                                        <MenuItem key={category.id} value={category.name}>
+                                            {category.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                <FormHelperText id="categories-helper">
+                                    Desplegá para ver tu selección de categorías para este producto.
+                                    (¿Necesitás cargar una nueva?{" "}
+                                    <CategoryBtnCreate
+                                        className={classes.btnCategoryCreate}
+                                        categories={enabledCategories}
+                                    />
+                                </FormHelperText>
+                            </FormControl>
+                            <Grid item xs={12}>
+                                <InputLabel>Imágenes</InputLabel>
+                                <FileUploadButton
+                                    handlerImages={handleChangeImages}
+                                    images={null}
+                                />
+                                <FormHelperText id="images-helper">
+                                    Imágenes del producto (MÁX. 5).
+                                </FormHelperText>
+                            </Grid>
+                        </Grid>
+                        <Grid item lg={4}>
+                            <Grid item xs={12}>
+                                <FormControl>
+                                    <FormHelperText id="variants-helper">
+                                        Selecciona las variantes del producto. (Separadas por comas)
+                                    </FormHelperText>
+                                    <SelectProperty
+                                        productName={name}
+                                        combineVariantsStocks={combineVariantsStocks}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
                                 <FormControl>
                                     <Autocomplete
                                         multiple
@@ -466,42 +466,42 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                     </FormHelperText>
                                 </FormControl>
                             </Grid>
-                                <Grid item xs={12}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                color="secondary"
-                                                name="isFeatured"
-                                                onChange={handleChangeIsFeatured}
-                                            />
-                                        }
-                                        label="¿Destacar producto?"
-                                    />
-                                </Grid>
+                            <Grid item xs={12}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            color="secondary"
+                                            name="isFeatured"
+                                            onChange={handleChangeIsFeatured}
+                                        />
+                                    }
+                                    label="¿Destacar producto?"
+                                />
                             </Grid>
                         </Grid>
-                    </form>
-                </React.Fragment>
-                <Snackbar
-                    open={openSuccess}
-                    autoHideDuration={3000}
-                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                    onClose={handleClose}
-                >
-                    <Alert onClose={handleClose} severity="success">
-                        ¡Producto cargado con éxito!
-                    </Alert>
-                </Snackbar>
-                <Snackbar
-                    open={openError}
-                    autoHideDuration={5000}
-                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                    onClose={handleClose}
-                >
-                    <Alert onClose={handleClose} severity="error">
-                        ¡No se ha podido cargar el producto, revise sus datos!
-                    </Alert>
-                </Snackbar>
+                    </Grid>
+                </form>
+            </React.Fragment>
+            <Snackbar
+                open={openSuccess}
+                autoHideDuration={3000}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                onClose={handleClose}
+            >
+                <Alert onClose={handleClose} severity="success">
+                    ¡Producto cargado con éxito!
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openError}
+                autoHideDuration={5000}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                onClose={handleClose}
+            >
+                <Alert onClose={handleClose} severity="error">
+                    ¡No se ha podido cargar el producto, revise sus datos!
+                </Alert>
+            </Snackbar>
         </Container>
     );
 }

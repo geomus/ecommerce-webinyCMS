@@ -2,11 +2,23 @@ import React, { useState, useContext } from "react";
 import { useTheme } from "@material-ui/core/styles";
 import Cart from "./Cart";
 import { Button, makeStyles } from "@material-ui/core";
+import { Theme, withStyles, createStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import Fab from "@material-ui/core/Fab";
 import Badge from "@material-ui/core/Badge";
 import Drawer from "@material-ui/core/Drawer";
 import { CartContext } from "./utils/context";
+
+const StyledBadge = withStyles((theme: Theme) =>
+    createStyles({
+        badge: {
+            right: -3,
+            top: 13,
+            border: `2px solid ${theme.palette.background.paper}`,
+            padding: "0 4px"
+        }
+    })
+)(Badge);
 
 export default function ButtonCartHome() {
     const theme = useTheme();
@@ -87,16 +99,11 @@ export default function ButtonCartHome() {
 
     return (
         <React.Fragment>
-            <Badge
-                // className={classes.float}
-                color="primary"
-                badgeContent={qtyCart}
-                onClick={toggleDrawer("right", true)}
-            >
-                <Fab color="secondary" aria-label="Cart" href="">
+            <IconButton aria-label="cart">
+                <StyledBadge badgeContent={qtyCart} color="secondary" onClick={toggleDrawer("right", true)}>
                     <ShoppingCartIcon />
-                </Fab>
-            </Badge>
+                </StyledBadge>
+            </IconButton>
             <Drawer anchor="right" open={show["right"]} onClose={toggleDrawer("right", false)}>
                 {cartHome("right")}
             </Drawer>

@@ -142,7 +142,6 @@ export default function FormCheckout() {
             cart: refactorCart(cart),
             totalOrder: totalCalculator(cart)
         }
-        console.log(order);
         
 
         if (pay === 'Mercado Pago') {
@@ -153,8 +152,8 @@ export default function FormCheckout() {
             //createOrder
             await executePayment(preferenceData.init_point, order)
         } else {
-            await executePayment('https://dsc5kyynzacr1.cloudfront.net/wonder-slug/pending', order)
-            // await executePayment('http://localhost:3000/wonder-slug/pending', order)
+            // await executePayment('https://dsc5kyynzacr1.cloudfront.net/wonder-slug/pending', order)
+            await executePayment('http://localhost:3000/wonder-slug/pending', order)
         }
     }
 

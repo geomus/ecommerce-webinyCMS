@@ -1,5 +1,4 @@
 import React from 'react';
-import ShopCartButton from './ShopCartButton'
 import { useTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';

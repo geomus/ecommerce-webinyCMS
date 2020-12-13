@@ -35,8 +35,6 @@ export default function TableProductVariants({ productName, properties, combineV
     const classes = useStyles();
     const [openDialog, setOpenDialog] = useState(false);
     const [stock, setStock] = useState([])
- console.log(properties);
- 
 
     const handleClickOpen = async () => {
         // funcion generadora de tabla con las variantes totales
