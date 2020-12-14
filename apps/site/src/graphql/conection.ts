@@ -8,7 +8,7 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
     // ENV = dev
-    const tokenValue = "c6507168fded758647102f273616362fe06b65053ebbdc7b";
+    const tokenValue = "4e2ee9895c94506261cc46f3f138049f1ca6177d7b88643a";
 
 
     //ENV = local

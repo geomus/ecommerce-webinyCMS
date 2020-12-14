@@ -109,12 +109,6 @@ const PRODUCTS = gql`
     }
 `;
 
-export interface SimpleDialogProps {
-    open: boolean;
-    selectedValue: string;
-    onClose: (value: string) => void;
-}
-
 export default function ProductSearch({ mobile }) {
     const classes = useStyles();
     const [name, setName] = useState("");
@@ -186,6 +180,7 @@ export default function ProductSearch({ mobile }) {
                                 inputProps={{ "aria-label": "search" }}
                                 value={name}
                                 onChange={handleChange}
+                                autoComplete="off"
                             />
                         </div>
                         <div className={classes.grow} />
@@ -243,6 +238,7 @@ export default function ProductSearch({ mobile }) {
                                     inputProps={{ "aria-label": "search" }}
                                     value={name}
                                     onChange={handleChange}
+                                    autoComplete="off"
                                 />
                                 <section className={classes.listProductsInline}>
                                     {productsSearch.map((item) => (
