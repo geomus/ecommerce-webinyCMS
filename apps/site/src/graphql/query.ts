@@ -2,21 +2,34 @@ import { gql } from "@apollo/client";
 
 /* PRODUCT */
 export const products = gql`
-    {
+    query listProducts {
         products {
-            listProducts(where: { isPublished: true }) {
+            listProducts {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
+                    prices
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isFeatured
                     isPublished
                     variants {
-                        propertyValues
                         stock
+                        propertyValues
                     }
                 }
             }
@@ -30,15 +43,29 @@ export const product = gql`
             getProduct(id: $id) {
                 data {
                     id
+                    sku
                     name
                     description
                     priceBase
+                    prices
                     images
                     tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
                     isFeatured
+                    isPublished
                     variants {
-                        propertyValues
                         stock
+                        propertyValues
                     }
                 }
             }
@@ -52,13 +79,29 @@ export const productsFilter = gql`
             listProducts(where: { name: $name, isPublished: true }) {
                 data {
                     id
+                    sku
                     name
+                    description
                     priceBase
+                    prices
                     images
+                    tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
+                    isPublished
                     isFeatured
                     variants {
-                        propertyValues
                         stock
+                        propertyValues
                     }
                 }
             }
@@ -170,21 +213,36 @@ export const updateOrder = gql`
         }
     }
 `;
-
 export const searchProducts = gql`
     query listProducts($searchVariable: ProductSearchInput) {
         products {
             listProducts(search: $searchVariable) {
                 data {
                     id
+                    sku
                     name
+                    description
                     priceBase
+                    prices
                     images
-                    isFeatured
+                    tags
                     variants {
                         propertyValues
                         stock
                     }
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
+                    isFeatured
+                    isPublished
                 }
             }
         }

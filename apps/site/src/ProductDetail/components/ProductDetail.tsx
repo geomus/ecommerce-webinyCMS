@@ -14,6 +14,8 @@ import Divider from "@material-ui/core/Divider";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import ShopCartButton from "../../Product/ShopCartButton";
 import CancelIcon from "@material-ui/icons/Cancel";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -50,9 +52,6 @@ const ProductDetail = () => {
     const [limitVariants, setLimitVariants] = useState(false);
     const [shopCartButtonEnabled, setShopCartButtonEnabled] = useState(false);
     const [enabledTooltip, setEnabledTooltip] = useState(false);
-
-    // const params = new URLSearchParams(window.location.search)
-    // const id = params.get('id')
     const location = useLocation();
     const id = location.search.split("=")[1];
 
@@ -232,9 +231,17 @@ const ProductDetail = () => {
                     )}
                 </Grid>
                 <Grid item xs={12} md={6} className={classes.detailProduct}>
-                    <Typography variant="body1" gutterBottom>
-                        Categoria del producto
-                    </Typography>
+                    {data.products.getProduct.data.categories &&
+                    (<Breadcrumbs separator="-" aria-label="breadcrumb">
+                        {data.products.getProduct.data.categories.map((category, i) => {
+                            return (
+                                <Link key={i + category.name} color="inherit" href="#">
+                                    {category.name}
+                                </Link>
+                            );
+                        })}
+                    </Breadcrumbs>)
+                    }
                     <Divider />
                     <Typography variant="h5" gutterBottom>
                         {data.products.getProduct.data.name}

@@ -58,7 +58,7 @@ const ProductsList = () => {
             {data ? (
                 data.products.listProducts.data.map((prod) => (
                     <Grid item xs={6} sm={6} md={3} key={prod.id}>
-                        <Product {...prod} />
+                        <Product {...prod}  />
                     </Grid>
                 ))
             ) : (

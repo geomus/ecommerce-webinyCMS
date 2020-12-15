@@ -79,7 +79,6 @@ export default function Product(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                {/* <ShopCartButton {...props} /> */}
                 <Button variant="contained" href={`/wonder-slug/product-detail?id=${props.id}`}>COMPRAR</Button>
                 <QuickView {...props}/>
             </CardActions>

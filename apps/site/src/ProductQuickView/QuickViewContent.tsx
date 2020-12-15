@@ -10,6 +10,8 @@ import ShopCartButton from "../Product/ShopCartButton";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -210,9 +212,17 @@ const QuickViewContent = (props) => {
                     {props.isFeatured ? <RbNew className={classes.ribbonNew} /> : ""}
                 </Grid>
                 <Grid item xs={12} md={5} className={classes.detailProduct}>
-                    <Typography variant="body1" gutterBottom>
-                        Categoria del producto
-                    </Typography>
+                    {props.categories && (
+                        <Breadcrumbs separator="-" aria-label="breadcrumb">
+                            {props.categories.map((category, i) => {
+                                return (
+                                    <Link key={i + category.name} color="inherit" href="#">
+                                        {category.name}
+                                    </Link>
+                                );
+                            })}
+                        </Breadcrumbs>
+                    )}
                     <Divider />
                     <Typography variant="h6" gutterBottom>
                         {props.name}
