@@ -1,5 +1,4 @@
 import React from 'react';
-import ShopCartButton from './ShopCartButton'
 import { useTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -57,11 +56,18 @@ export default function Product(props) {
     return (
         <Card className={classes.root} key={props.id} elevation={0}>
             <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
-                <CardMedia
+                {props.images ?
+                    <CardMedia
                     className={classes.media}
                     image={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}`}
-                    title="Contemplative Reptile"
+                    title="Producto"
+                /> :
+                <CardMedia
+                    className={classes.media}
+                    image="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                    title="Producto"
                 />
+                }
                 <CardContent>
                     <Typography gutterBottom variant="body2" color="textSecondary" className={classes.productName}>
                         {props.name}

@@ -37,7 +37,6 @@ export const CartProvider = ({ children }) => {
         const cartModified = cart.map((item) => {
             if (item.id === id) {
                 item.quantity = newQty;
-                console.log(newQty);
             }
             return item;
         });

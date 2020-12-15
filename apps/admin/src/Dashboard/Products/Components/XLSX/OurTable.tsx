@@ -114,7 +114,6 @@ export default function OurTable({ data, cols, objectKeys, handleCloseDialog }) 
         if (!usedKey) {
             cols[index].name = value;
             cols[index].used = true;
-            console.log("libre");
         } else {
             console.log("ya existo");
         }

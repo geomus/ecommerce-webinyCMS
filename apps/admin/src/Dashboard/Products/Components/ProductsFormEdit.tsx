@@ -30,9 +30,8 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import Tag from "@material-ui/icons/LocalOffer";
 import { makeStyles } from "@material-ui/core/styles";
-import ProductsCheckboxPricesCategory from './ProductsCheckboxPricesCategory'
-import SelectProperty from './SelectProperty'
-
+import ProductsCheckboxPricesCategory from "./ProductsCheckboxPricesCategory";
+import SelectProperty from "./SelectProperty";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -120,21 +119,24 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const [tags, setTags] = useState(product.tags);
 
     const [idPrices, setIdPrices] = useState([]);
-    const [checkedPrices, setCheckedPrices] = useState([{}])
+    const [checkedPrices, setCheckedPrices] = useState([{}]);
 
-    const [productVariants, setProductVariants] = useState([])
+    const [productVariants, setProductVariants] = useState([]);
     useEffect(() => {
         if (product.categories) {
             const productCategories = product.categories.map(({ name }) => name);
             setCategories(productCategories);
         }
         if (product.variants) {
-            const variants = []
+            const variants = [];
             for (let i = 0; i < product.variants.length; i++) {
-                const obj = { propertyValues: product.variants[i].propertyValues, stock: product.variants[i].stock }
-                variants.push(obj)
+                const obj = {
+                    propertyValues: product.variants[i].propertyValues,
+                    stock: product.variants[i].stock
+                };
+                variants.push(obj);
             }
-            setProductVariants(variants)
+            setProductVariants(variants);
         }
     }, []);
 
@@ -208,15 +210,13 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     };
 
     const handleIdPrices = (event) => {
-        const idValue = event.currentTarget.id
-        console.log(event.target.checked);
+        const idValue = event.currentTarget.id;
         if (event.target.checked) {
-            const id = idPrices
-            id.push(idValue)
+            const id = idPrices;
+            id.push(idValue);
             setIdPrices(id);
-            console.log(idPrices);
         }
-    }
+    };
     const handleChangeCategories = (event) => {
         setCategories(event.target.value);
     };
@@ -228,15 +228,15 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     };
     const combineVariantsStocks = (variants, stock, setOpenDialog) => {
         for (let i = 0; i < variants.length; i++) {
-            variants[i].propertyValues = JSON.stringify(variants[i].propertyValues)
-            variants[i].stock = Number(stock[i])
+            variants[i].propertyValues = JSON.stringify(variants[i].propertyValues);
+            variants[i].stock = Number(stock[i]);
         }
-        setOpenDialog(false)
+        setOpenDialog(false);
         setProductVariants(variants);
-    }
+    };
     const handleProperties = (properties, setPropertiesSelected) => {
-        setPropertiesSelected(properties)
-    }
+        setPropertiesSelected(properties);
+    };
 
     const onSubmit = async (e) => {
         setIsLoading(true);
@@ -252,7 +252,6 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             }
             // await deleteImage({ variables: { id: data.files.getFile.data.id } });
         } else {
-            console.log(productImages);
             setImagesKeys(productImages);
         }
 
@@ -275,8 +274,6 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             tags: tags,
             variants: productVariants
         };
-        console.log(product);
-
 
         try {
             await editProduct({ variables: { id: productId, data: product } });
@@ -296,7 +293,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
         <Container className={classes.layout}>
             <React.Fragment>
                 <form onSubmit={onSubmit}>
-                <FormControl>
+                    <FormControl>
                         {!isLoading ? (
                             <Button
                                 variant="contained"
@@ -307,11 +304,11 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 GUARDAR
                             </Button>
                         ) : (
-                                <CircularProgress />
-                            )}
+                            <CircularProgress />
+                        )}
                     </FormControl>
-                    <br/>
-                    <br/>
+                    <br />
+                    <br />
                     <Grid container spacing={3}>
                         <Grid item lg={4}>
                             <Grid item xs={12}>
@@ -371,12 +368,16 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <ProductsCheckboxPricesCategory handleIdPrices={handleIdPrices} checkedPrices={checkedPrices} setCheckedPrices={setCheckedPrices} />
+                                <ProductsCheckboxPricesCategory
+                                    handleIdPrices={handleIdPrices}
+                                    checkedPrices={checkedPrices}
+                                    setCheckedPrices={setCheckedPrices}
+                                />
                             </Grid>
                         </Grid>
                         <Grid item lg={4}>
                             <Grid item xs={12}>
-                                {categories &&
+                                {categories && (
                                     <FormControl className={classes.formControl}>
                                         <InputLabel id="categories">Categorías</InputLabel>
                                         <Select
@@ -409,9 +410,9 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                         <FormHelperText id="categories-helper">
                                             Desplegá para ver tu selección de categorías para este
                                             producto.
-                                    </FormHelperText>
+                                        </FormHelperText>
                                     </FormControl>
-                                }
+                                )}
                             </Grid>
                             <Grid item xs={12}>
                                 <InputLabel>Imágenes</InputLabel>
@@ -423,15 +424,17 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                     Imágenes del producto (MÁX. 5).
                                 </FormHelperText>
                             </Grid>
-                            <Grid item xs={12}>
-                            </Grid>
+                            <Grid item xs={12}></Grid>
                         </Grid>
                         <Grid item lg={4}>
                             <FormControl>
                                 <FormHelperText id="variants-helper">
                                     Selecciona las variantes del producto. (Separadas por comas)
-                                    </FormHelperText>
-                                <SelectProperty productName={name} combineVariantsStocks={combineVariantsStocks} />
+                                </FormHelperText>
+                                <SelectProperty
+                                    productName={name}
+                                    combineVariantsStocks={combineVariantsStocks}
+                                />
                             </FormControl>
                             <Grid item xs={12} sm={6}>
                                 <FormControl>
@@ -475,19 +478,18 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                         </Grid>
                     </Grid>
                     <br />
-                    
                 </form>
             </React.Fragment>
             <Snackbar open={openSuccess} autoHideDuration={3000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success">
                     ¡Producto editado con éxito!
-                    </Alert>
+                </Alert>
             </Snackbar>
             <Snackbar open={openError} autoHideDuration={5000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="error">
                     ¡No se ha podido editar el producto, revise sus datos!
-                    </Alert>
+                </Alert>
             </Snackbar>
         </Container>
-    )
+    );
 }

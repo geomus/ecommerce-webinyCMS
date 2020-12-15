@@ -1,5 +1,5 @@
 // @ts-ignore
-import { withFields, withName, string, pipe, withProps, withHooks } from "@webiny/commodo";
+import { withFields, withName, string, pipe, withProps, withHooks, number } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 
 /**
@@ -24,6 +24,7 @@ export default ({ createBase }) =>
             shipping: string({ validation: validation.create("required,maxLength:50") }),
             status: string({ validation: validation.create("required,maxLength:50"), value: 'intent' }),
             cart: string({ validation: validation.create("required") }),
+            totalOrder: number()
         })),
         withHooks({
         }),

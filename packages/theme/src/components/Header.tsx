@@ -25,7 +25,7 @@ const Header = () => {
                             className={"webiny-pb-section-header"}
                             data-testid={"pb-desktop-mobile-headers"}
                         >
-                            <DesktopHeader menuName={menuName} name="TEST LAYOUT" logo={logo} />
+                            <DesktopHeader menuName={menuName} name={name} logo={logo} />
                             <MobileHeader
                                 menuName={menuName}
                                 name={name}

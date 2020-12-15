@@ -68,7 +68,6 @@ export default function Tags({ combineVariantsStocks, productName }) {
     const updateProperties = (e) => {
         const valueSplit = e.target.value.split(",")
         const valueSplitUppercased = valueSplit.map(value => value.toUpperCase())
-        console.log(valueSplitUppercased);
         
         setProperties({ ...properties, [e.target.name]: valueSplitUppercased })
     }
@@ -93,7 +92,7 @@ export default function Tags({ combineVariantsStocks, productName }) {
             }
             <TableProductVariants properties={properties} productName={productName} combineVariantsStocks={combineVariantsStocks} />
             <br/>
-            <VariantsBtnCreate/>
+            {/* <VariantsBtnCreate/> */}
             <br/> 
         </div >
     );

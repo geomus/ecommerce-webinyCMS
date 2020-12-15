@@ -10,6 +10,7 @@ import { ReactComponent as RbNew } from '../../utils/svg/rb-new.svg'
 import { Button, Divider, LinearProgress, Tooltip } from '@material-ui/core';
 import ShopCartButton from '../../Product/ShopCartButton';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { useLocation } from 'react-router-dom'
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -47,8 +48,10 @@ const ProductDetail = () => {
     const [shopCartButtonEnabled, setShopCartButtonEnabled] = useState(false)
     const [enabledTooltip, setEnabledTooltip] = useState(false)
 
-    const params = new URLSearchParams(window.location.search)
-    const id = params.get('id')
+    // const params = new URLSearchParams(window.location.search)
+    // const id = params.get('id')
+const location = useLocation()
+const id = location.search.split("=")[1]
 
     const { loading, error, data } = useQuery(product, { variables: { id } });
 
@@ -205,7 +208,10 @@ const ProductDetail = () => {
         <Container>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                    <img src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}`} alt="Product" className={classes.imgFluid} />
+                    { data.products.getProduct.data.images ?
+                        <img src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}`} alt="Product" className={classes.imgFluid} /> :
+                        <img src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg" alt="Product" className={classes.imgFluid} />
+                    }
                     {data.products.getProduct.data.isFeatured ? <RbNew className={classes.ribbonNew} /> : ''}
                 </Grid>
                 <Grid item xs={12} md={6} className={classes.detailProduct}>
