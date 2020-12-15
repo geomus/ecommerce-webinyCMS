@@ -6,8 +6,7 @@ import {
     deleteFile,
     getFile,
     createFile,
-    products,
-    listPrices
+    products
 } from "../../../graphql/query";
 import FileUploadButton from "./FileUploadButton";
 import {

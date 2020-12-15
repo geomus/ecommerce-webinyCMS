@@ -1,5 +1,6 @@
 import React from "react";
-import { lighten, makeStyles, Toolbar } from "@material-ui/core";
+import { lighten, makeStyles } from "@material-ui/core";
+import Toolbar from "@material-ui/core/Toolbar";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 

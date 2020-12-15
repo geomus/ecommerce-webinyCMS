@@ -1,32 +1,38 @@
-import React, { useState } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import { TransitionProps } from '@material-ui/core/transitions';
-import AddIcon from '@material-ui/icons/Add';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@material-ui/core';
+import React, { useState } from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { TransitionProps } from "@material-ui/core/transitions";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import CloseIcon from "@material-ui/icons/Close";
+import Slide from "@material-ui/core/Slide";
+import AddIcon from "@material-ui/icons/Add";
+import TextField from "@material-ui/core/TextField";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Table from "@material-ui/core/Table";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         appBar: {
-            position: 'relative',
+            position: "relative"
         },
         title: {
             marginLeft: theme.spacing(2),
-            flex: 1,
-        },
-    }),
+            flex: 1
+        }
+    })
 );
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement },
-    ref: React.Ref<unknown>,
+    ref: React.Ref<unknown>
 ) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -34,7 +40,7 @@ const Transition = React.forwardRef(function Transition(
 export default function TableProductVariants({ productName, properties, combineVariantsStocks }) {
     const classes = useStyles();
     const [openDialog, setOpenDialog] = useState(false);
-    const [stock, setStock] = useState([])
+    const [stock, setStock] = useState([]);
 
     const handleClickOpen = async () => {
         // funcion generadora de tabla con las variantes totales
@@ -76,7 +82,7 @@ export default function TableProductVariants({ productName, properties, combineV
 
     function createNewVariantFromValue(variant, key, value) {
         const newVariant = {
-            propertyValues : {...variant},
+            propertyValues: { ...variant }
         };
         newVariant.propertyValues[key] = value.toUpperCase();
         return newVariant;
@@ -86,31 +92,49 @@ export default function TableProductVariants({ productName, properties, combineV
     for (const key in properties) {
         variants = combine(variants, key, properties[key]);
     }
-    const propertiesKeys = Object.keys(properties)
-    const tableHead = ["Producto", ...propertiesKeys, "Stock"]
+    const propertiesKeys = Object.keys(properties);
+    const tableHead = ["Producto", ...propertiesKeys, "Stock"];
 
     const handleStockInputs = (e) => {
-        setStock([...stock, e.target.value])
-    }
-   
+        setStock([...stock, e.target.value]);
+    };
 
     return (
         <div>
-            <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={handleClickOpen}>
+            <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddIcon />}
+                onClick={handleClickOpen}
+            >
                 GENERAR VARIANTES
-      </Button>
-            <Dialog fullScreen open={openDialog} onClose={handleCloseDialog} TransitionComponent={Transition}>
+            </Button>
+            <Dialog
+                fullScreen
+                open={openDialog}
+                onClose={handleCloseDialog}
+                TransitionComponent={Transition}
+            >
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={handleCloseDialog} aria-label="close">
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleCloseDialog}
+                            aria-label="close"
+                        >
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
                             VARIANTES DEL PRODUCTO
-            </Typography>
-                        <Button autoFocus color="inherit" onClick={() => combineVariantsStocks(variants, stock, setOpenDialog)}>
+                        </Typography>
+                        <Button
+                            autoFocus
+                            color="inherit"
+                            onClick={() => combineVariantsStocks(variants, stock, setOpenDialog)}
+                        >
                             save
-            </Button>
+                        </Button>
                     </Toolbar>
                 </AppBar>
 
@@ -118,22 +142,18 @@ export default function TableProductVariants({ productName, properties, combineV
                     <Table>
                         <TableHead>
                             <TableRow>
-                                {
-                                    tableHead.map(item => <TableCell key={item}>{item}</TableCell>)
-                                }
+                                {tableHead.map((item) => (
+                                    <TableCell key={item}>{item}</TableCell>
+                                ))}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {variants.map((variant, i) =>
+                            {variants.map((variant, i) => (
                                 <TableRow key={i}>
                                     <TableCell>{productName}</TableCell>
-                                    {
-                                        Object.entries(variant.propertyValues).map(([key, val]) =>
-                                            <TableCell key={key}>{
-                                                `${val}`
-                                            }
-                                            </TableCell>
-                                        )}
+                                    {Object.entries(variant.propertyValues).map(([key, val]) => (
+                                        <TableCell key={key}>{`${val}`}</TableCell>
+                                    ))}
                                     <TableCell>
                                         <TextField
                                             name="stock"
@@ -145,7 +165,7 @@ export default function TableProductVariants({ productName, properties, combineV
                                         />
                                     </TableCell>
                                 </TableRow>
-                            )}
+                            ))}
                         </TableBody>
                     </Table>
                 </TableContainer>

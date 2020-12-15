@@ -1,5 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useQuery } from "@apollo/client";
+import { products, listAllCategories } from "../../../graphql/query";
+import ProductsTableToolbar from "./ProductsTableToolbar";
+import ProductsTableHead from "./ProductsTableHead";
+import ProductRow from "./ProductRow";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -9,12 +14,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { useQuery } from "@apollo/client";
-import { products, listAllCategories } from "../../../graphql/query";
-import { LinearProgress } from "@material-ui/core";
-import ProductsTableToolbar from "./ProductsTableToolbar";
-import ProductsTableHead from "./ProductsTableHead";
-import ProductRow from "./ProductRow";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -155,9 +155,11 @@ export default function ProductsTable() {
     };
 
     const totalCalculatorStock = (variants) => {
-        const suma = variants.reduce((acc, variant) => { return acc += variant.stock }, 0)
-        return suma
-    }
+        const suma = variants.reduce((acc, variant) => {
+            return (acc += variant.stock);
+        }, 0);
+        return suma;
+    };
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 

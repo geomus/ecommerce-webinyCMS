@@ -1,13 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
-
+import React from "react";
+import PropTypes from "prop-types";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 const headCells = [
-    { id: 'parent', disablePadding: false, disableSort: false, label: 'Categoría superior' },
-    { id: 'name', disablePadding: false, disableSort: false, label: 'Nombre' },
-    { id: 'enabled', disablePadding: false, disableSort: false, label: 'Activa' }
-
+    { id: "parent", disablePadding: false, disableSort: false, label: "Categoría superior" },
+    { id: "name", disablePadding: false, disableSort: false, label: "Nombre" },
+    { id: "enabled", disablePadding: false, disableSort: false, label: "Activa" }
 ];
 const ProductsTableHead = (props) => {
     const { classes, order, orderBy, onRequestSort } = props;
@@ -21,29 +22,34 @@ const ProductsTableHead = (props) => {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align='center'
-                        padding={headCell.disablePadding ? 'none' : 'default'}
+                        align="center"
+                        padding={headCell.disablePadding ? "none" : "default"}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
-                        {headCell.disableSort ? <strong>{headCell.label}</strong>
-                            : <TableSortLabel
+                        {headCell.disableSort ? (
+                            <strong>{headCell.label}</strong>
+                        ) : (
+                            <TableSortLabel
                                 active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
+                                direction={orderBy === headCell.id ? order : "asc"}
                                 onClick={createSortHandler(headCell.id)}
                             >
                                 <strong>{headCell.label}</strong>
                                 {orderBy === headCell.id ? (
                                     <span className={classes.visuallyHidden}>
-                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        {order === "desc"
+                                            ? "sorted descending"
+                                            : "sorted ascending"}
                                     </span>
                                 ) : null}
-                            </TableSortLabel>}
+                            </TableSortLabel>
+                        )}
                     </TableCell>
                 ))}
             </TableRow>
         </TableHead>
     );
-}
+};
 
 export default ProductsTableHead;
 
@@ -52,7 +58,7 @@ ProductsTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
     orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired
 };

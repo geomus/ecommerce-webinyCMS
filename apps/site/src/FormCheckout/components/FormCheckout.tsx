@@ -1,11 +1,18 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext } from "react";
 import { useMutation } from "@apollo/client";
 import { CartContext } from "theme/components/utils/context";
-import { createOrder } from '../../graphql/query';
-
-import { TextField, Grid, Button, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, CircularProgress } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles'
-import PaymentIcon from '@material-ui/icons/Payment';
+import { createOrder } from "../../graphql/query";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Radio from "@material-ui/core/Radio";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import { makeStyles } from "@material-ui/core/styles";
+import PaymentIcon from "@material-ui/icons/Payment";
 
 const useStyles = makeStyles({
     root: {
@@ -17,55 +24,55 @@ const useStyles = makeStyles({
 const paymentMethods = [
     {
         id: 1,
-        name: 'Efectivo',
-        slug: 'efectivo'
+        name: "Efectivo",
+        slug: "efectivo"
     },
     {
         id: 2,
-        name: 'Transferencia bancaria',
-        slug: 'transferencia-bancaria'
+        name: "Transferencia bancaria",
+        slug: "transferencia-bancaria"
     },
     {
         id: 3,
-        name: 'Mercado Pago',
-        slug: 'mercado-pago'
-    },
+        name: "Mercado Pago",
+        slug: "mercado-pago"
+    }
 ];
 const shippingMethods = [
     {
         id: 1,
-        name: 'Retiro por local',
-        slug: 'retiro-por-local'
+        name: "Retiro por local",
+        slug: "retiro-por-local"
     },
     {
         id: 2,
-        name: 'Envío a domicilio',
-        slug: 'envio-a-domicilio'
+        name: "Envío a domicilio",
+        slug: "envio-a-domicilio"
     },
     {
         id: 3,
-        name: 'Acuerdo con el vendedor',
-        slug: 'acuerdo-con-el-vendedor'
-    },
+        name: "Acuerdo con el vendedor",
+        slug: "acuerdo-con-el-vendedor"
+    }
 ];
 
 export default function FormCheckout() {
     const [addOrder] = useMutation(createOrder);
 
-    const classes = useStyles()
+    const classes = useStyles();
 
-    const [name, setName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [phone, setPhone] = useState('')
-    const [address, setAddress] = useState('')
-    const [state, setState] = useState('')
-    const [city, setCity] = useState('')
-    const [zip, setZip] = useState('')
-    const [pay, setPay] = useState('');
-    const [shipping, setShipping] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const { cart, totalCalculator } = useContext(CartContext)
-    const token = 'TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039';
+    const [name, setName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
+    const [state, setState] = useState("");
+    const [city, setCity] = useState("");
+    const [zip, setZip] = useState("");
+    const [pay, setPay] = useState("");
+    const [shipping, setShipping] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const { cart, totalCalculator } = useContext(CartContext);
+    const token = "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
 
     const handleChangeName = (event) => {
         setName(event.target.value);
@@ -95,22 +102,22 @@ export default function FormCheckout() {
         setShipping(event.target.value);
     };
     const refactorCart = (cart) => {
-        const newCart = cart.map(item => ({
+        const newCart = cart.map((item) => ({
             id: item.id,
             name: item.name,
             priceBase: item.priceBase,
             quantity: item.quantity,
             variantsSelected: item.variantsSelected
-        }))  
-        return JSON.stringify(newCart)      
-    }
+        }));
+        return JSON.stringify(newCart);
+    };
 
     const generatePreference = async (cartItem, userToken) => {
         const response = await fetch(
             `${process.env.REACT_APP_API_URL}/mercado-pago/generate-preference`,
             {
                 method: "POST",
-                body: JSON.stringify({ cart: cartItem, token: userToken }),
+                body: JSON.stringify({ cart: cartItem, token: userToken })
             }
         );
         const body = await response.json();
@@ -120,14 +127,14 @@ export default function FormCheckout() {
     const executePayment = async (url, order) => {
         const { data } = await addOrder({ variables: { data: order } });
         const orderGenerate = data.orders.createOrder.data;
-        await localStorage.setItem('orderId', JSON.stringify(orderGenerate.id));
+        await localStorage.setItem("orderId", JSON.stringify(orderGenerate.id));
 
-        return window.location.href = url;
+        return (window.location.href = url);
     };
 
     const onSubmit = async (e) => {
-        setIsLoading(true)
-        e.preventDefault()
+        setIsLoading(true);
+        e.preventDefault();
         const order = {
             name: name,
             lastName: lastName,
@@ -141,81 +148,148 @@ export default function FormCheckout() {
             shipping: shipping,
             cart: refactorCart(cart),
             totalOrder: totalCalculator(cart)
-        }
-        
+        };
 
-        if (pay === 'Mercado Pago') {
-            const preferenceData = await generatePreference(cart, token)
-            console.log(order,preferenceData);
-            
-            order.idPreference = preferenceData.id
+        if (pay === "Mercado Pago") {
+            const preferenceData = await generatePreference(cart, token);
+            console.log(order, preferenceData);
+
+            order.idPreference = preferenceData.id;
             //createOrder
-            await executePayment(preferenceData.init_point, order)
+            await executePayment(preferenceData.init_point, order);
         } else {
             // await executePayment('https://dsc5kyynzacr1.cloudfront.net/wonder-slug/pending', order)
-            await executePayment('http://localhost:3000/wonder-slug/pending', order)
+            await executePayment("http://localhost:3000/wonder-slug/pending", order);
         }
-    }
+    };
 
     return (
         <form className={classes.root} onSubmit={onSubmit}>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                    <TextField fullWidth required id="firstName" name="firstName" label="Nombre" onChange={handleChangeName} />
+                    <TextField
+                        fullWidth
+                        required
+                        id="firstName"
+                        name="firstName"
+                        label="Nombre"
+                        onChange={handleChangeName}
+                    />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField fullWidth required id="lastName" name="lastName" label="Apellido" onChange={handleChangeLastName} />
+                    <TextField
+                        fullWidth
+                        required
+                        id="lastName"
+                        name="lastName"
+                        label="Apellido"
+                        onChange={handleChangeLastName}
+                    />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField fullWidth required id="phone" name="phone" label="Telefono" onChange={handleChangePhone} />
+                    <TextField
+                        fullWidth
+                        required
+                        id="phone"
+                        name="phone"
+                        label="Telefono"
+                        onChange={handleChangePhone}
+                    />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <TextField fullWidth required id="address" name="address" label="Direccion" onChange={handleChangeAddress} />
+                    <TextField
+                        fullWidth
+                        required
+                        id="address"
+                        name="address"
+                        label="Direccion"
+                        onChange={handleChangeAddress}
+                    />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <TextField fullWidth required id="state" name="state" label="Estado" onChange={handleChangeState} />
+                    <TextField
+                        fullWidth
+                        required
+                        id="state"
+                        name="state"
+                        label="Estado"
+                        onChange={handleChangeState}
+                    />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <TextField fullWidth required id="city" name="city" label="Ciudad" onChange={handleChangeCity} />
+                    <TextField
+                        fullWidth
+                        required
+                        id="city"
+                        name="city"
+                        label="Ciudad"
+                        onChange={handleChangeCity}
+                    />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <TextField fullWidth required id="zipCode" name="zipCode" label="C.P." onChange={handleChangeZip} />
+                    <TextField
+                        fullWidth
+                        required
+                        id="zipCode"
+                        name="zipCode"
+                        label="C.P."
+                        onChange={handleChangeZip}
+                    />
                 </Grid>
                 <Grid item xs={6}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Métodos de pago</FormLabel>
-                        <RadioGroup aria-label="payments" name="payments1" value={pay} onChange={handleChangePay}>
-                            {
-                                paymentMethods.map((pay) => (
-                                    <FormControlLabel value={pay.name} control={<Radio />} label={pay.name} key={pay.id + pay.name} />
-                                ))
-                            }
+                        <RadioGroup
+                            aria-label="payments"
+                            name="payments1"
+                            value={pay}
+                            onChange={handleChangePay}
+                        >
+                            {paymentMethods.map((pay) => (
+                                <FormControlLabel
+                                    value={pay.name}
+                                    control={<Radio />}
+                                    label={pay.name}
+                                    key={pay.id + pay.name}
+                                />
+                            ))}
                         </RadioGroup>
-                    </FormControl>                </Grid>
+                    </FormControl>{" "}
+                </Grid>
                 <Grid item xs={6}>
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Métodos de envío</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender1" value={shipping} onChange={handleChangeShipping}>
-                            {
-                                shippingMethods.map((pay) => (
-                                    <FormControlLabel value={pay.name} control={<Radio />} label={pay.name} key={Math.random() * pay.id} />
-                                ))
-                            }
+                        <RadioGroup
+                            aria-label="gender"
+                            name="gender1"
+                            value={shipping}
+                            onChange={handleChangeShipping}
+                        >
+                            {shippingMethods.map((pay) => (
+                                <FormControlLabel
+                                    value={pay.name}
+                                    control={<Radio />}
+                                    label={pay.name}
+                                    key={Math.random() * pay.id}
+                                />
+                            ))}
                         </RadioGroup>
                     </FormControl>
                 </Grid>
 
-                {!isLoading ?
+                {!isLoading ? (
                     <Button
                         variant="contained"
                         color="primary"
-                        startIcon={<PaymentIcon/> }
+                        startIcon={<PaymentIcon />}
                         type="submit"
-                    >PAGAR
-                </Button>
-                    : <CircularProgress />}
-
+                    >
+                        PAGAR
+                    </Button>
+                ) : (
+                    <CircularProgress />
+                )}
             </Grid>
         </form>
-    )
+    );
 }

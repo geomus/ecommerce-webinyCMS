@@ -1,7 +1,9 @@
 import React, { useState, Component } from "react";
 import Files from "react-butterfiles";
-
-import { Input, Button, FormControl, Typography } from "@material-ui/core/";
+import Typography from "@material-ui/core/Typography";
+import Input from "@material-ui/core/Input";
+import FormControl from "@material-ui/core/FormControl";
+import Button from "@material-ui/core/Button";
 
 export default function FileUploadButton({ handlerImages, images }) {
     const [files, setFiles] = useState([]);

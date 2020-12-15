@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { ReactComponent as RbNew } from "../utils/svg/rb-new.svg";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
-import { makeStyles } from "@material-ui/core/styles";
-import { ReactComponent as RbNew } from "../utils/svg/rb-new.svg";
-import { Button, Divider, Tooltip } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
 import ShopCartButton from "../Product/ShopCartButton";
 import CancelIcon from "@material-ui/icons/Cancel";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles({
     detailProduct: {

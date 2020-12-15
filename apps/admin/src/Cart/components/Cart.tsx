@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import { Typography } from "@material-ui/core"
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles({
     table: {
-        maxWidth: "80%",
+        maxWidth: "80%"
     },
     cellQty: {
         width: 120
@@ -25,7 +25,6 @@ const useStyles = makeStyles({
         width: "100%"
     }
 });
-
 
 const localCart = [
     {
@@ -51,9 +50,9 @@ const localCart = [
 export default function SpanningTable() {
     const classes = useStyles();
 
-    const [cart, setCart] = useState(localCart)
+    const [cart, setCart] = useState(localCart);
 
-    const totalCart = "$2000"
+    const totalCart = "$2000";
 
     return (
         <TableContainer>
@@ -72,7 +71,11 @@ export default function SpanningTable() {
                     {cart.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell className={classes.cellImgProduct}>
-                                <img src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg" className={classes.imgProduct} alt="Foto producto" />
+                                <img
+                                    src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                    className={classes.imgProduct}
+                                    alt="Foto producto"
+                                />
                             </TableCell>
                             <TableCell>{row.name}</TableCell>
                             <TableCell align="right" className={classes.cellQty}>
@@ -88,7 +91,7 @@ export default function SpanningTable() {
                             <TableCell align="right">${row.priceBase}</TableCell>
                             <TableCell align="right">${row.quantity * row.priceBase}</TableCell>
                             <TableCell align="right">
-                                <Button value={row.id} id={row.id} >
+                                <Button value={row.id} id={row.id}>
                                     <HighlightOffIcon />
                                 </Button>
                             </TableCell>
@@ -97,17 +100,13 @@ export default function SpanningTable() {
 
                     <TableRow>
                         <TableCell colSpan={4}>
-                            <Typography variant="body1">
-                                TOTAL CART
-                            </Typography>
+                            <Typography variant="body1">TOTAL CART</Typography>
                         </TableCell>
                         <TableCell align="right">
-                            <Typography variant="body1">
-                                ${totalCart}
-                            </Typography>
+                            <Typography variant="body1">${totalCart}</Typography>
                         </TableCell>
                         <TableCell align="right">
-                            <Button variant="contained" color="secondary" >
+                            <Button variant="contained" color="secondary">
                                 VACIAR
                             </Button>
                         </TableCell>

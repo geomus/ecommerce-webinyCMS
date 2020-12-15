@@ -1,19 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
-
+import React from "react";
+import PropTypes from "prop-types";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 const headCells = [
-    { id: 'image', disablePadding: false, disableSort: true, label: 'Imagen' },
-    { id: 'name', disablePadding: false, disableSort: false, label: 'Producto' },
-    { id: 'price', disablePadding: false, disableSort: false, label: 'Precio' },
-    { id: 'stock', disablePadding: false, disableSort: false, label: 'Stock' },
-    { id: 'tags', disablePadding: false, disableSort: true, label: 'Tags' },
-    { id: 'categories', disablePadding: false, disableSort: false, label: 'Categorías' },
-    { id: 'isPublished', disablePadding: false, disableSort: false, label: 'Publicado' },
-    { id: 'isFeatured', disablePadding: false, disableSort: false, label: 'Destacado' },
-    { id: 'edit', disablePadding: false, disableSort: true, label: 'Editar' },
-    { id: 'delete', disablePadding: false, disableSort: true, label: 'Eliminar' }
+    { id: "image", disablePadding: false, disableSort: true, label: "Imagen" },
+    { id: "name", disablePadding: false, disableSort: false, label: "Producto" },
+    { id: "price", disablePadding: false, disableSort: false, label: "Precio" },
+    { id: "stock", disablePadding: false, disableSort: false, label: "Stock" },
+    { id: "tags", disablePadding: false, disableSort: true, label: "Tags" },
+    { id: "categories", disablePadding: false, disableSort: false, label: "Categorías" },
+    { id: "isPublished", disablePadding: false, disableSort: false, label: "Publicado" },
+    { id: "isFeatured", disablePadding: false, disableSort: false, label: "Destacado" },
+    { id: "edit", disablePadding: false, disableSort: true, label: "Editar" },
+    { id: "delete", disablePadding: false, disableSort: true, label: "Eliminar" }
 ];
 const ProductsTableHead = (props) => {
     const { classes, order, orderBy, onRequestSort } = props;
@@ -27,30 +29,34 @@ const ProductsTableHead = (props) => {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align='center'
-                        padding={headCell.disablePadding ? 'none' : 'default'}
+                        align="center"
+                        padding={headCell.disablePadding ? "none" : "default"}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
-                        {headCell.disableSort ? <strong>{headCell.label}</strong>
-                            : <TableSortLabel
+                        {headCell.disableSort ? (
+                            <strong>{headCell.label}</strong>
+                        ) : (
+                            <TableSortLabel
                                 active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : 'asc'}
+                                direction={orderBy === headCell.id ? order : "asc"}
                                 onClick={createSortHandler(headCell.id)}
                             >
                                 <strong>{headCell.label}</strong>
                                 {orderBy === headCell.id ? (
                                     <span className={classes.visuallyHidden}>
-                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        {order === "desc"
+                                            ? "sorted descending"
+                                            : "sorted ascending"}
                                     </span>
                                 ) : null}
-                            </TableSortLabel>}
-
+                            </TableSortLabel>
+                        )}
                     </TableCell>
                 ))}
             </TableRow>
         </TableHead>
     );
-}
+};
 
 export default ProductsTableHead;
 
@@ -59,7 +65,7 @@ ProductsTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
     orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired
 };

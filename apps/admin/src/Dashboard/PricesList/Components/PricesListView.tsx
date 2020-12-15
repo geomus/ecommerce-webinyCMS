@@ -1,27 +1,33 @@
-import React from 'react';
-import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
-import { TransitionProps } from '@material-ui/core/transitions';
+import React from "react";
+import TableCell from "@material-ui/core/TableCell";
+import TableRow from "@material-ui/core/TableRow";
+import IconButton from "@material-ui/core/IconButton";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import EditIcon from "@material-ui/icons/Edit";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import CloseIcon from "@material-ui/icons/Close";
+import Slide from "@material-ui/core/Slide";
+import { TransitionProps } from "@material-ui/core/transitions";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         appBar: {
-            position: 'relative',
+            position: "relative"
         },
         title: {
             marginLeft: theme.spacing(2),
-            flex: 1,
+            flex: 1
         },
         table: {
-            maxWidth: "80%",
+            maxWidth: "80%"
         },
         cellQty: {
             width: 120
@@ -32,12 +38,12 @@ const useStyles = makeStyles((theme: Theme) =>
         imgProduct: {
             width: "100%"
         }
-    }),
+    })
 );
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement },
-    ref: React.Ref<unknown>,
+    ref: React.Ref<unknown>
 ) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -45,7 +51,7 @@ const Transition = React.forwardRef(function Transition(
 export default function FullScreenDialog(row) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const cart = JSON.parse(row.cart)
+    const cart = JSON.parse(row.cart);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -55,7 +61,6 @@ export default function FullScreenDialog(row) {
         setOpen(false);
     };
 
-
     return (
         <div>
             <IconButton aria-label="edit" color="primary" onClick={handleClickOpen}>
@@ -64,7 +69,12 @@ export default function FullScreenDialog(row) {
             <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
-                        <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleClose}
+                            aria-label="close"
+                        >
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
@@ -81,7 +91,7 @@ export default function FullScreenDialog(row) {
                             <TableRow>
                                 <TableCell align="center" colSpan={3}>
                                     Detalles
-                            </TableCell>
+                                </TableCell>
                                 <TableCell align="right">Precio</TableCell>
                                 <TableCell align="right">Subtotal</TableCell>
                             </TableRow>
@@ -90,14 +100,20 @@ export default function FullScreenDialog(row) {
                             {cart.map((row) => (
                                 <TableRow key={row.id}>
                                     <TableCell className={classes.cellImgProduct}>
-                                        <img src={row.images} className={classes.imgProduct} alt="Foto producto" />
+                                        <img
+                                            src={row.images}
+                                            className={classes.imgProduct}
+                                            alt="Foto producto"
+                                        />
                                     </TableCell>
                                     <TableCell>{row.name}</TableCell>
                                     <TableCell align="right" className={classes.cellQty}>
                                         {row.quantity}
                                     </TableCell>
                                     <TableCell align="right">${row.priceBase}</TableCell>
-                                    <TableCell align="right">${row.quantity * row.priceBase}</TableCell>
+                                    <TableCell align="right">
+                                        ${row.quantity * row.priceBase}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -107,4 +123,3 @@ export default function FullScreenDialog(row) {
         </div>
     );
 }
-

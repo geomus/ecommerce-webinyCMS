@@ -9,7 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import { Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 import { CartContext } from "theme/components/utils/context";
 
 const useStyles = makeStyles({

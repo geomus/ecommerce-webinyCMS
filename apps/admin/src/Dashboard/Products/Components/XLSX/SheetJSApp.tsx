@@ -2,18 +2,19 @@ import React, { Fragment, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { products } from "../../../../graphql/query";
 import XLSX from "xlsx";
-import { LinearProgress } from "@material-ui/core";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import DragDropFile from "./DragDropFile";
+import Backdrop from "@material-ui/core/Backdrop";
 import DataInput from "./DataInput";
-import OutTable from "./OurTable"
-import { Backdrop, makeStyles } from "@material-ui/core";
+import OutTable from "./OurTable";
+import { makeStyles } from "@material-ui/core";
 import StepperImport from "./StepperImport";
 
 const useStyles = makeStyles((theme) => ({
     backdrop: {
         zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-    },
+        color: "#fff"
+    }
 }));
 
 /* generate an array of column objects */
@@ -27,7 +28,7 @@ const make_cols = (refstr) => {
     return o;
 };
 export default function SheetJSApp({ handleCloseDialog }) {
-    const classes = useStyles()
+    const classes = useStyles();
     const [state, setState] = useState({
         data: [],
         cols: []
@@ -54,7 +55,7 @@ export default function SheetJSApp({ handleCloseDialog }) {
     const objectKeys = data.products.listProducts.data[0];
 
     function handleFile(file /*:File*/) {
-        setOpen(true)
+        setOpen(true);
         /* Boilerplate to set up FileReader */
         const reader = new FileReader();
         const rABS = !!reader.readAsBinaryString;
@@ -74,7 +75,7 @@ export default function SheetJSApp({ handleCloseDialog }) {
             });
             /* Update state */
             setState({ data: data, cols: newCols });
-            setOpen(false)
+            setOpen(false);
         };
         if (rABS) {
             reader.readAsBinaryString(file);
@@ -87,11 +88,16 @@ export default function SheetJSApp({ handleCloseDialog }) {
         <Fragment>
             <Backdrop className={classes.backdrop} open={open} onClick={handleClose}>
                 CARGANDO...
-        </Backdrop>
+            </Backdrop>
             <StepperImport />
             <DragDropFile handleFile={handleFile}>
                 <DataInput handleFile={handleFile} />
-                <OutTable handleCloseDialog={handleCloseDialog} data={state.data} cols={state.cols} objectKeys={objectKeys} />
+                <OutTable
+                    handleCloseDialog={handleCloseDialog}
+                    data={state.data}
+                    cols={state.cols}
+                    objectKeys={objectKeys}
+                />
             </DragDropFile>
         </Fragment>
     );

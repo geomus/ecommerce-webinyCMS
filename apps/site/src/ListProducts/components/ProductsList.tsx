@@ -1,10 +1,10 @@
 import React from "react";
 import Product from "../../Product";
 import { useQuery } from "@apollo/client";
-import Grid from "@material-ui/core/Grid";
 import { products } from "../../graphql/query";
 import { searchProducts } from "../../graphql/query";
 import { useLocation } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Box from "@material-ui/core/Box";
 

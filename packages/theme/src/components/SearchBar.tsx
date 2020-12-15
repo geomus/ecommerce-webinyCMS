@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { LinearProgress } from "@material-ui/core";
-import { IconButton } from "@material-ui/core";
 import { gql, useQuery } from "@apollo/client";
+import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
-import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -170,7 +170,9 @@ export default function ProductSearch({ mobile }) {
                                     <SearchIcon />
                                 </IconButton>
                             </div>
+                            <InputLabel htmlFor="searchDesktop"></InputLabel>
                             <InputBase
+                                id="searchDesktop"
                                 name="search"
                                 placeholder="Search any product..."
                                 classes={{
@@ -228,7 +230,9 @@ export default function ProductSearch({ mobile }) {
                                 aria-labelledby="search-product"
                                 open={open}
                             >
+                                <InputLabel htmlFor="searchMobile"></InputLabel>
                                 <InputBase
+                                    id="searchMobile"
                                     name="search"
                                     placeholder="Search any product..."
                                     classes={{

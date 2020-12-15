@@ -1,5 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useQuery } from "@apollo/client";
+import { listAllCategories } from "../../../graphql/query";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -9,9 +11,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { useQuery } from "@apollo/client";
-import { listAllCategories } from "../../../graphql/query";
-import { LinearProgress } from "@material-ui/core";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import CategoryTableToolbar from "./CategoryTableToolbar";
 import CategoryTableHead from "./CategoryTableHead";
 import CategoryBtnEdit from "./CategoryBtnEdit";
@@ -169,7 +169,11 @@ export default function CategoryTable() {
                                                 {row.enabled ? "SI" : "NO"}
                                             </TableCell>
                                             <TableCell align="center">
-                                                <CategoryBtnEdit className={classes.btnCategoryCreate} categories={data.categories.listCategories.data} row={row} />
+                                                <CategoryBtnEdit
+                                                    className={classes.btnCategoryCreate}
+                                                    categories={data.categories.listCategories.data}
+                                                    row={row}
+                                                />
                                             </TableCell>
                                             <TableCell align="center">
                                                 <CategoryDeleteBtn row={row} />

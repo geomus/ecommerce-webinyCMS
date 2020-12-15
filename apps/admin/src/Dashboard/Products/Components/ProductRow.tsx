@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
-import { Chip } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip";
 import ProductsBtnPublished from "./ProductsBtnPublished";
 import ProductsBtnEdit from "./ProductsBtnEdit";
 import ProductsBtnDelete from "./ProductsBtnDelete";
@@ -27,26 +27,28 @@ export default function ProductRow({ row, categories }) {
     const classes = useStyles();
 
     const totalCalculatorStock = (variants) => {
-        const suma = variants.reduce((acc, variant) => { return acc += variant.stock }, 0)
-        return suma
-    }
+        const suma = variants.reduce((acc, variant) => {
+            return (acc += variant.stock);
+        }, 0);
+        return suma;
+    };
 
     return (
         <TableRow hover role="checkbox" tabIndex={-1}>
             <TableCell align="center" className={classes.cellImgProduct}>
-                {
-                    row.images ?
-                        <img
-                            src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
-                            className={classes.imgProduct}
-                            alt="Foto producto"
-                        /> :
-                        <img
-                            src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
-                            className={classes.imgProduct}
-                            alt="Foto producto"
-                        />
-                }
+                {row.images ? (
+                    <img
+                        src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
+                        className={classes.imgProduct}
+                        alt="Foto producto"
+                    />
+                ) : (
+                    <img
+                        src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                        className={classes.imgProduct}
+                        alt="Foto producto"
+                    />
+                )}
             </TableCell>
             <TableCell component="th" scope="row">
                 {row.name}
@@ -92,10 +94,9 @@ export default function ProductRow({ row, categories }) {
                             />
                         ))}
                 </TableCell>
-            ) :
-                <TableCell align="center">
-                    Uncategorized
-                </TableCell>}
+            ) : (
+                <TableCell align="center">Uncategorized</TableCell>
+            )}
             <TableCell align="center">
                 <ProductsBtnPublished row={row} />
             </TableCell>

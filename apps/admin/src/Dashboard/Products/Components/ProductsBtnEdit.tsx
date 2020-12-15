@@ -1,6 +1,6 @@
 import React from "react";
 import ProductsFormEdit from "./ProductsFormEdit";
-import { IconButton } from "@material-ui/core";
+import IconButton  from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";

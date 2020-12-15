@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme, withStyles } from "@material-ui/core/styles";
+import { updateCategory, listAllCategories } from "../../../graphql/query";
+import { useMutation } from "@apollo/client";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
@@ -17,17 +20,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import InputBase from "@material-ui/core/InputBase";
 import EditIcon from "@material-ui/icons/Edit";
-import {
-    Checkbox,
-    FormControlLabel,
-    FormGroup,
-    Grid,
-    Snackbar,
-    TextField
-} from "@material-ui/core";
-import { updateCategory, listAllCategories } from "../../../graphql/query";
-import { useMutation } from "@apollo/client";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import Grid from "@material-ui/core/Grid";
+import Snackbar from "@material-ui/core/Snackbar";
+import TextField from "@material-ui/core/TextField";
 
 const BootstrapInput = withStyles((theme: Theme) =>
     createStyles({

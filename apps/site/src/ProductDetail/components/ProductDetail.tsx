@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { product } from '../../graphql/query'
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Chip from '@material-ui/core/Chip';
-import { makeStyles } from "@material-ui/core/styles"
-import { ReactComponent as RbNew } from '../../utils/svg/rb-new.svg'
-import { Button, Divider, LinearProgress, Tooltip } from '@material-ui/core';
-import ShopCartButton from '../../Product/ShopCartButton';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { useLocation } from 'react-router-dom'
+import { product } from "../../graphql/query";
+import { useLocation } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import { ReactComponent as RbNew } from "../../utils/svg/rb-new.svg";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Chip from "@material-ui/core/Chip";
+import Tooltip from "@material-ui/core/Tooltip";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import ShopCartButton from "../../Product/ShopCartButton";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const useStyles = makeStyles({
     detailProduct: {
@@ -19,14 +22,14 @@ const useStyles = makeStyles({
         justifyContent: "space-between"
     },
     imgFluid: {
-        position: 'relative',
-        width: '100%'
+        position: "relative",
+        width: "100%"
     },
     marginTags: {
         marginRight: "0.5rem"
     },
     ribbonNew: {
-        position: 'absolute',
+        position: "absolute",
         top: 0,
         right: 0,
         width: 70
@@ -41,38 +44,36 @@ const useStyles = makeStyles({
 const ProductDetail = () => {
     const classes = useStyles();
     const [variantsSelected, setVariantsSelected] = useState([]);
-    const [productState, setProductState] = useState([])
-    const [propertyKeys, setPropertyKeys] = useState([])
-    const [isDisabled, setIsDisabled] = useState({})
-    const [limitVariants, setLimitVariants] = useState(false)
-    const [shopCartButtonEnabled, setShopCartButtonEnabled] = useState(false)
-    const [enabledTooltip, setEnabledTooltip] = useState(false)
+    const [productState, setProductState] = useState([]);
+    const [propertyKeys, setPropertyKeys] = useState([]);
+    const [isDisabled, setIsDisabled] = useState({});
+    const [limitVariants, setLimitVariants] = useState(false);
+    const [shopCartButtonEnabled, setShopCartButtonEnabled] = useState(false);
+    const [enabledTooltip, setEnabledTooltip] = useState(false);
 
     // const params = new URLSearchParams(window.location.search)
     // const id = params.get('id')
-const location = useLocation()
-const id = location.search.split("=")[1]
+    const location = useLocation();
+    const id = location.search.split("=")[1];
 
     const { loading, error, data } = useQuery(product, { variables: { id } });
 
-
     useEffect(() => {
         if (!loading && data) {
-            const productData = data.products.getProduct.data.variants
+            const productData = data.products.getProduct.data.variants;
             if (productData[0]) {
-                setShopCartButtonEnabled(true)
-                const propertyKeys = Object.keys(JSON.parse(productData[0].propertyValues))
-                setPropertyKeys(propertyKeys)
-                const newProductData = []
+                setShopCartButtonEnabled(true);
+                const propertyKeys = Object.keys(JSON.parse(productData[0].propertyValues));
+                setPropertyKeys(propertyKeys);
+                const newProductData = [];
                 for (const key in productData) {
                     const dataObjectProduct = {
                         propertyValues: JSON.parse(productData[key].propertyValues),
                         stock: productData[key].stock
-                    }
+                    };
                     newProductData.push(dataObjectProduct);
                 }
-                setProductState(newProductData)
-
+                setProductState(newProductData);
 
                 interface ValueOptions {
                     [key: string]: Array<string>;
@@ -91,7 +92,7 @@ const id = location.search.split("=")[1]
                             }
                         }
                     }
-                    const productVariants = []
+                    const productVariants = [];
                     for (const key in options) {
                         const element = { [key]: options[key] };
                         productVariants.push(element);
@@ -99,22 +100,24 @@ const id = location.search.split("=")[1]
                     return productVariants;
                 }
 
-
-                const options = generateOptions(newProductData)
-                const elementSelected = setInitalStateDisabled(options, true)
+                const options = generateOptions(newProductData);
+                const elementSelected = setInitalStateDisabled(options, true);
                 setIsDisabled({ ...elementSelected });
             }
         }
-    }, [loading, data])
+    }, [loading, data]);
 
     if (loading) {
         return (
-            <h1> <LinearProgress /> </h1>
-        )
+            <h1>
+                {" "}
+                <LinearProgress />{" "}
+            </h1>
+        );
     }
 
     if (error) {
-        console.dir(error)
+        console.dir(error);
         return <h1> error </h1>;
     }
 
@@ -135,7 +138,7 @@ const id = location.search.split("=")[1]
                 }
             }
         }
-        const productVariants = []
+        const productVariants = [];
         for (const key in options) {
             const element = { [key]: options[key] };
             productVariants.push(element);
@@ -143,76 +146,90 @@ const id = location.search.split("=")[1]
         return productVariants;
     }
 
-    let options
+    let options;
     if (productState) {
-        options = generateOptions(productState)
+        options = generateOptions(productState);
     }
 
     function setInitalStateDisabled(value, status) {
-        const elementSelected = {}
+        const elementSelected = {};
         for (let i = 0; i < value.length; i++) {
             for (const key in value[i]) {
                 for (let j = 0; j < value[i][key].length; j++) {
                     const element = value[i][key][j];
-                    elementSelected[element] = status
+                    elementSelected[element] = status;
                 }
             }
         }
-        return elementSelected
+        return elementSelected;
     }
 
     const handleVariant = (e) => {
-        const selected = { key: e.currentTarget.id, value: e.target.innerText }
+        const selected = { key: e.currentTarget.id, value: e.target.innerText };
 
-        setVariantsSelected([...variantsSelected, { [e.currentTarget.id]: e.target.innerText }])
+        setVariantsSelected([...variantsSelected, { [e.currentTarget.id]: e.target.innerText }]);
         const filteredVariants = productState.filter((variant) => {
-            return variant.propertyValues[selected.key].toUpperCase() == selected.value && variant.stock > 0;
-
+            return (
+                variant.propertyValues[selected.key].toUpperCase() == selected.value &&
+                variant.stock > 0
+            );
         });
 
         const filteredOptions = generateOptions(filteredVariants);
 
-        const elementSelected = setInitalStateDisabled(filteredOptions, false)
+        const elementSelected = setInitalStateDisabled(filteredOptions, false);
         setIsDisabled({ ...isDisabled, ...elementSelected });
-        setEnabledTooltip(true)
+        setEnabledTooltip(true);
 
         if (variantsSelected.length === propertyKeys.length - 1) {
-            setLimitVariants(true)
-            setShopCartButtonEnabled(false)
+            setLimitVariants(true);
+            setShopCartButtonEnabled(false);
         }
-    }
+    };
 
     const resetVariantsSelected = (addToCart) => {
-        setVariantsSelected([])
-    }
+        setVariantsSelected([]);
+    };
 
     const handleDeleteChipVariant = (e) => {
-        const splitSelected = e.currentTarget.id.split(",")
-        const selected = { key: splitSelected[0], value: splitSelected[1] }
-        setShopCartButtonEnabled(true)
-        const variantsSelectedFiltered = variantsSelected.filter(variant => {
-            return variant[selected.key] != selected.value
-        })
+        const splitSelected = e.currentTarget.id.split(",");
+        const selected = { key: splitSelected[0], value: splitSelected[1] };
+        setShopCartButtonEnabled(true);
+        const variantsSelectedFiltered = variantsSelected.filter((variant) => {
+            return variant[selected.key] != selected.value;
+        });
 
-        setVariantsSelected(variantsSelectedFiltered)
+        setVariantsSelected(variantsSelectedFiltered);
 
         if (variantsSelected.length == 1) {
-            const elementSelected = setInitalStateDisabled(options, true)
+            const elementSelected = setInitalStateDisabled(options, true);
             setIsDisabled({ ...elementSelected });
         }
-        setLimitVariants(false)
-    }
-
+        setLimitVariants(false);
+    };
 
     return (
         <Container>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                    { data.products.getProduct.data.images ?
-                        <img src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}`} alt="Product" className={classes.imgFluid} /> :
-                        <img src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg" alt="Product" className={classes.imgFluid} />
-                    }
-                    {data.products.getProduct.data.isFeatured ? <RbNew className={classes.ribbonNew} /> : ''}
+                    {data.products.getProduct.data.images ? (
+                        <img
+                            src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}`}
+                            alt="Product"
+                            className={classes.imgFluid}
+                        />
+                    ) : (
+                        <img
+                            src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                            alt="Product"
+                            className={classes.imgFluid}
+                        />
+                    )}
+                    {data.products.getProduct.data.isFeatured ? (
+                        <RbNew className={classes.ribbonNew} />
+                    ) : (
+                        ""
+                    )}
                 </Grid>
                 <Grid item xs={12} md={6} className={classes.detailProduct}>
                     <Typography variant="body1" gutterBottom>
@@ -229,55 +246,101 @@ const id = location.search.split("=")[1]
                         {data.products.getProduct.data.description}
                     </Typography>
 
-                    {
-                        propertyKeys &&
-                        propertyKeys.map((variantProperty, i) =>
-                            <div key={`${i}variant`} >
-                                <Typography variant="body1" >{variantProperty}</Typography>
+                    {propertyKeys &&
+                        propertyKeys.map((variantProperty, i) => (
+                            <div key={`${i}variant`}>
+                                <Typography variant="body1">{variantProperty}</Typography>
                                 <div className={classes.variantsRow}>
-                                    {
-                                        Object.entries(options[i][propertyKeys[i]]).map(([key, value], j) =>
+                                    {Object.entries(options[i][propertyKeys[i]]).map(
+                                        ([key, value], j) => (
                                             <div key={`${key}val`}>
-                                                {
-                                                    isDisabled[`${value}`] === true ?
-                                                        enabledTooltip ?
-                                                            <Tooltip title="Sin Stock" arrow>
-                                                                <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant} disabled={limitVariants}>{value}</Button>
-                                                            </Tooltip>
-                                                            :
-                                                            <Button variant="outlined" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant} disabled={limitVariants}>{value}</Button>
-                                                        :
-                                                        <Button variant="contained" size="small" color="primary" id={propertyKeys[i]} onClick={handleVariant}>{value}</Button>
-                                                }
+                                                {isDisabled[`${value}`] === true ? (
+                                                    enabledTooltip ? (
+                                                        <Tooltip title="Sin Stock" arrow>
+                                                            <Button
+                                                                variant="outlined"
+                                                                size="small"
+                                                                color="primary"
+                                                                id={propertyKeys[i]}
+                                                                onClick={handleVariant}
+                                                                disabled={limitVariants}
+                                                            >
+                                                                {value}
+                                                            </Button>
+                                                        </Tooltip>
+                                                    ) : (
+                                                        <Button
+                                                            variant="outlined"
+                                                            size="small"
+                                                            color="primary"
+                                                            id={propertyKeys[i]}
+                                                            onClick={handleVariant}
+                                                            disabled={limitVariants}
+                                                        >
+                                                            {value}
+                                                        </Button>
+                                                    )
+                                                ) : (
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        color="primary"
+                                                        id={propertyKeys[i]}
+                                                        onClick={handleVariant}
+                                                    >
+                                                        {value}
+                                                    </Button>
+                                                )}
                                             </div>
                                         )
-                                    }
+                                    )}
                                 </div>
                             </div>
-                        )}
+                        ))}
                     <div>
-                        {
-                            variantsSelected &&
+                        {variantsSelected &&
                             variantsSelected.map((variable, i) =>
-                                Object.entries(variable).map(([key, value]) =>
-                                    <Chip color="secondary" key={key + i} id={`${value}`} size="small" onDelete={handleDeleteChipVariant} label={`${key}:${value}`} deleteIcon={<CancelIcon id={`${key},${value}`} key={key} />} />
+                                Object.entries(variable).map(([key, value]) => (
+                                    <Chip
+                                        color="secondary"
+                                        key={key + i}
+                                        id={`${value}`}
+                                        size="small"
+                                        onDelete={handleDeleteChipVariant}
+                                        label={`${key}:${value}`}
+                                        deleteIcon={<CancelIcon id={`${key},${value}`} key={key} />}
+                                    />
                                 ))
-                        }
+                            )}
                     </div>
                     <br />
                     <div>
                         {data.products.getProduct.data.tags &&
-                            data.products.getProduct.data.tags.map((tag, i) => <Chip variant="outlined" className={classes.marginTags}
-                                color="secondary" label={tag} component="a" href="#chip" key={i + tag} clickable />)
-                        }
+                            data.products.getProduct.data.tags.map((tag, i) => (
+                                <Chip
+                                    variant="outlined"
+                                    className={classes.marginTags}
+                                    color="secondary"
+                                    label={tag}
+                                    component="a"
+                                    href="#chip"
+                                    key={i + tag}
+                                    clickable
+                                />
+                            ))}
                     </div>
 
-                    <ShopCartButton {...data.products.getProduct.data} listVariants={options} variantsSelected={variantsSelected} resetVariantsSelected={resetVariantsSelected} enabled={shopCartButtonEnabled} />
+                    <ShopCartButton
+                        {...data.products.getProduct.data}
+                        listVariants={options}
+                        variantsSelected={variantsSelected}
+                        resetVariantsSelected={resetVariantsSelected}
+                        enabled={shopCartButtonEnabled}
+                    />
                 </Grid>
             </Grid>
         </Container>
     );
-}
+};
 
 export default ProductDetail;
-
