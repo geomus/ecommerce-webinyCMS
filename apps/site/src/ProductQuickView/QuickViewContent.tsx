@@ -166,6 +166,9 @@ const QuickViewContent = (props) => {
         setEnabledTooltip(true);
 
         if (variantsSelected.length === propertyKeys.length - 1) {
+            console.log(variantsSelected.length);
+            console.log(propertyKeys.length);
+
             setLimitVariants(true);
             setShopCartButtonEnabled(false);
         }
@@ -191,6 +194,9 @@ const QuickViewContent = (props) => {
         }
         setLimitVariants(false);
     };
+
+    console.log(limitVariants);
+
 
     return (
         <Container>
