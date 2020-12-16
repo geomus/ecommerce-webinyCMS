@@ -25,6 +25,10 @@ const useStyles = makeStyles({
     },
     imgProduct: {
         width: "100%"
+    },
+    titleVariant: {
+        fontWeight: "bold",
+        textTransform: "uppercase",
     }
 });
 
@@ -40,7 +44,7 @@ export default function Cart() {
     const totalCart = totalCalculator(cart);
 
     const propertyKeys = [];
-    for (let i = 0; i < cart.length; i++) {
+    for (let i = 0; i < 1; i++) {
         for (let j = 0; j < cart[i].listVariants.length; j++) {
             const keys = Object.keys(cart[i].listVariants[j]);
             propertyKeys.push(keys);
@@ -88,42 +92,54 @@ export default function Cart() {
                                         alt="Foto producto"
                                     />
                                 ) : (
-                                    <img
-                                        src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
-                                        className={classes.imgProduct}
-                                        alt="Foto producto"
-                                    />
-                                )}
+                                        <img
+                                            src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                            className={classes.imgProduct}
+                                            alt="Foto producto"
+                                        />
+                                    )}
                             </TableCell>
                             <TableCell colSpan={3} padding="none" size="small">
                                 {row.name}
                             </TableCell>
+                            <TableCell padding="none" size="small">
                             {propertyKeys &&
                                 propertyKeys.map((variantProperty, i) => (
                                     <div key={`${i}variant`}>
-                                        <Typography variant="body1">{variantProperty}</Typography>
+                                        <Typography variant="caption" className={classes.titleVariant}>{variantProperty}</Typography>
                                         <select>
                                             {Object.entries(
                                                 row.listVariants[i][propertyKeys[i]]
                                             ).map(
                                                 ([key, value], j) => (
-                                                    <option
-                                                        key={`${key}val${j}`}
-                                                        value={state[`${value}`]}
-                                                        id={`${value}`}
-                                                        defaultValue={
-                                                            row.variantsSelected[i][propertyKeys[i]]
-                                                        }
-                                                        onChange={handleChange}
-                                                    >
-                                                        {value}
-                                                    </option>
+                                                    row.variantsSelected[i][propertyKeys[i]] != value
+                                                        ?
+                                                        <option
+                                                            key={`${key}val${j}`}
+                                                            value={state[`${value}`]}
+                                                            id={`${value}`}
+                                                            onChange={handleChange}
+                                                        >
+                                                            {value}
+                                                        </option>
+                                                        :
+                                                        <option
+                                                            key={`${key}val${j}`}
+                                                            value={state[`${value}`]}
+                                                            id={`${value}`}
+                                                            onChange={handleChange}
+                                                            selected
+                                                        >
+                                                            {value}
+                                                        </option>
+
                                                 )
                                                 //
                                             )}
                                         </select>
                                     </div>
                                 ))}
+                                </TableCell>
                             <TableCell colSpan={1}>
                                 <TextField
                                     id={row.id}

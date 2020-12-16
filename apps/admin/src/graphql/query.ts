@@ -369,6 +369,7 @@ export const listOrders = gql`
         orders {
             listOrders {
                 data {
+                    id
                     name
                     lastName
                     phone

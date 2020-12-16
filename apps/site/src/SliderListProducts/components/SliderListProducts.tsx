@@ -37,6 +37,9 @@ const SliderListProducts = () => {
             [theme.breakpoints.up("lg")]: {
                 width: "260px!important"
             }
+        },
+        skeleton: {
+            margin: "auto"
         }
     });
     const classes = useStyles();
@@ -45,7 +48,7 @@ const SliderListProducts = () => {
     if (loading) {
         return (
             <React.Fragment>
-                <Grid container wrap="nowrap">
+                <Grid container wrap="nowrap" justify="space-around">
                     {Array.from(new Array(4)).map((index) => (
                         <Box key={index} width={210} marginRight={0.5} my={5}>
                             <Skeleton variant="rect" width={200} height={200} />

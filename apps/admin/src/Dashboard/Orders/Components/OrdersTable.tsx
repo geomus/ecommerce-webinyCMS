@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,13 +12,11 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { useQuery } from "@apollo/client";
 import { listOrders } from '../../../graphql/query'
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress, NativeSelect } from '@material-ui/core';
 import OrdersTableToolbar from './OrdersTableToolbar';
 import OrdersTableHead from './OrdersTableHead';
 import OrdersBtnView from './OrdersBtnView';
 import OrdersBtnDisable from './OrdersBtnDelete';
-
-
 
 
 function descendingComparator(a, b, orderBy) {
@@ -77,19 +75,37 @@ const useStyles = makeStyles((theme) => ({
     },
     marginTags: {
         marginRight: "0.5rem"
-    }
+    },
+    selectStatus: {textTransform: "capitalize", fontWeight:500}
 }));
 
 export default function OrdersTable() {
-    const classes = useStyles();
+    const props = { color: '' }
+    const classes = useStyles(props);
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [orderStatus, setOrderStatus] = React.useState([]);
+
 
     const { loading, error, data } = useQuery(listOrders);
+
+    useEffect(() => {
+        if (!loading && data) {
+            const orders = data.orders.listOrders.data
+            const arrayStatusOrders = []
+            for (const order of orders) {
+                const status = { [order.id]: order.status }
+                arrayStatusOrders.push(status)
+            }
+            setOrderStatus(arrayStatusOrders)
+        }
+        console.log(orderStatus);
+
+    }, [loading, data]);
 
     if (loading) {
         return (
@@ -101,9 +117,28 @@ export default function OrdersTable() {
         console.dir(error)
         return <h1> error </h1>;
     }
+
+    const status = [
+        {
+            name: 'intent',
+            icon: "🔵"
+        },
+        {
+            name: 'pending',
+            icon: "🟡"
+        },
+        {
+            name: 'approved',
+            icon: "🟢"
+        },
+        {
+            name: 'failure',
+            icon: "🔴"
+        }]
+
     const rows = []
     data.orders.listOrders.data.map(order => rows.push(order))
-    
+
     function totalCalculator(items) {
         return items.map((item) => item.priceBase * item.quantity).reduce((sum, i) => sum + i, 0);
     }
@@ -136,6 +171,16 @@ export default function OrdersTable() {
         setDense(event.target.checked);
     };
 
+    const handleChangeStatus = (event) => {
+        const name = event.currentTarget.id;
+        setOrderStatus({
+            ...orderStatus,
+            [name]: event.target.value
+        });
+
+    };
+
+    console.log(orderStatus);
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -164,7 +209,7 @@ export default function OrdersTable() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     const cart = JSON.parse(row.cart)
-                                    const totalCart = totalCalculator(cart)                                   
+                                    const totalCart = totalCalculator(cart)
 
                                     return (
                                         <TableRow
@@ -189,31 +234,6 @@ export default function OrdersTable() {
                                                     ${totalCart}
                                                 </Typography>
                                             </TableCell>
-                                            {/* <TableCell align="left">
-                                                <Typography variant="body2" component="span">
-                                                    {row.phone}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                <Typography variant="body2" component="span">
-                                                    {row.address}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                <Typography variant="body2" component="span">
-                                                    {row.state}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                <Typography variant="body2" component="span">
-                                                    {row.city}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell align="left">
-                                                <Typography variant="body2" component="span">
-                                                    {row.zip}
-                                                </Typography>
-                                            </TableCell> */}
                                             <TableCell align="center">
                                                 <Typography variant="body2" component="span">
                                                     {row.pay}
@@ -224,17 +244,27 @@ export default function OrdersTable() {
                                                     {row.shipping}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell align="center">
-                                                <Typography variant="body2" component="span">
-                                                    {row.status}
-                                                </Typography>
+                                            <TableCell align="center" padding="none">
+                                                <NativeSelect
+                                                    defaultValue={orderStatus[`${row.id}`]}
+                                                    onChange={handleChangeStatus}
+                                                    className={classes.selectStatus}
+                                                >
+                                                    {
+                                                        status.map((item, i) =>
+                                                            <option key={`statusOrder${i}`} value={item.name} id={row.id} style={{ textTransform: "capitalize" }}>
+                                                                {item.icon} {item.name}
+                                                            </option>
+                                                        )
+                                                    }
+                                                </NativeSelect>
                                             </TableCell>
                                             <TableCell align="center">
                                                 <OrdersBtnView cart={cart} />
                                             </TableCell>
-                                            <TableCell align="center">
+                                            {/* <TableCell align="center">
                                                 <OrdersBtnDisable row={row} />
-                                            </TableCell>
+                                            </TableCell> */}
                                         </TableRow>
                                     );
                                 })}
