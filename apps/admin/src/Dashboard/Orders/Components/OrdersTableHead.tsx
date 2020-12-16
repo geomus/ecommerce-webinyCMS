@@ -17,7 +17,7 @@ const headCells = [
     { id: 'shipping', disablePadding: false, disableSort: false, label: 'Envío' },
     { id: 'status', disablePadding: false, disableSort: false, label: 'Estado' },
     { id: 'cart', disablePadding: false, disableSort: true, label: 'Ver Productos' },
-    { id: 'delete', disablePadding: false, disableSort: true, label: 'Ocultar' }
+    // { id: 'delete', disablePadding: false, disableSort: true, label: 'Ocultar' }
 ];
 const ProductsTableHead = (props) => {
     const { classes, order, orderBy, onRequestSort } = props;
