@@ -54,10 +54,13 @@ export default function PayResult(order: Order) {
     const classes = useStyles();
     const [orderId, setOrderId] = useState("");
     const [updateStockMutation] = useMutation(updateStockProductVariant);
+    const [cartLocalStorage, setCartLocalStorage] = useState([])
 
     useEffect(() => {
         const orderId = localStorage.getItem("orderId").replace(/['"]+/g, "");
         setOrderId(orderId);
+        const localCart = JSON.parse(localStorage.getItem("cart"))
+        setCartLocalStorage(localCart)
     }, []);
 
     // const [patchOrder] = useMutation(updateOrder);
@@ -131,13 +134,12 @@ export default function PayResult(order: Order) {
         }
     };
 
-    orderProcess();
-
-    async function updateStock() {
-        const _cart = JSON.parse(order.cart);
+    async function updateStock(cartLocalStorage) {
+        const _cart = cartLocalStorage;
         const objectVariantSelected = await formatVariantsSelected(_cart);
         const refactorCart = await discountStock(_cart, objectVariantSelected);
         await executeUpdateStock(refactorCart);
+        await localStorage.setItem("cart", JSON.stringify([]))
     }
     function formatVariantsSelected(_cart) {
         const objectVariantSelected = [];
@@ -155,9 +157,11 @@ export default function PayResult(order: Order) {
     }
     function discountStock(_cart, objectVariantSelected) {
         const cart = [..._cart];
+        
         for (let i = 0; i < _cart.length; i++) {
             const arrayVariants = [];
             const variants = _cart[i].variants;
+            
             for (let j = 0; j < variants.length; j++) {
                 delete variants[j].__typename;
                 const element = JSON.parse(variants[j].propertyValues);
@@ -165,19 +169,19 @@ export default function PayResult(order: Order) {
                     propertyValues: JSON.stringify(element),
                     stock: variants[j].stock
                 });
+                
                 if (objectEquals(element, objectVariantSelected[i])) {
-                    arrayVariants[j].stock = arrayVariants[j].stock - 1;
+                    arrayVariants[j].stock = arrayVariants[j].stock - _cart[i].quantity;
                 }
             }
             cart[i].variants = arrayVariants;
         }
-
         return cart;
     }
-    function executeUpdateStock(cart) {
-        for (let i = 0; i < cart.length; i++) {
-            const id = cart[i].id;
-            const variants = [...cart[i].variants];
+    function executeUpdateStock(_cart) {
+        for (let i = 0; i < _cart.length; i++) {
+            const id = _cart[i].id;
+            const variants = [..._cart[i].variants];
             updateStockMutation({ variables: { id: id, data: { variants: variants } } });
         }
     }
@@ -204,6 +208,11 @@ export default function PayResult(order: Order) {
         }
         return true;
     }
+
+
+    
+        orderProcess();
+   
 
     return (
         <React.Fragment>
@@ -254,7 +263,7 @@ export default function PayResult(order: Order) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {/* <button onClick={updateStock}>Update</button> */}
+            <button onClick={updateStock}>Update</button>
         </React.Fragment>
     );
 }
