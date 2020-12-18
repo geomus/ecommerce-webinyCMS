@@ -29,8 +29,8 @@ const SliderListProducts = () => {
         },
         swiperSlide: {
             padding: "2rem 0",
-            width: "180px!important",
-            height: 380,
+            width: "49%",
+            height: 400,
             "&:hover": {
                 height: "100%"
             },
@@ -70,7 +70,7 @@ const SliderListProducts = () => {
     }
     return (
         <Swiper
-            spaceBetween={10}
+            spaceBetween={5}
             slidesPerView="auto"
             navigation
             scrollbar={{ draggable: true }}
