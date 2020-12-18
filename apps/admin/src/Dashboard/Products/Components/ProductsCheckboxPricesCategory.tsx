@@ -5,8 +5,18 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
+import { makeStyles } from "@material-ui/core/styles";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useQuery } from "@apollo/client";
 import { listPrices } from "../../../graphql/query";
+
+const useStyles = makeStyles((theme) => ({
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+        maxWidth: 300
+    }
+}));
 
 export default function ProductsCheckboxPricesCategory({
     handleIdPrices,
@@ -14,6 +24,7 @@ export default function ProductsCheckboxPricesCategory({
     setCheckedPrices
 }) {
     const { loading, error, data } = useQuery(listPrices);
+    const classes = useStyles();
 
     useEffect(() => {
         if (!loading && data) {
@@ -40,16 +51,20 @@ export default function ProductsCheckboxPricesCategory({
         return <h1> error </h1>;
     }
     return (
-        <FormControl>
+        <FormControl className={classes.formControl}>
             {data.prices.listPrices.data.map((category) => (
                 <FormGroup row key={category.id}>
-                    <Checkbox
-                        onChange={handleIdPrices}
-                        name={category.name}
-                        id={category.id}
-                        checked={checkedPrices.idStatePrices}
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                onChange={handleIdPrices}
+                                name={category.name}
+                                id={category.id}
+                                checked={checkedPrices.idStatePrices}
+                            />
+                        }
+                        label={<Typography variant="caption">{category.name}</Typography>}
                     />
-                    <Typography variant="caption">{category.name}</Typography>
                 </FormGroup>
             ))}
             <FormHelperText id="prices-categories-helper">
