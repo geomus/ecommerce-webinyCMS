@@ -21,7 +21,7 @@ export default function Product(props) {
             transition: "all 0.1s",
             height: '100%',
             [theme.breakpoints.up(768)]: {
-                height: '85%',
+                height: '330px',
             },
             '&:hover': {
                 transform: "scale(1.05) translateY(-20px)",
