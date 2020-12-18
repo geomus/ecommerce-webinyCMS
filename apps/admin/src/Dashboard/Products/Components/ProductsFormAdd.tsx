@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import CategoryBtnCreate from "../../Categories/Components/CategoryBtnCreate";
 import { useMutation, useQuery } from "@apollo/client";
 import {
     createProduct,
@@ -110,7 +109,6 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     const [checkedPrices, setCheckedPrices] = useState([{}]);
 
     const [productVariants, setProductVariants] = useState([]);
-    const [properties, setProperties] = useState({});
 
     const uploadImage = async (selectedFile) => {
         const getPresignedPostData = async (selectedFile): Promise<any> => {
@@ -208,9 +206,6 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         setOpenDialog(false);
         setProductVariants(variants);
     };
-    const handleProperties = (properties, setPropertiesSelected) => {
-        setPropertiesSelected(properties);
-    };
 
     const onSubmit = async (e) => {
         setIsLoading(true);
@@ -257,12 +252,10 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         }
     };
 
-    const { loading, error, data } = useQuery(listPrices);
-
     const { loading: pricesLoading, error: pricesError, data: pricesData } = useQuery(listPrices);
     useEffect(() => {
-        if (!loading && data) {
-            const objectForStatePrices = data.prices.listPrices.data.map((price) => {
+        if (!pricesLoading && pricesData) {
+            const objectForStatePrices = pricesData.prices.listPrices.data.map((price) => {
                 const idStatePrices = price.id + "state";
                 const objectForStatePrices = { [idStatePrices]: false };
                 return objectForStatePrices;
@@ -274,8 +267,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     if (pricesLoading) {
         return (
             <h1>
-                {" "}
-                <LinearProgress />{" "}
+                <LinearProgress />
             </h1>
         );
     }

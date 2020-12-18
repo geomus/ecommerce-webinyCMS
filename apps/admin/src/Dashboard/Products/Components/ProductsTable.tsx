@@ -154,13 +154,6 @@ export default function ProductsTable() {
         setDense(event.target.checked);
     };
 
-    const totalCalculatorStock = (variants) => {
-        const suma = variants.reduce((acc, variant) => {
-            return (acc += variant.stock);
-        }, 0);
-        return suma;
-    };
-
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     return (

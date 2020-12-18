@@ -77,8 +77,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ProductFormEdit({ handleCloseDialog, product, enabledCategories }) {
     const [files, setFiles] = useState([]);
     const productId = product.id;    
-    const productImages = product.images;
-    console.log(productImages);    
+    const productImages = product.images;  
 
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
@@ -239,9 +238,10 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             }
             // await deleteImage({ variables: { id: data.files.getFile.data.id } });
         } else {
-            setImagesKeys(productImages);
+            imagesKeys.push(...productImages)
+            setImagesKeys(imagesKeys);
         }
-
+        
         const categoriesProd = [];
         categories.forEach((category) => {
             enabledCategories.map((c) => {
