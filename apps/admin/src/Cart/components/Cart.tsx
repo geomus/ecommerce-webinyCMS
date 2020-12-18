@@ -50,7 +50,7 @@ const localCart = [
 export default function SpanningTable() {
     const classes = useStyles();
 
-    const [cart, setCart] = useState(localCart);
+    const [cart] = useState(localCart);
 
     const totalCart = "$2000";
 

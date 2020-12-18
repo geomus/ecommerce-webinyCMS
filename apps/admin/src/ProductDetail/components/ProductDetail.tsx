@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 
 const ProductDetail = () => {
     const classes = useStyles();
-    const [state, setState] = React.useState({
+    const [state] = React.useState({
         age: "",
         name: "hai"
     });

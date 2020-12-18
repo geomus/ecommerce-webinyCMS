@@ -138,7 +138,7 @@ export default function FullScreenDialog({ className, categories, row }) {
     const handleClickOpen = () => {
         setOpen(true);
     };
-    const handleClose = (boolean) => {
+    const handleClose = () => {
         setOpen(false);
         setChecked(false);
         setEnabled(false);
@@ -169,7 +169,7 @@ export default function FullScreenDialog({ className, categories, row }) {
         try {
             await patchCategory({ variables: { id: categoryId, data: category } });
             setTimeout(function () {
-                handleClose(false);
+                handleClose();
             }, 1200);
             setOpenSnackbar(true);
             setTimeout(function () {
