@@ -72,8 +72,8 @@ export default function Tags({ combineVariantsStocks, productName }) {
         <div>
             {data.properties.listProperties.data.map((item, i) => (
                 <div key={`${i}${item.name}`} className={classes.root}>
-                    <Typography className={classes.textField} variant="body1">
-                        {item.name}
+                    <Typography className={classes.textField} variant="body2">
+                        {item.name}:
                     </Typography>
                     <TextField
                         key={i}

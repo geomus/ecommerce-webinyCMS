@@ -14,7 +14,13 @@ export default function FileUploadButton({ handlerImages, images }) {
 
     class ImagesOnEdit extends Component {
         render() {
-            return images.map((img) => <li key={img}>{img}</li>);
+            return images.map((img) => (
+                <li key={img}>
+                    <Typography variant="subtitle1" align="center" gutterBottom>
+                        {img}
+                    </Typography>
+                </li>
+            ));
         }
     }
 
@@ -37,14 +43,14 @@ export default function FileUploadButton({ handlerImages, images }) {
                         <div
                             {...getDropZoneProps({
                                 style: {
-                                    width: 400,
+                                    width: 300,
                                     minHeight: 200,
                                     border: "2px lightgray dashed"
                                 }
                             })}
                         >
                             <br />
-                            <Typography variant="subtitle2" gutterBottom>
+                            <Typography variant="subtitle2" align="center" gutterBottom>
                                 Soltá y cargá.
                             </Typography>
                             <ol>

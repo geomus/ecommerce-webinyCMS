@@ -325,23 +325,25 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <InputLabel htmlFor="description">Descripción</InputLabel>
-                                <Input
-                                    required
-                                    id="description"
-                                    type="text"
-                                    aria-describedby="description-helper"
-                                    fullWidth
-                                    autoComplete="given-description"
-                                    multiline
-                                    onChange={handleChangeDescp}
-                                />
-                                <FormHelperText id="description-helper">
-                                    Breve descripción del producto.
-                                </FormHelperText>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="description">Descripción</InputLabel>
+                                    <Input
+                                        required
+                                        id="description"
+                                        type="text"
+                                        aria-describedby="description-helper"
+                                        fullWidth
+                                        autoComplete="given-description"
+                                        multiline
+                                        onChange={handleChangeDescp}
+                                    />
+                                    <FormHelperText id="description-helper">
+                                        Breve descripción del producto.
+                                    </FormHelperText>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControl>
+                                <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="price">Precio</InputLabel>
                                     <Input
                                         required
@@ -359,6 +361,11 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                         Precio minorista base.
                                     </FormHelperText>
                                 </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <InputLabel className={classes.formControl}>
+                                    Listas de precios
+                                </InputLabel>
                                 <ProductsCheckboxPricesCategory
                                     handleIdPrices={handleIdPrices}
                                     checkedPrices={checkedPrices}
@@ -398,15 +405,10 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 </Select>
                                 <FormHelperText id="categories-helper">
                                     Desplegá para ver tu selección de categorías para este producto.
-                                    (¿Necesitás cargar una nueva?{" "}
-                                    <CategoryBtnCreate
-                                        className={classes.btnCategoryCreate}
-                                        categories={enabledCategories}
-                                    />
                                 </FormHelperText>
                             </FormControl>
                             <Grid item xs={12}>
-                                <InputLabel>Imágenes</InputLabel>
+                                <InputLabel className={classes.formControl}>Imágenes</InputLabel>
                                 <FileUploadButton
                                     handlerImages={handleChangeImages}
                                     images={null}
@@ -418,7 +420,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                         </Grid>
                         <Grid item lg={4}>
                             <Grid item xs={12}>
-                                <FormControl>
+                                <FormControl className={classes.formControl}>
                                     <FormHelperText id="variants-helper">
                                         Selecciona las variantes del producto. (Separadas por comas)
                                     </FormHelperText>
@@ -429,7 +431,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl>
+                                <FormControl className={classes.formControl}>
                                     <Autocomplete
                                         multiple
                                         id="tags"
@@ -476,6 +478,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                         />
                                     }
                                     label="¿Destacar producto?"
+                                    className={classes.formControl}
                                 />
                             </Grid>
                         </Grid>

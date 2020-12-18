@@ -55,7 +55,7 @@ export default function FullScreenDialog({className}) {
     setOpen(true);
   };
   const handleClose = (boolean) => {
-    setOpen(boolean);
+    setOpen(false);
   };
   const handleCloseSnackbar = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {

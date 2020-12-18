@@ -57,16 +57,6 @@ const useStyles = makeStyles((theme) => ({
             marginRight: "auto"
         }
     },
-    paper: {
-        marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(3),
-        padding: theme.spacing(2),
-        [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
-            padding: theme.spacing(3)
-        }
-    },
     button: {
         marginTop: theme.spacing(3),
         marginLeft: theme.spacing(1)
@@ -86,20 +76,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductFormEdit({ handleCloseDialog, product, enabledCategories }) {
     const [files, setFiles] = useState([]);
-    const productId = product.id;
+    const productId = product.id;    
     const productImages = product.images;
+    console.log(productImages);    
 
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
 
     // PARA BORRADO DE IMAGEN
-    const oneImageKey = productImages[0];
+    // const oneImageKey = productImages[0];
 
-    const { error, data } = useQuery(getFile, { variables: { key: oneImageKey } });
-    if (error) {
-        console.dir(error);
-    }
-    const [deleteImage] = useMutation(deleteFile);
+    // const { error, data } = useQuery(getFile, { variables: { key: oneImageKey } });
+    // if (error) {
+    //     console.dir(error);
+    // }
+    // const [deleteImage] = useMutation(deleteFile);
 
     const [editProduct] = useMutation(updateProduct, {
         refetchQueries: () => [{ query: products }]
@@ -233,16 +224,13 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
         setOpenDialog(false);
         setProductVariants(variants);
     };
-    const handleProperties = (properties, setPropertiesSelected) => {
-        setPropertiesSelected(properties);
-    };
 
     const onSubmit = async (e) => {
         setIsLoading(true);
         e.preventDefault();
         e.persist();
 
-        if (files.length !== 0) {
+        if (files.length) {
             let imageKey = [];
             for (const file of files) {
                 imageKey = await uploadImage(file);
@@ -311,7 +299,8 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                     <Grid container spacing={3}>
                         <Grid item lg={4}>
                             <Grid item xs={12}>
-                                <FormControl>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="name">Nombre</InputLabel>
                                     <Input
                                         required
                                         id="name"
@@ -329,24 +318,26 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <InputLabel htmlFor="description">Descripción</InputLabel>
-                                <Input
-                                    required
-                                    id="description"
-                                    type="text"
-                                    aria-describedby="description-helper"
-                                    fullWidth
-                                    autoComplete="given-description"
-                                    multiline
-                                    onChange={handleChangeDescp}
-                                    defaultValue={product.description}
-                                />
-                                <FormHelperText id="description-helper">
-                                    Breve descripción del producto.
-                                </FormHelperText>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="description">Descripción</InputLabel>
+                                    <Input
+                                        required
+                                        id="description"
+                                        type="text"
+                                        aria-describedby="description-helper"
+                                        fullWidth
+                                        autoComplete="given-description"
+                                        multiline
+                                        onChange={handleChangeDescp}
+                                        defaultValue={product.description}
+                                    />
+                                    <FormHelperText id="description-helper">
+                                        Breve descripción del producto.
+                                    </FormHelperText>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControl>
+                                <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="price">Precio</InputLabel>
                                     <Input
                                         required
@@ -367,6 +358,9 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
+                                <InputLabel className={classes.formControl}>
+                                    Listas de precios
+                                </InputLabel>
                                 <ProductsCheckboxPricesCategory
                                     handleIdPrices={handleIdPrices}
                                     checkedPrices={checkedPrices}
@@ -414,7 +408,9 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 )}
                             </Grid>
                             <Grid item xs={12}>
-                                <InputLabel>Imágenes</InputLabel>
+                                <InputLabel id="images" className={classes.formControl}>
+                                    Imágenes
+                                </InputLabel>
                                 <FileUploadButton
                                     handlerImages={handleChangeImages}
                                     images={product.images}
@@ -426,7 +422,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                             <Grid item xs={12}></Grid>
                         </Grid>
                         <Grid item lg={4}>
-                            <FormControl>
+                            <FormControl className={classes.formControl}>
                                 <FormHelperText id="variants-helper">
                                     Selecciona las variantes del producto. (Separadas por comas)
                                 </FormHelperText>
@@ -436,7 +432,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 />
                             </FormControl>
                             <Grid item xs={12} sm={6}>
-                                <FormControl>
+                                <FormControl className={classes.formControl}>
                                     <Autocomplete
                                         multiple
                                         id="tags"
