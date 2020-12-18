@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { useEffect, useState } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import {
     orderExternalID,
-    updateOrder,
+    //updateOrder,
     getOrder,
-    updateStockProductVariant
 } from "../../graphql/query";
 import {
     Backdrop,
@@ -14,12 +13,12 @@ import {
     TableBody,
     TableCell,
     TableContainer,
-    TableHead,
     TableRow,
     Paper
 } from "@material-ui/core";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { useLocation } from "react-router-dom";
+import OrderId from "./OrderId";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,12 +52,13 @@ interface Order {
 export default function PayResult(order: Order) {
     const classes = useStyles();
     const [orderId, setOrderId] = useState("");
-    const [updateStockMutation] = useMutation(updateStockProductVariant);
 
     useEffect(() => {
         const orderId = localStorage.getItem("orderId").replace(/['"]+/g, "");
         setOrderId(orderId);
+       
     }, []);
+
 
     // const [patchOrder] = useMutation(updateOrder);
 
@@ -133,88 +133,13 @@ export default function PayResult(order: Order) {
 
     orderProcess();
 
-    async function updateStock() {
-        const _cart = JSON.parse(order.cart);
-        const objectVariantSelected = await formatVariantsSelected(_cart);
-        const refactorCart = await discountStock(_cart, objectVariantSelected);
-        await executeUpdateStock(refactorCart);
-    }
-    function formatVariantsSelected(_cart) {
-        const objectVariantSelected = [];
-        for (let i = 0; i < _cart.length; i++) {
-            const variant = {};
-            for (let j = 0; j < _cart[i].variantsSelected.length; j++) {
-                const variants = _cart[i].variantsSelected[j];
-                for (const key in variants) {
-                    variant[key] = variants[key];
-                }
-            }
-            objectVariantSelected.push(variant);
-        }
-        return objectVariantSelected;
-    }
-    function discountStock(_cart, objectVariantSelected) {
-        const cart = [..._cart];
-        for (let i = 0; i < _cart.length; i++) {
-            const arrayVariants = [];
-            const variants = _cart[i].variants;
-            for (let j = 0; j < variants.length; j++) {
-                delete variants[j].__typename;
-                const element = JSON.parse(variants[j].propertyValues);
-                arrayVariants.push({
-                    propertyValues: JSON.stringify(element),
-                    stock: variants[j].stock
-                });
-                if (objectEquals(element, objectVariantSelected[i])) {
-                    arrayVariants[j].stock = arrayVariants[j].stock - 1;
-                }
-            }
-            cart[i].variants = arrayVariants;
-        }
-
-        return cart;
-    }
-    function executeUpdateStock(cart) {
-        for (let i = 0; i < cart.length; i++) {
-            const id = cart[i].id;
-            const variants = [...cart[i].variants];
-            updateStockMutation({ variables: { id: id, data: { variants: variants } } });
-        }
-    }
-    function objectEquals(obj1, obj2) {
-        for (const i in obj1) {
-            if (obj1.hasOwnProperty(i)) {
-                if (!obj2.hasOwnProperty(i)) {
-                    return false;
-                }
-                if (obj1[i] != obj2[i]) {
-                    return false;
-                }
-            }
-        }
-        for (const i in obj2) {
-            if (obj2.hasOwnProperty(i)) {
-                if (!obj1.hasOwnProperty(i)) {
-                    return false;
-                }
-                if (obj1[i] != obj2[i]) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     return (
         <React.Fragment>
             <h3>Mi orden:</h3> <br />
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Orden Nº: {order.id} </TableCell>
-                        </TableRow>
-                    </TableHead>
+                    <OrderId id={order.id} />
                     <TableBody>
                         <TableRow>
                             <TableCell component="th" scope="row">
@@ -244,8 +169,8 @@ export default function PayResult(order: Order) {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            ""
-                        )}
+                                ""
+                            )}
                         <TableRow>
                             <TableCell component="th" scope="row">
                                 Monto: ${order.totalOrder}
@@ -254,7 +179,6 @@ export default function PayResult(order: Order) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            {/* <button onClick={updateStock}>Update</button> */}
         </React.Fragment>
     );
 }
