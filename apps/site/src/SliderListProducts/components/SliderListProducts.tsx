@@ -73,7 +73,6 @@ const SliderListProducts = () => {
             spaceBetween={10}
             slidesPerView="auto"
             navigation
-            pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
             className={classes.swiper}
         >
