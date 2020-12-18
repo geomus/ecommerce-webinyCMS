@@ -25,6 +25,10 @@ const useStyles = makeStyles({
     },
     imgProduct: {
         width: "100%"
+    },
+    titleVariant: {
+        fontWeight: "bold",
+        textTransform: "uppercase",
     }
 });
 
@@ -85,9 +89,10 @@ export default function Cart() {
                                     row.variantsSelected.map((variant, i) =>
                                         Object.entries(variant).map(([key, value]) => (
                                             <div key={`${value}`}>
-                                                <span>
-                                                    {key}:{value}
+                                                <span className={classes.titleVariant}>
+                                                    {key[0]}:
                                                 </span>
+                                                <span>{value}</span>
                                                 <br />
                                             </div>
                                         ))

@@ -36,15 +36,17 @@ const DesktopHeader = ({
                     </div>
                 </Grid>
                 <Grid item>
-                    <SearchBar mobile={false}/>
+                    <SearchBar mobile={false} />
+                </Grid>
+                <Grid item>
+                    <nav className={"webiny-pb-section-header__navigation"}>
+                        <Menu slug={menuName} component={Navigation} />
+                    </nav>
                 </Grid>
                 <Grid item>
                     <ButtonCartHome />
                 </Grid>
             </Grid>
-            <nav className={"webiny-pb-section-header__navigation"}>
-                <Menu slug={menuName} component={Navigation} />
-            </nav>
         </div>
     );
 };

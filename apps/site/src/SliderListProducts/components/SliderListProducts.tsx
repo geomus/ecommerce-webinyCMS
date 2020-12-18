@@ -29,14 +29,17 @@ const SliderListProducts = () => {
         },
         swiperSlide: {
             padding: "2rem 0",
-            width: "180px!important",
-            height: 380,
+            width: "49%",
+            height: 400,
             "&:hover": {
                 height: "100%"
             },
             [theme.breakpoints.up("lg")]: {
                 width: "260px!important"
             }
+        },
+        skeleton: {
+            margin: "auto"
         }
     });
     const classes = useStyles();
@@ -45,7 +48,7 @@ const SliderListProducts = () => {
     if (loading) {
         return (
             <React.Fragment>
-                <Grid container wrap="nowrap">
+                <Grid container wrap="nowrap" justify="space-around">
                     {Array.from(new Array(4)).map((index) => (
                         <Box key={index} width={210} marginRight={0.5} my={5}>
                             <Skeleton variant="rect" width={200} height={200} />
@@ -67,10 +70,9 @@ const SliderListProducts = () => {
     }
     return (
         <Swiper
-            spaceBetween={10}
+            spaceBetween={5}
             slidesPerView="auto"
             navigation
-            pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
             className={classes.swiper}
         >

@@ -181,6 +181,9 @@ const ProductDetail = () => {
         setEnabledTooltip(true);
 
         if (variantsSelected.length === propertyKeys.length - 1) {
+            console.log(variantsSelected.length);
+            console.log(propertyKeys.length);
+            
             setLimitVariants(true);
             setShopCartButtonEnabled(false);
         }
@@ -206,6 +209,7 @@ const ProductDetail = () => {
         }
         setLimitVariants(false);
     };
+console.log(limitVariants);
 
     return (
         <Container>
@@ -294,6 +298,7 @@ const ProductDetail = () => {
                                                         color="primary"
                                                         id={propertyKeys[i]}
                                                         onClick={handleVariant}
+                                                        disabled={limitVariants}
                                                     >
                                                         {value}
                                                     </Button>

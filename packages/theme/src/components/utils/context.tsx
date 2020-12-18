@@ -14,13 +14,14 @@ export const CartProvider = ({ children }) => {
     const addToCart = (prod) => {
         const localCart = JSON.parse(localStorage.getItem("cart")) ?? [];
 
-        const { id } = prod;
-        const existingProd = localCart.find((cartProd) => cartProd.id == id);
-        if (existingProd) {
-            existingProd.quantity += prod.quantity;
-        } else {
-            localCart.push(prod);
-        }
+        //const { id } = prod;
+        //const existingProd = localCart.find((cartProd) => cartProd.id == id);
+        // if (existingProd) {
+        //     existingProd.quantity += prod.quantity;
+        // } else {
+        //     localCart.push(prod);
+        // }
+        localCart.push(prod)
         localStorage.setItem("cart", JSON.stringify(localCart));
         setCart(localCart);
     };

@@ -43,37 +43,37 @@ const ProductSearch = () => {
     const [name, setName] = useState("");
     const [productsSearch, setProductsSearch] = useState([]);
 
-    const { loading, error, data } = useQuery(products);
+    // const { loading, error, data } = useQuery(products);
 
-    if (loading) {
-        return (
-            <h1>
-                {" "}
-                <LinearProgress />{" "}
-            </h1>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <h1>
+    //             {" "}
+    //             <LinearProgress />{" "}
+    //         </h1>
+    //     );
+    // }
 
-    if (error) {
-        console.dir(error);
-        return <h1> error </h1>;
-    }
+    // if (error) {
+    //     console.dir(error);
+    //     return <h1> error </h1>;
+    // }
 
-    const searchProduct = () => {
-        const listProd = data.products.listProducts.data;
-        const results = listProd.filter((product) => product.name.toLowerCase().includes(name));
-        return setProductsSearch(results);
-    };
+    // const searchProduct = () => {
+    //     const listProd = data.products.listProducts.data;
+    //     const results = listProd.filter((product) => product.name.toLowerCase().includes(name));
+    //     return setProductsSearch(results);
+    // };
 
-    const handleChange = async (e) => {
-        if (e.target.value === "") {
-            setProductsSearch([]);
-            setName("");
-        } else {
-            await setName(e.target.value);
-            await searchProduct();
-        }
-    };
+    // const handleChange = async (e) => {
+    //     if (e.target.value === "") {
+    //         setProductsSearch([]);
+    //         setName("");
+    //     } else {
+    //         await setName(e.target.value);
+    //         await searchProduct();
+    //     }
+    // };
 
     return (
         <div>
@@ -81,8 +81,8 @@ const ProductSearch = () => {
                 <TextField
                     name="search"
                     type="text"
-                    value={name}
-                    onChange={handleChange}
+                    // value={name}
+                    //onChange={handleChange}
                     label="Search any product..."
                     className={classes.inputTextForm}
                 />
@@ -90,7 +90,7 @@ const ProductSearch = () => {
                     <SearchIcon />
                 </IconButton>
             </form>
-            <section className={classes.listProductsInline}>
+            {/* <section className={classes.listProductsInline}>
                 {productsSearch.map((item) => (
                     <a
                         key={item.id}
@@ -115,7 +115,7 @@ const ProductSearch = () => {
                         <span>{item.name}</span>
                     </a>
                 ))}
-            </section>
+            </section> */}
         </div>
     );
 };
