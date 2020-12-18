@@ -277,3 +277,15 @@ export const updateStockProductVariant = gql`
         }
     }
 `;
+
+export const updateStatusOrder = gql`
+    mutation updateOrder($id: ID!, $data: OrderInput!) {
+        orders {
+            updateOrder(id: $id, data: $data) {
+                data {
+                    status
+                }
+            }
+        }
+    }
+`;
