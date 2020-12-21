@@ -89,17 +89,16 @@ export default function OrdersTable() {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [orderStatus, setOrderStatus] = React.useState([]);
+    const [orderStatus, setOrderStatus] = React.useState({});
 
     const { loading, error, data } = useQuery(listOrders);
 
     useEffect(() => {
         if (!loading && data) {
             const orders = data.orders.listOrders.data
-            const arrayStatusOrders = []
+            const arrayStatusOrders = {}
             for (const order of orders) {
-                const status = { [order.id]: order.status }
-                arrayStatusOrders.push(status)
+                arrayStatusOrders[order.id] = order.status
             }
             setOrderStatus(arrayStatusOrders)
         }
@@ -131,7 +130,7 @@ export default function OrdersTable() {
             icon: "🟡"
         },
         {
-            name: 'approved',
+            name: 'success',
             icon: "🟢"
         },
         {
@@ -208,7 +207,7 @@ export default function OrdersTable() {
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((row) => {
+                                .map((row, j) => {
                                     const cart = JSON.parse(row.cart)
                                     const totalCart = totalCalculator(cart)
                                     return (
@@ -241,15 +240,21 @@ export default function OrdersTable() {
                                             </TableCell>
                                             <TableCell align="center" padding="none">
                                                 <NativeSelect
-                                                    defaultValue={orderStatus[`${row.id}`]}
                                                     onChange={handleChangeStatus}
                                                     className={classes.selectStatus}
+                                                    defaultValue={orderStatus[row.id]}
                                                 >
                                                     {
+                                                        
                                                         status.map((item, i) =>
+                                                        orderStatus[row.id] != item.name ?
                                                             <option key={`statusOrder${i}`} value={item.name} id={row.id} style={{ textTransform: "capitalize" }}>
                                                                 {item.icon} {item.name}
                                                             </option>
+                                                            :
+                                                            <option key={`statusOrder${i}`} value={item.name} id={row.id} style={{ textTransform: "capitalize" }} selected>
+                                                            {item.icon} {item.name}
+                                                        </option>
                                                         )
                                                     }
                                                 </NativeSelect>

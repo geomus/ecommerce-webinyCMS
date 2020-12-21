@@ -50,36 +50,36 @@ const plugin: GraphQLSchemaPlugin = {
 
             type Order {
                 id: ID
-                name: String!
-                lastName: String!
-                phone: String!
-                address: String!
-                state: String!
-                city: String!
+                name: String
+                lastName: String
+                phone: String
+                address: String
+                state: String
+                city: String
                 zip: String
-                pay: String!
+                pay: String
                 idPreference: String
-                shipping: String!
+                shipping: String
                 status: String
-                cart:String!
+                cart:String
                 totalOrder: Int
                 createdOn: DateTime
             }
 
             input OrderInput {
                 id: ID
-                name: String!
-                lastName: String!
-                phone: String!
-                address: String!
-                state:String!
-                city: String!
+                name: String
+                lastName: String
+                phone: String
+                address: String
+                state:String
+                city: String
                 zip: String
-                pay: String!
+                pay: String
                 idPreference: String
-                shipping: String!
+                shipping: String
                 status: String
-                cart:String!
+                cart:String
                 totalOrder: Int
             }
 
