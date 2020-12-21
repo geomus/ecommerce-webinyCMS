@@ -2,7 +2,7 @@ import React from "react";
 import Product from "../../Product";
 import "./SliderListProducts";
 import { useQuery } from "@apollo/client";
-import { products } from "../../graphql/query";
+import { listProductsSite } from "../../graphql/query";
 import SwiperCore, { Navigation, Pagination, A11y } from "swiper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from "@material-ui/core/styles";
@@ -16,7 +16,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.scss";
 import "swiper/components/navigation/navigation.scss";
 import "swiper/components/pagination/pagination.scss";
-import { LinearProgress } from "@material-ui/core";
 
 // install Swiper components
 SwiperCore.use([Navigation, Pagination, A11y]);
@@ -43,7 +42,7 @@ const SliderListProducts = () => {
         }
     });
     const classes = useStyles();
-    const { loading, error, data } = useQuery(products);
+    const { loading, error, data } = useQuery(listProductsSite);
 
     if (loading) {
         return (

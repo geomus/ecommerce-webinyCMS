@@ -97,8 +97,8 @@ export const productsFilter = gql`
                         }
                         isEnabledInHierarchy
                     }
-                    isPublished
                     isFeatured
+                    isPublished
                     variants {
                         stock
                         propertyValues
@@ -284,6 +284,42 @@ export const updateStatusOrder = gql`
             updateOrder(id: $id, data: $data) {
                 data {
                     status
+                }
+            }
+        }
+    }
+`;
+
+export const listProductsSite = gql`
+    query listProducts() {
+        products {
+            listProducts(where: { isPublished: true }) {
+                data {
+                    id
+                    sku
+                    name
+                    description
+                    priceBase
+                    prices
+                    images
+                    tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
+                    isFeatured
+                    isPublished
+                    variants {
+                        stock
+                        propertyValues
+                    }
                 }
             }
         }
