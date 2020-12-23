@@ -82,15 +82,6 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
 
-    // PARA BORRADO DE IMAGEN
-    // const oneImageKey = productImages[0];
-
-    // const { error, data } = useQuery(getFile, { variables: { key: oneImageKey } });
-    // if (error) {
-    //     console.dir(error);
-    // }
-    // const [deleteImage] = useMutation(deleteFile);
-
     const [editProduct] = useMutation(updateProduct, {
         refetchQueries: () => [{ query: products }]
     });
