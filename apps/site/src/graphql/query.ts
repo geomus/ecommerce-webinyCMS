@@ -277,3 +277,49 @@ export const updateStockProductVariant = gql`
         }
     }
 `;
+
+export const listCategoriesParentsEnabled = gql`
+    query listCategories {
+        categories {
+            listCategories(where: {  parent: null }) {
+                data {
+                    id
+                    name
+                    enabled
+                    parent {
+                        id
+                        name
+                        enabled
+                    }
+                    isEnabledInHierarchy
+                }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const listSubcategories = gql`
+    query listCategories($parent: RefInput!) {
+        categories {
+            listCategories(where: { parent: $parent }) {
+                data {
+                    id
+                    name
+                    enabled
+                    parent {
+                        id
+                        name
+                        enabled
+                    }
+                    isEnabledInHierarchy
+                }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
