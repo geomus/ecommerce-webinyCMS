@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 const SubcategoriesList = (parent): JSX.Element => {
     const [selected, setSelected] = useState<string>("");
     const [parentId, setParentId] = useState({});
+
     useEffect(() => {
         setParentId(parent.parent);
     }, []);
@@ -29,19 +30,15 @@ const SubcategoriesList = (parent): JSX.Element => {
         console.dir(errorSubcategories);
         return <h1> error </h1>;
     }
-    console.log(dataSubcategories.categories.listCategories.data);
-    
-    const handleSelect = (event: React.ChangeEvent<{}>, nodeId) => {
-        setSelected(nodeId);
-    };
 
     return (
         <React.Fragment>
-            <Typography variant="subtitle1">{selected}</Typography>
-            {dataSubcategories ??
-                dataSubcategories.categories.listCategories.data.map((category, i) => (
-                    <TreeItem key={i + "subcat"} nodeId={category.id} label={category.name} />
-                ))}
+            <Typography variant="subtitle1">{parentId}</Typography>
+            {dataSubcategories.categories.listCategories.data
+                ? dataSubcategories.categories.listCategories.data.map((category, i) => (
+                      <TreeItem key={i + "subcat"} nodeId={category.id} label={category.name} />
+                  ))
+                : ""}
         </React.Fragment>
     );
 };

@@ -82,6 +82,12 @@ const ProductsFilter = () => {
         setFiltersState([]);
     };
 
+    const handleSelect = (event: React.ChangeEvent<{}>, nodeId, setSelected, setSubLevel) => {
+        console.log(nodeId);
+        setSubLevel(true);
+        setSelected(nodeId);
+    };
+
     return (
         <React.Fragment>
             <Grid container spacing={3}>
@@ -108,7 +114,7 @@ const ProductsFilter = () => {
                                     <Typography className={classes.heading}>Categories</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <CategoriesFilter />
+                                    <CategoriesFilter categoriesFilter={handleSelect} />
                                 </AccordionDetails>
                             </Accordion>
                             <Accordion defaultExpanded>
