@@ -198,10 +198,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     };
 
     const handleIdPrices = (event) => {
-        console.log(event.target.checked,idPrices);
-        
-        idPrices[event.currentTarget.id] = event.target.checked
-        setIdPrices(idPrices)
+        setIdPrices({...idPrices, [event.currentTarget.id] : event.target.checked})
     };
     const handleChangeCategories = (event) => {
         setCategories(event.target.value);
@@ -252,7 +249,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             name: name,
             description: description,
             priceBase: priceBase,
-            prices: idPrices,
+            prices: Object.keys(idPrices),
             categories: categoriesProd,
             images: imagesKeys,
             tags: tags,
