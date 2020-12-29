@@ -126,6 +126,7 @@ const plugin: GraphQLSchemaPlugin = {
                 slug: String
                 description: String
                 priceBase: Float
+                manualPrices: [String]
                 prices: [String]
                 categories: [Category]
                 images: [String]
@@ -180,6 +181,7 @@ const plugin: GraphQLSchemaPlugin = {
                 slug: String
                 description: String
                 priceBase: Int
+                manualPrices: [String]
                 categories: [CategoryInput]
                 prices: [String]
                 images: [String]

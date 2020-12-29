@@ -11,6 +11,8 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import { useQuery } from "@apollo/client";
 import PricesListTable from "./PricesListTable";
 import PricesCategoryBtnCreate from "./PricesListBtnCreate";
+import PricesListDelete from './PricesListDelete'
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -91,6 +93,8 @@ export default function PricesTabsListPrices() {
             <PricesCategoryBtnCreate className={classes.btnPricesCategoryCreate} />
             {data.prices.listPrices.data.map((price, index) => (
                 <TabPanel key={price.id} value={value} index={index}>
+                    <PricesListDelete row={price} />
+
                     <PricesListTable searchQuery={price.id} percent={price.percent} />
                 </TabPanel>
             ))}

@@ -15,6 +15,7 @@ export default ({ createBase, context }) => {
             slug: string(),
             description: string({ validation: validation.create("maxLength:500") }),
             priceBase: number(),
+            manualPrices:number({list:true}),
             prices: string({
                 list: true
             }),

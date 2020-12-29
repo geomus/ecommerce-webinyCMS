@@ -2,7 +2,7 @@
 import { withFields, withName, withProps, string, pipe, ref, boolean } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 
-export default ({ createBase }) => {
+export default ({ createBase, context }) => {
     const Category = pipe(
         withName("Category"),
         withFields(() => ({
@@ -13,8 +13,8 @@ export default ({ createBase }) => {
         withProps({
             async isEnabledInHierarchy() {
                 const parent = await this.parent;
-                if (!this.enabled) return false;
-                if (parent) return parent.isEnabledInHierarchy();
+                if (!this.enabled) {return false;}
+                if (parent) {return parent.isEnabledInHierarchy();}
                 return true;
             }
         })

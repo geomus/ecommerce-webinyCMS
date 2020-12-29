@@ -457,7 +457,7 @@ export const getHeaderData = gql`
             }
         }
     }
-`
+`;
 export const createProducts = gql`
     mutation createProducts($data: [ProductInput!]!) {
         products {
@@ -488,7 +488,8 @@ export const listProperties = gql`
                 }
             }
         }
-    }`
+    }
+`;
 export const listSubcategories = gql`
     query listCategories($parent: RefInput!) {
         categories {
@@ -522,8 +523,8 @@ export const createProperties = gql`
                 }
             }
         }
-        }
-        `
+    }
+`;
 export const createCategory = gql`
     mutation createCategory($data: CategoryInput!) {
         categories {
@@ -553,7 +554,8 @@ export const deleteProperties = gql`
                 data
             }
         }
-    }`
+    }
+`;
 export const listEnabledCategories = gql`
     query listCategories {
         categories {
@@ -587,7 +589,8 @@ export const updateProperties = gql`
                 }
             }
         }
-    }`
+    }
+`;
 export const listAllCategories = gql`
     query listCategories {
         categories {
@@ -635,6 +638,19 @@ export const updateCategory = gql`
                         id
                     }
                 }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const deleteCategoryPrice = gql`
+    mutation deletePrice($id: ID!) {
+        prices {
+            deletePrice(id: $id) {
+                data
                 error {
                     message
                 }
