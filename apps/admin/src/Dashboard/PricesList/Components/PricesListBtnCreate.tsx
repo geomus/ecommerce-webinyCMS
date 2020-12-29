@@ -92,6 +92,9 @@ export default function FullScreenDialog({ className }) {
             handleClose();
         }, 1200);
         setOpenSnackbar(true);
+        setTimeout(function () {
+            setOpenSnackbar(false);
+        }, 1400);
     };
 
     return (

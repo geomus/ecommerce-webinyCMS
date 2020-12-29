@@ -14,6 +14,8 @@ import { searchProducts } from "../../../graphql/query";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import PricesListTableToolbar from "./PricesListTableToolbar";
 import PricesListTableHead from "./PricesListTableHead";
+import InputPriceManual from "./InputPriceManual";
+
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -174,9 +176,10 @@ export default function PricesListTable({ searchQuery, percent }) {
                                             <TableCell component="th" align="center" scope="row">
                                                 {percent}%
                                             </TableCell>
-                                            <TableCell component="th" align="center" scope="row">
+                                            {/* <TableCell component="th" align="center" scope="row">
                                                 ${priceListCalculator(row.priceBase, percent)}
-                                            </TableCell>
+                                            </TableCell> */}
+                                            <InputPriceManual row={row} percent={percent}/>
                                         </TableRow>
                                     );
                                 })}

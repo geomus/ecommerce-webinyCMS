@@ -291,7 +291,7 @@ export const updateStatusOrder = gql`
 `;
 
 export const listProductsSite = gql`
-    query listProducts() {
+    query {
         products {
             listProducts(where: { isPublished: true }) {
                 data {

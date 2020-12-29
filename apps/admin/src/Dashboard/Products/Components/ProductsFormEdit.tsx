@@ -76,8 +76,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductFormEdit({ handleCloseDialog, product, enabledCategories }) {
     const [files, setFiles] = useState([]);
-    const productId = product.id;    
-    const productImages = product.images;  
+    const productId = product.id;
+    const productImages = product.images;
 
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
@@ -107,8 +107,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const [imagesKeys, setImagesKeys] = useState([]);
     const [tags, setTags] = useState(product.tags);
 
-    const [idPrices, setIdPrices] = useState([]);
-    const [checkedPrices, setCheckedPrices] = useState([{}]);
+    const [idPrices, setIdPrices] = useState({});
 
     const [productVariants, setProductVariants] = useState([]);
     useEffect(() => {
@@ -199,12 +198,10 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     };
 
     const handleIdPrices = (event) => {
-        const idValue = event.currentTarget.id;
-        if (event.target.checked) {
-            const id = idPrices;
-            id.push(idValue);
-            setIdPrices(id);
-        }
+        console.log(event.target.checked,idPrices);
+        
+        idPrices[event.currentTarget.id] = event.target.checked
+        setIdPrices(idPrices)
     };
     const handleChangeCategories = (event) => {
         setCategories(event.target.value);
@@ -241,7 +238,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             imagesKeys.push(...productImages)
             setImagesKeys(imagesKeys);
         }
-        
+
         const categoriesProd = [];
         categories.forEach((category) => {
             enabledCategories.map((c) => {
@@ -291,8 +288,8 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 GUARDAR
                             </Button>
                         ) : (
-                            <CircularProgress />
-                        )}
+                                <CircularProgress />
+                            )}
                     </FormControl>
                     <br />
                     <br />
@@ -363,8 +360,9 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 </InputLabel>
                                 <ProductsCheckboxPricesCategory
                                     handleIdPrices={handleIdPrices}
-                                    checkedPrices={checkedPrices}
-                                    setCheckedPrices={setCheckedPrices}
+                                    productPrices={product.prices}
+                                    statePrices={idPrices}
+                                    setStatePrices={setIdPrices}
                                 />
                             </Grid>
                         </Grid>
