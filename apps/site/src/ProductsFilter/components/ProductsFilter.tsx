@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import Product from "../../Product";
-import { useQuery } from "@apollo/client";
+import React, { useState, useEffect } from "react";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { products } from "../../graphql/query";
 import { searchProducts } from "../../graphql/query";
 import { useLocation } from "react-router-dom";
@@ -15,6 +14,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CategoriesFilter from "./CategoriesFilter";
+import ProductsList from "./ProductsList";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const ProductsFilter = () => {
     const classes = useStyles();
     const location = useLocation();
+    const [categoriesFilter, setCategoriesFilter] = useState([]);
     const [filtersState, setFiltersState] = useState([]);
     const searchQuery = location.search.split("=")[1];
 
@@ -51,7 +52,9 @@ const ProductsFilter = () => {
         searchVariable = null;
         queryGQL = products;
     }
+    useEffect(() => {
 
+    }, []);
     const { loading, error, data } = useQuery(queryGQL, { variables: { searchVariable } });
 
     if (loading) {
@@ -82,12 +85,6 @@ const ProductsFilter = () => {
         setFiltersState([]);
     };
 
-    const handleSelect = (event: React.ChangeEvent<{}>, nodeId, setSelected, setSubLevel) => {
-        console.log(nodeId);
-        setSubLevel(true);
-        setSelected(nodeId);
-    };
-
     return (
         <React.Fragment>
             <Grid container spacing={3}>
@@ -114,7 +111,7 @@ const ProductsFilter = () => {
                                     <Typography className={classes.heading}>Categories</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <CategoriesFilter categoriesFilter={handleSelect} />
+                                    <CategoriesFilter categoriesFilter={setCategoriesFilter} />
                                 </AccordionDetails>
                             </Accordion>
                             <Accordion defaultExpanded>
@@ -137,17 +134,7 @@ const ProductsFilter = () => {
                     </Grid>
                 </Grid>
                 <Divider orientation="vertical" light flexItem className={classes.dividers} />
-                <Grid item xs={12} sm container spacing={3}>
-                    {data ? (
-                        data.products.listProducts.data.map((prod) => (
-                            <Grid item xs={6} sm={6} md={3} key={prod.id}>
-                                <Product {...prod} />
-                            </Grid>
-                        ))
-                    ) : (
-                        <h1>Ups! No hay productos</h1>
-                    )}
-                </Grid>
+                <ProductsList products={data.products.listProducts.data} />
             </Grid>
         </React.Fragment>
     );

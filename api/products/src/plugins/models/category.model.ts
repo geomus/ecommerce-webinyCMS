@@ -2,15 +2,17 @@
 import { withFields, withName, withProps, string, pipe, ref, boolean } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 
-export default ({ createBase, context  }) => {
+export default ({ createBase, context }) => {
     const Category = pipe(
         withName("Category"),
         withFields(() => ({
             name: string({ validation: validation.create("maxLength:30") }),
             parent: ref({ instanceOf: Category, value: null }),
             enabled: boolean({ value: true }),
-            product: ref({
-                instanceOf: context.models.Product
+            products: ref({
+                list: true,
+                instanceOf: context.models.Product,
+                using: context.models.Product2Category
             })
         })),
         withProps({

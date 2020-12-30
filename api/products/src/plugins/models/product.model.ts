@@ -18,7 +18,7 @@ export default ({ createBase, context }) => {
             prices: string({
                 list: true
             }),
-            categories: fields({ list: true, instanceOf: context.models.Category }),
+            categories: fields({ list: true, instanceOf: context.models.Category, using: context.models.Product2Category }),
             images: string({ list: true }),
             tags: string({ list: true }),
             isPublished: boolean({ value: true }), 

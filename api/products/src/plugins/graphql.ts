@@ -180,7 +180,7 @@ const plugin: GraphQLSchemaPlugin = {
                 slug: String
                 description: String
                 priceBase: Int
-                categories: [CategoryInput]
+                categories: [RefInput]
                 prices: [String]
                 images: [String]
                 tags: [String]
@@ -194,7 +194,7 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 isPublished: Boolean
                 sku: String
-                categories: [CategoryInput]
+                categories: [RefInput]
             }
             input PriceListWhere {
                 name: String
