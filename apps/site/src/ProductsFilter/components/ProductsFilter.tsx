@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const ProductsFilter = () => {
     const classes = useStyles();
     const location = useLocation();
-    const [categoriesFilter, setCategoriesFilter] = useState([]);
+    const [categoriesFilter, setCategoriesFilter] = useState("");
     const [filtersState, setFiltersState] = useState([]);
     const searchQuery = location.search.split("=")[1];
 
@@ -52,9 +52,7 @@ const ProductsFilter = () => {
         searchVariable = null;
         queryGQL = products;
     }
-    useEffect(() => {
 
-    }, []);
     const { loading, error, data } = useQuery(queryGQL, { variables: { searchVariable } });
 
     if (loading) {

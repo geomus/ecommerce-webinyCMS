@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { listCategoriesParentsEnabled } from "../../graphql/query";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -13,6 +13,9 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -31,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const CategoriesFilter = ({ categoriesFilter }) => {
     const classes = useStyles();
+    const [breadcrumbState, setBreadcrumbState] = useState([]);
     const [selected, setSelected] = useState<string>("");
     const [subLevel, setSubLevel] = useState(false);
 
@@ -51,10 +55,16 @@ const CategoriesFilter = ({ categoriesFilter }) => {
         return <h1> error </h1>;
     }
 
-    const handleSelect = (event: React.ChangeEvent<{}>, nodeId) => {
+    const handleBreadcrumb = (breadcrumbId) => {
+        categoriesFilter(breadcrumbId);
+    };
+    const handleSelect = (category) => {
+        breadcrumbState.push(category);
+        setBreadcrumbState(breadcrumbState);
         setSubLevel(true);
-        setSelected(nodeId);
-        categoriesFilter(nodeId);
+        setSelected(category.id);
+        categoriesFilter(breadcrumbState[breadcrumbState.length - 1].id);
+        console.log(breadcrumbState);
     };
 
     return (
@@ -65,17 +75,36 @@ const CategoriesFilter = ({ categoriesFilter }) => {
                         separator={<NavigateNextIcon fontSize="small" />}
                         aria-label="breadcrumb"
                     >
-                        <Link color="inherit" href="#">
-                            Parent1
-                        </Link>
-                        <Link color="inherit" href="#">
-                            SubCat1
-                        </Link>
-                        <Typography color="textPrimary">SubCat1</Typography>
+                        {breadcrumbState
+                            ? breadcrumbState.map((breadcrumb) => (
+                                  <Link
+                                      key={breadcrumb.id}
+                                      color="inherit"
+                                      href="#"
+                                      onClick={() => handleBreadcrumb(breadcrumb.id)}
+                                  >
+                                      {breadcrumb.name}
+                                  </Link>
+                              ))
+                            : ""}
                     </Breadcrumbs>
                 </Grid>
                 <Grid item container>
-                    <TreeView
+                    <List component="nav" aria-label="categories">
+                        {!subLevel ? (
+                            dataParents.categories.listCategories.data.map((category) => (
+                                <ListItem button key={category.id}>
+                                    <ListItemText
+                                        primary={category.name}
+                                        onClick={() => handleSelect(category)}
+                                    />
+                                </ListItem>
+                            ))
+                        ) : (
+                            <SubcategoriesList parent={selected} />
+                        )}
+                    </List>
+                    {/* <TreeView
                         className={classes.root}
                         defaultCollapseIcon={<ExpandMoreIcon />}
                         defaultExpanded={["root"]}
@@ -87,14 +116,14 @@ const CategoriesFilter = ({ categoriesFilter }) => {
                             dataParents.categories.listCategories.data.map((category, i) => (
                                 <TreeItem
                                     key={category + i}
-                                    nodeId={category.id}
+                                    nodeId={JSON.stringify(category)}
                                     label={category.name}
                                 />
                             ))
                         ) : (
                             <SubcategoriesList parent={selected} />
                         )}
-                    </TreeView>
+                    </TreeView> */}
                 </Grid>
             </Grid>
         </React.Fragment>
