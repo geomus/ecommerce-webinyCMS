@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { listSubcategories } from "../../graphql/query";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import TreeItem from "@material-ui/lab/TreeItem";
-import Typography from "@material-ui/core/Typography";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
-const SubcategoriesList = (parent): JSX.Element => {
+const SubcategoriesList = ({ parent, handlerBreadcrumb }): JSX.Element => {
     const [selected, setSelected] = useState<string>("");
     const [parentId, setParentId] = useState({});
 
     useEffect(() => {
-        setParentId(parent.parent);
+        setParentId(parent.id);
     }, []);
 
     const {
@@ -33,10 +33,14 @@ const SubcategoriesList = (parent): JSX.Element => {
 
     return (
         <React.Fragment>
-            <Typography variant="subtitle1">{parentId}</Typography>
             {dataSubcategories.categories.listCategories.data
-                ? dataSubcategories.categories.listCategories.data.map((category, i) => (
-                      <TreeItem key={i + "subcat"} nodeId={category.id} label={category.name} />
+                ? dataSubcategories.categories.listCategories.data.map((category) => (
+                      <ListItem button key={category.id}>
+                          <ListItemText
+                              primary={category.name}
+                              onClick={() => handlerBreadcrumb(category)}
+                          />
+                      </ListItem>
                   ))
                 : ""}
         </React.Fragment>

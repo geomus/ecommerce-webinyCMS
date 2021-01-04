@@ -81,6 +81,7 @@ const ProductsFilter = () => {
 
     const handleClear = () => {
         setFiltersState([]);
+        setCategoriesFilter("")
     };
 
     return (
@@ -109,7 +110,7 @@ const ProductsFilter = () => {
                                     <Typography className={classes.heading}>Categories</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <CategoriesFilter categoriesFilter={setCategoriesFilter} />
+                                    <CategoriesFilter categoriesFilter={setCategoriesFilter} categoriesFilterState={categoriesFilter} />
                                 </AccordionDetails>
                             </Accordion>
                             <Accordion defaultExpanded>

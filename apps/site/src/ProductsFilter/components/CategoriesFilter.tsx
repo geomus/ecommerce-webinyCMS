@@ -1,42 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { listCategoriesParentsEnabled } from "../../graphql/query";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import TreeView from "@material-ui/lab/TreeView";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import TreeItem from "@material-ui/lab/TreeItem";
 import SubcategoriesList from "./ListSubcategories";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import CloseIcon from "@material-ui/icons/Close";
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            height: 240,
-            flexGrow: 1,
-            maxWidth: 400
-        },
-        list: {
-            display: "flex",
-            flexDirection: "column",
-            width: 360
-        }
-    })
-);
-
-const CategoriesFilter = ({ categoriesFilter }) => {
-    const classes = useStyles();
+const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
     const [breadcrumbState, setBreadcrumbState] = useState([]);
     const [selected, setSelected] = useState<string>("");
     const [subLevel, setSubLevel] = useState(false);
+    // useEffect(() => {
+    //     categoriesFilterState == "" ?? setBreadcrumbState([]);
+    // }, [categoriesFilterState]);
 
     const { loading: loadingParents, error: errorParents, data: dataParents } = useQuery(
         listCategoriesParentsEnabled
@@ -62,9 +44,8 @@ const CategoriesFilter = ({ categoriesFilter }) => {
         breadcrumbState.push(category);
         setBreadcrumbState(breadcrumbState);
         setSubLevel(true);
-        setSelected(category.id);
+        setSelected(category);
         categoriesFilter(breadcrumbState[breadcrumbState.length - 1].id);
-        console.log(breadcrumbState);
     };
 
     return (
@@ -75,7 +56,7 @@ const CategoriesFilter = ({ categoriesFilter }) => {
                         separator={<NavigateNextIcon fontSize="small" />}
                         aria-label="breadcrumb"
                     >
-                        {breadcrumbState
+                        {breadcrumbState && !(categoriesFilterState === "")
                             ? breadcrumbState.map((breadcrumb) => (
                                   <Link
                                       key={breadcrumb.id}
@@ -91,7 +72,7 @@ const CategoriesFilter = ({ categoriesFilter }) => {
                 </Grid>
                 <Grid item container>
                     <List component="nav" aria-label="categories">
-                        {!subLevel ? (
+                        {!subLevel || categoriesFilterState === "" ? (
                             dataParents.categories.listCategories.data.map((category) => (
                                 <ListItem button key={category.id}>
                                     <ListItemText
@@ -101,29 +82,12 @@ const CategoriesFilter = ({ categoriesFilter }) => {
                                 </ListItem>
                             ))
                         ) : (
-                            <SubcategoriesList parent={selected} />
+                            <SubcategoriesList
+                                parent={selected}
+                                handlerBreadcrumb={handleBreadcrumb}
+                            />
                         )}
                     </List>
-                    {/* <TreeView
-                        className={classes.root}
-                        defaultCollapseIcon={<ExpandMoreIcon />}
-                        defaultExpanded={["root"]}
-                        defaultExpandIcon={<ChevronRightIcon />}
-                        selected={selected}
-                        onNodeSelect={handleSelect}
-                    >
-                        {!subLevel ? (
-                            dataParents.categories.listCategories.data.map((category, i) => (
-                                <TreeItem
-                                    key={category + i}
-                                    nodeId={JSON.stringify(category)}
-                                    label={category.name}
-                                />
-                            ))
-                        ) : (
-                            <SubcategoriesList parent={selected} />
-                        )}
-                    </TreeView> */}
                 </Grid>
             </Grid>
         </React.Fragment>
