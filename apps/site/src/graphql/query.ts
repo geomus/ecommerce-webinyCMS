@@ -302,7 +302,7 @@ export const listCategoriesParentsEnabled = gql`
 `;
 
 export const listSubcategories = gql`
-    query listCategories($parent: RefInput!) {
+    query listCategories($parent: RefInput) {
         categories {
             listCategories(where: { parent: $parent }) {
                 data {

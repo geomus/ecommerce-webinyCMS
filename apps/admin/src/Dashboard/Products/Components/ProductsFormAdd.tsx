@@ -216,11 +216,16 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         categories.forEach((category) => {
             enabledCategories.map((c) => {
                 if (c.name === category) {
-                    categoriesProd.push(c);
+                    const subCategory = {
+                        id: c.id
+                    };
+                    categoriesProd.push(subCategory);
                 }
             });
         });
 
+        console.log(categoriesProd);
+        
         for (const file of files) {
             const imageKey = await uploadImage(file);
             imagesKeys.push(imageKey);
@@ -238,6 +243,8 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
             variants: productVariants
         };
 
+        console.log(product.categories);
+        
         try {
             await addProduct({ variables: { data: product } });
 

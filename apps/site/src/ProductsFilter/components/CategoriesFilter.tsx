@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { listCategoriesParentsEnabled } from "../../graphql/query";
+import { listCategoriesParentsEnabled, listSubcategories } from "../../graphql/query";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import SubcategoriesList from "./ListSubcategories";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
@@ -14,8 +13,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
     const [breadcrumbState, setBreadcrumbState] = useState([]);
-    const [selected, setSelected] = useState<string>("");
-    const [subLevel, setSubLevel] = useState(false);
+    const [subcategories, setSubcategories] = useState([]);
     // useEffect(() => {
     //     categoriesFilterState == "" ?? setBreadcrumbState([]);
     // }, [categoriesFilterState]);
@@ -24,7 +22,12 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
         listCategoriesParentsEnabled
     );
 
-    if (loadingParents) {
+    const [
+        getSubcategories,
+        { called, loading: loadingSubcategories, data: dataSubcategories }
+    ] = useLazyQuery(listSubcategories);
+
+    if (loadingParents || (loadingSubcategories && called)) {
         return (
             <h1>
                 <LinearProgress />
@@ -43,8 +46,7 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
     const handleSelect = (category) => {
         breadcrumbState.push(category);
         setBreadcrumbState(breadcrumbState);
-        setSubLevel(true);
-        setSelected(category);
+        getSubcategories({ variables: { parent: { id: category.id } } });
         categoriesFilter(breadcrumbState[breadcrumbState.length - 1].id);
     };
 
@@ -72,21 +74,23 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
                 </Grid>
                 <Grid item container>
                     <List component="nav" aria-label="categories">
-                        {!subLevel || categoriesFilterState === "" ? (
-                            dataParents.categories.listCategories.data.map((category) => (
-                                <ListItem button key={category.id}>
-                                    <ListItemText
-                                        primary={category.name}
-                                        onClick={() => handleSelect(category)}
-                                    />
-                                </ListItem>
-                            ))
-                        ) : (
-                            <SubcategoriesList
-                                parent={selected}
-                                handlerBreadcrumb={handleBreadcrumb}
-                            />
-                        )}
+                        {!called || categoriesFilterState === ""
+                            ? dataParents.categories.listCategories.data.map((category) => (
+                                  <ListItem button key={category.id}>
+                                      <ListItemText
+                                          primary={category.name}
+                                          onClick={() => handleSelect(category)}
+                                      />
+                                  </ListItem>
+                              ))
+                            : dataSubcategories.categories.listCategories.data.map((category) => (
+                                  <ListItem button key={category.id}>
+                                      <ListItemText
+                                          primary={category.name}
+                                          onClick={() => handleBreadcrumb(category)}
+                                      />
+                                  </ListItem>
+                              ))}
                     </List>
                 </Grid>
             </Grid>

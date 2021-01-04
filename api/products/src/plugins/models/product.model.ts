@@ -1,5 +1,5 @@
 // @ts-ignore
-import { withFields, withName, string, boolean, number, pipe, withProps, onSet, fields, ref } from "@webiny/commodo";
+import { withFields, withName, string, boolean, number, pipe, withProps, onSet, ref } from "@webiny/commodo";
 import { validation } from "@webiny/validation";
 import slugify from "slugify";
 
@@ -18,7 +18,7 @@ export default ({ createBase, context }) => {
             prices: string({
                 list: true
             }),
-            categories: fields({ list: true, instanceOf: context.models.Category, using: context.models.Product2Category }),
+            categories: ref({ list: true, instanceOf: context.models.Category, using: context.models.Product2Category }),
             images: string({ list: true }),
             tags: string({ list: true }),
             isPublished: boolean({ value: true }), 

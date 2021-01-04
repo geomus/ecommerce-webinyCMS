@@ -76,8 +76,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductFormEdit({ handleCloseDialog, product, enabledCategories }) {
     const [files, setFiles] = useState([]);
-    const productId = product.id;    
-    const productImages = product.images;  
+    const productId = product.id;
+    const productImages = product.images;
 
     const [getPresignedPost] = useMutation(uploadFile);
     const [createFileDB] = useMutation(createFile);
@@ -113,7 +113,16 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const [productVariants, setProductVariants] = useState([]);
     useEffect(() => {
         if (product.categories) {
-            const productCategories = product.categories.map(({ name }) => name);
+            const productCategories = [];
+            product.categories.forEach((category) => {
+                enabledCategories.map((c) => {
+                    if (c.id === category.id) {
+                        productCategories.push(c.name);
+                    }
+                });
+            });
+
+            // const productCategories = product.categories.map(({ name }) => name);
             setCategories(productCategories);
         }
         if (product.variants) {
@@ -238,15 +247,18 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             }
             // await deleteImage({ variables: { id: data.files.getFile.data.id } });
         } else {
-            imagesKeys.push(...productImages)
+            imagesKeys.push(...productImages);
             setImagesKeys(imagesKeys);
         }
-        
+
         const categoriesProd = [];
         categories.forEach((category) => {
             enabledCategories.map((c) => {
                 if (c.name === category) {
-                    categoriesProd.push(c);
+                    const subCategory = {
+                        id: c.id
+                    };
+                    categoriesProd.push(subCategory);
                 }
             });
         });
