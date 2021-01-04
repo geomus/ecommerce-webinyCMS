@@ -179,12 +179,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         setPrice(price);
     };
     const handleIdPrices = (event) => {
-        const idValue = event.currentTarget.id;
-        if (event.target.checked) {
-            const id = idPrices;
-            id.push(idValue);
-            setIdPrices(id);
-        }
+        setIdPrices({...idPrices, [event.currentTarget.id] : event.target.checked})
     };
     const handleChangeCategories = (event) => {
         setCategories(event.target.value);
@@ -230,7 +225,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
             name: name,
             description: description,
             priceBase: price,
-            prices: idPrices,
+            prices: Object.keys(idPrices),
             categories: categoriesProd,
             images: imagesKeys,
             tags: tags,
@@ -291,8 +286,8 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 GUARDAR
                             </Button>
                         ) : (
-                            <CircularProgress />
-                        )}
+                                <CircularProgress />
+                            )}
                     </FormControl>
                     <br />
                     <br />
@@ -360,8 +355,9 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 </InputLabel>
                                 <ProductsCheckboxPricesCategory
                                     handleIdPrices={handleIdPrices}
-                                    checkedPrices={checkedPrices}
-                                    setCheckedPrices={setCheckedPrices}
+                                    productPrices={[]}
+                                    statePrices={idPrices}
+                                    setStatePrices={setIdPrices}
                                 />
                             </Grid>
                         </Grid>
