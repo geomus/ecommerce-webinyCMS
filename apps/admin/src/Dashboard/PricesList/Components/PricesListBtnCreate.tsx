@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
         title: {
             marginLeft: theme.spacing(2),
             flex: 1
+        },
+        dialog: {
+            padding: 20
         }
     })
 );
@@ -108,7 +111,7 @@ export default function FullScreenDialog({ className }) {
             >
                 NUEVA
             </Button>
-            <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+            <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
                         <IconButton
@@ -124,7 +127,7 @@ export default function FullScreenDialog({ className }) {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <Grid container>
+                <Grid container className={classes.dialog} >
                     <form onSubmit={handleSubmit}>
                         <FormGroup>
                             <TextField

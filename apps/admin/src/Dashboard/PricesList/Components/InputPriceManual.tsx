@@ -5,17 +5,17 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 
 const priceListCalculator = (priceBase, percent) => {
     const finalPrice = priceBase * (percent / 100 + 1);
-    return finalPrice;
+    return (Math.round(finalPrice)-0.01);
 };
 
-export default function InputPriceManual({row, percent}) {
+export default function InputPriceManual({priceBase, percent}) {
     return (
         <TableCell component="th" align="center" scope="row">   
             <TextField 
             type="number"
             id="standard-required" 
             aria-label="Price calculated" 
-            defaultValue={`${priceListCalculator(row.priceBase, percent)}`}
+            defaultValue={`${priceListCalculator(priceBase, percent)}`}
             InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}

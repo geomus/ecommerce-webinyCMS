@@ -5,14 +5,9 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TableHead from "@material-ui/core/TableHead";
 
-const headCells = [
-    { id: "name", disablePadding: false, disableSort: false, label: "Lista" },
-    { id: "priceBase", disablePadding: false, disableSort: false, label: "Precio Base" },
-    { id: "percent", disablePadding: false, disableSort: false, label: "Porcentaje" },
-    { id: "finalPrice", disablePadding: false, disableSort: false, label: "Precio Final" }
-];
-const ProductsTableHead = (props) => {
-    const { classes, order, orderBy, onRequestSort } = props;
+
+const ProductsTableHead = ({ classes, order, orderBy, onRequestSort, prices }) => {
+
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -20,31 +15,33 @@ const ProductsTableHead = (props) => {
     return (
         <TableHead>
             <TableRow>
-                {headCells.map((headCell) => (
+                <TableCell
+                    align="center"
+                    padding="default"
+                >
+                    Producto
+                </TableCell>
+                {prices.map((price) => (
                     <TableCell
-                        key={headCell.id}
+                        key={price.id}
                         align="center"
-                        padding={headCell.disablePadding ? "none" : "default"}
-                        sortDirection={orderBy === headCell.id ? order : false}
+                        padding="default"
+                        sortDirection={orderBy === price.id ? order : false}
                     >
-                        {headCell.disableSort ? (
-                            <strong>{headCell.label}</strong>
-                        ) : (
-                            <TableSortLabel
-                                active={orderBy === headCell.id}
-                                direction={orderBy === headCell.id ? order : "asc"}
-                                onClick={createSortHandler(headCell.id)}
-                            >
-                                <strong>{headCell.label}</strong>
-                                {orderBy === headCell.id ? (
-                                    <span className={classes.visuallyHidden}>
-                                        {order === "desc"
-                                            ? "sorted descending"
-                                            : "sorted ascending"}
-                                    </span>
-                                ) : null}
-                            </TableSortLabel>
-                        )}
+                        <TableSortLabel
+                            active={orderBy === price.id}
+                            direction={orderBy === price.id ? order : "asc"}
+                            onClick={createSortHandler(price.id)}
+                        >
+                            <strong>{price.name}</strong>
+                            {orderBy === price.id ? (
+                                <span className={classes.visuallyHidden}>
+                                    {order === "desc"
+                                        ? "sorted descending"
+                                        : "sorted ascending"}
+                                </span>
+                            ) : null}
+                        </TableSortLabel>
                     </TableCell>
                 ))}
             </TableRow>

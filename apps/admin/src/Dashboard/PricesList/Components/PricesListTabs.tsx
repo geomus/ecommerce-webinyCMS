@@ -1,9 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { listPrices } from "../../../graphql/query";
@@ -12,6 +9,18 @@ import { useQuery } from "@apollo/client";
 import PricesListTable from "./PricesListTable";
 import PricesCategoryBtnCreate from "./PricesListBtnCreate";
 import PricesListDelete from './PricesListDelete'
+import Container from "@material-ui/core/Container";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Button from "@material-ui/core/Button";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Input from "@material-ui/core/Input";
+
 
 
 function TabPanel(props) {
@@ -40,12 +49,6 @@ TabPanel.propTypes = {
     value: PropTypes.any.isRequired
 };
 
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        "aria-controls": `simple-tabpanel-${index}`
-    };
-}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,12 +57,20 @@ const useStyles = makeStyles((theme) => ({
     },
     btnPricesCategoryCreate: {
         margin: "1rem 0 0 1.5rem"
+    },
+    table: {
+        width: "100%",
+        [theme.breakpoints.up(768)]: {
+            width: "50%"
+        },
+    },
+    inputPercent: {
+        width: 60,
     }
 }));
 
 export default function PricesTabsListPrices() {
     const classes = useStyles();
-    const [value, setValue] = useState(0);
 
     const { loading, error, data } = useQuery(listPrices);
 
@@ -77,27 +88,59 @@ export default function PricesTabsListPrices() {
         return <h1> error </h1>;
     }
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                    {data.prices.listPrices.data.map((price, index) => (
-                        <Tab key={price.id} label={price.name} {...a11yProps({ index })} />
-                    ))}
-                </Tabs>
-            </AppBar>
-            <PricesCategoryBtnCreate className={classes.btnPricesCategoryCreate} />
-            {data.prices.listPrices.data.map((price, index) => (
-                <TabPanel key={price.id} value={value} index={index}>
-                    <PricesListDelete row={price} />
+            <Container maxWidth={false}>
+                <Typography variant="h5">
+                    Listas de precios
+                </Typography>
+                <br />
+                <PricesCategoryBtnCreate className={classes.btnPricesCategoryCreate} />
+                <br />
+                <TableContainer className={classes.table} component={Paper} >
+                    <Table aria-label="simple table" size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Lista</TableCell>
+                                <TableCell align="right"></TableCell>
+                                <TableCell align="right"></TableCell>
+                                <TableCell align="left">Porcentaje</TableCell>
+                                <TableCell align="right"></TableCell>
+                                <TableCell align="right"></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data.prices.listPrices.data.map((row) => (
+                                <TableRow key={row.name}>
+                                    <TableCell component="th" scope="row" colSpan={3}>
+                                        {row.name}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <TableCell component="th" className={classes.inputPercent} align="right" scope="row">
+                                            <Input
+                                                type="number"
+                                                id="standard-required"
+                                                aria-label="Percent"
+                                                defaultValue={row.percent}
+                                                endAdornment={<InputAdornment position="end">%</InputAdornment>}
 
-                    <PricesListTable searchQuery={price.id} percent={price.percent} />
-                </TabPanel>
-            ))}
+                                            />
+                                        </TableCell>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <Button variant="outlined" color="primary" size="small">Recalcular</Button>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <PricesListDelete row={row} />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <PricesListTable prices={data.prices.listPrices.data}/>
+            </Container>
         </div>
     );
 }
