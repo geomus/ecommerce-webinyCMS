@@ -111,7 +111,7 @@ export default function PricesTabsListPrices() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.prices.listPrices.data.map((row) => (
+                            {data.prices.listPricesList.data.map((row) => (
                                 <TableRow key={row.name}>
                                     <TableCell component="th" scope="row" colSpan={3}>
                                         {row.name}

@@ -416,14 +416,14 @@ export const updateOrder = gql`
 `;
 
 export const listPrices = gql`
-    query listPrices {
+    query listPricesList {
         prices {
-            listPrices {
+            listPricesList {
                 data {
                     id
                     name
                     percent
-                    default
+                    isDefaultOnSite
                 }
             }
         }
@@ -431,13 +431,13 @@ export const listPrices = gql`
 `;
 
 export const createPrice = gql`
-    mutation createPrice($data: PriceInput!) {
+    mutation createPriceList($data: PriceInput!) {
         prices {
-            createPrice(data: $data) {
+            createPriceList(data: $data) {
                 data {
                     name
                     percent
-                    default
+                    isDefaultOnSite
                 }
             }
         }
