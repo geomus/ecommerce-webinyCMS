@@ -23,18 +23,18 @@ const ProductsTableHead = ({ classes, order, orderBy, onRequestSort, prices }) =
                 </TableCell>
                 {prices.map((price) => (
                     <TableCell
-                        key={price.id}
+                        key={price.list.id}
                         align="center"
                         padding="default"
-                        sortDirection={orderBy === price.id ? order : false}
+                        sortDirection={orderBy === price.list.id ? order : false}
                     >
                         <TableSortLabel
-                            active={orderBy === price.id}
-                            direction={orderBy === price.id ? order : "asc"}
-                            onClick={createSortHandler(price.id)}
+                            active={orderBy === price.list.id}
+                            direction={orderBy === price.list.id ? order : "asc"}
+                            onClick={createSortHandler(price.list.id)}
                         >
-                            <strong>{price.name}</strong>
-                            {orderBy === price.id ? (
+                            <strong>{price.list.name}</strong>
+                            {orderBy === price.list.id ? (
                                 <span className={classes.visuallyHidden}>
                                     {order === "desc"
                                         ? "sorted descending"

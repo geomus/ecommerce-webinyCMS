@@ -8,14 +8,14 @@ const priceListCalculator = (priceBase, percent) => {
     return (Math.round(finalPrice)-0.01);
 };
 
-export default function InputPriceManual({priceBase, percent}) {
+export default function InputPriceManual({priceValue}) {
     return (
         <TableCell component="th" align="center" scope="row">   
             <TextField 
             type="number"
             id="standard-required" 
             aria-label="Price calculated" 
-            defaultValue={`${priceListCalculator(priceBase, percent)}`}
+            defaultValue={priceValue}
             InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}

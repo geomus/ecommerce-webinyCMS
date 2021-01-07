@@ -87,21 +87,6 @@ export default function PricesListTable({prices}) {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { loading: loadingPrices, error: errorPrices, data: dataPrices } = useQuery(listPricesList);
-
-    if (loadingPrices) {
-        return (
-            <h1>
-                <LinearProgress />
-            </h1>
-        );
-    }
-
-    if (errorPrices) {
-        console.dir(errorPrices);
-        return <h1> error </h1>;
-    }
-
     const { loading, error, data } = useQuery(products);
 
     if (loading) {
@@ -166,7 +151,7 @@ export default function PricesListTable({prices}) {
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
-                            prices={prices}
+                            prices={rows[0].prices}
                         />
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
@@ -178,7 +163,7 @@ export default function PricesListTable({prices}) {
                                                 {row.name}
                                             </TableCell>
                                             {
-                                                dataPrices.prices.listPricesList.data.map((price) => <InputPriceManual key={Date.now()*Math.random()} priceBase={row.priceBase} percent={price.percent} />)
+                                                row.prices.map((price) => <InputPriceManual key={Date.now()*Math.random()} priceValue={price.value} />)
                                             }
                                         </TableRow>
                                     );
