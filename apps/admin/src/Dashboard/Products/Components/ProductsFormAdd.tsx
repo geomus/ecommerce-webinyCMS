@@ -225,7 +225,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         });
 
         console.log(categoriesProd);
-        
+
         for (const file of files) {
             const imageKey = await uploadImage(file);
             imagesKeys.push(imageKey);
@@ -244,7 +244,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         };
 
         console.log(product.categories);
-        
+
         try {
             await addProduct({ variables: { data: product } });
 
@@ -306,7 +306,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                     <Grid container spacing={3}>
                         <Grid item lg={4}>
                             <Grid item xs={12}>
-                                <FormControl>
+                                <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="name">Nombre</InputLabel>
                                     <Input
                                         required

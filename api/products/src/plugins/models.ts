@@ -6,7 +6,7 @@ import price from "./models/price.model";
 import property from "./models/property.model"
 import productVariant from "./models/productVariant.model"
 import category from "./models/category.model";
-import product2category from "./models/product2category.model";product2category
+import product2category from "./models/product2category.model";
 
 
 export default () => ({
@@ -37,7 +37,7 @@ export default () => ({
             Property: property({ createBase  }),
             ProductVariant: productVariant({ createBase, context  }),
             Category: category({ createBase, context }),
-            Product2Category: category({ createBase, context }),
+            Product2Category: product2category({ createBase, context }),
             createBase
         };
     }

@@ -87,7 +87,7 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
                                   <ListItem button key={category.id}>
                                       <ListItemText
                                           primary={category.name}
-                                          onClick={() => handleBreadcrumb(category)}
+                                          onClick={() => handleSelect(category)}
                                       />
                                   </ListItem>
                               ))}
