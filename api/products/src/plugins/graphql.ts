@@ -171,12 +171,12 @@ const plugin: GraphQLSchemaPlugin = {
             type Price {
                 id: ID
                 list: PriceList
-                value: Int
+                value: Float
             }
             type SaleDiscount {
                 id: ID
                 list: SaleDiscountList
-                value: Int
+                value: Float
             }
             type SaleDiscountList {
                 id: ID
@@ -242,10 +242,10 @@ const plugin: GraphQLSchemaPlugin = {
             input PriceInput {
                 id: ID
                 list: RefInput
-                value: Int
+                value: Float
             }
             input SaleDiscountInput {
-                ID: id
+                ID: ID
                 list: RefInput
                 value: Int
             }
@@ -467,6 +467,7 @@ const plugin: GraphQLSchemaPlugin = {
             }
             type PriceMutation {
                 createPrice(data: PriceInput!): PriceResponse
+                createPrices(data:[PriceInput!]!): PricesResponse
                 updatePrice(id: ID!, data: PriceInput!): PriceResponse
                 deletePrice(id: ID!): PriceDeleteResponse
             }
@@ -510,6 +511,7 @@ const plugin: GraphQLSchemaPlugin = {
                 saleDiscount: SaleDiscountMutation
             }
         `,
+
         resolvers: {
             Query: {
                 products: emptyResolver,
@@ -570,6 +572,7 @@ const plugin: GraphQLSchemaPlugin = {
             },
             PriceMutation: {
                 createPrice: hasScope("prices:create")(resolveCreate(priceFetcher)),
+                createPrices: hasScope("prices:create")(resolveBulkImport(priceFetcher)),
                 updatePrice: hasScope("prices:update")(resolveUpdate(priceFetcher)),
                 deletePrice: hasScope("prices:delete")(resolveDelete(priceFetcher))
             },

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { listPrices } from "../../../graphql/query";
+import { listPricesList } from "../../../graphql/query";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { useQuery } from "@apollo/client";
 import PricesListTable from "./PricesListTable";
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PricesTabsListPrices() {
     const classes = useStyles();
 
-    const { loading, error, data } = useQuery(listPrices);
+    const { loading, error, data } = useQuery(listPricesList);
 
     if (loading) {
         return (
@@ -111,7 +111,7 @@ export default function PricesTabsListPrices() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.prices.listPricesList.data.map((row) => (
+                            {data.pricesList.listPricesList.data.map((row) => (
                                 <TableRow key={row.name}>
                                     <TableCell component="th" scope="row" colSpan={3}>
                                         {row.name}
@@ -139,7 +139,7 @@ export default function PricesTabsListPrices() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <PricesListTable prices={data.prices.listPrices.data}/>
+                <PricesListTable prices={data.pricesList.listPricesList.data}/>
             </Container>
         </div>
     );

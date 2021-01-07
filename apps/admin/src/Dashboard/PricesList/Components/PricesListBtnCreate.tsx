@@ -18,7 +18,7 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createPrice, listPrices } from "../../../graphql/query";
+import { createPrices, listPricesList } from "../../../graphql/query";
 import { useMutation } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
@@ -56,8 +56,8 @@ export default function FullScreenDialog({ className }) {
     const [percent, setPercent] = useState(null);
     const [defaultPrice, setDefaultPrice] = useState(false);
 
-    const [addPricesCategory] = useMutation(createPrice, {
-        refetchQueries: () => [{ query: listPrices }]
+    const [addPricesCategory] = useMutation(createPrices, {
+        refetchQueries: () => [{ query: listPricesList }]
     });
 
     const handleClickOpen = () => {

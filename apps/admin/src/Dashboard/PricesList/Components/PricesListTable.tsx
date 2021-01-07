@@ -10,7 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { useQuery } from "@apollo/client";
-import { listPrices, products } from "../../../graphql/query";
+import { listPricesList, products } from "../../../graphql/query";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import PricesListTableToolbar from "./PricesListTableToolbar";
 import PricesListTableHead from "./PricesListTableHead";
@@ -87,7 +87,7 @@ export default function PricesListTable({prices}) {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { loading: loadingPrices, error: errorPrices, data: dataPrices } = useQuery(listPrices);
+    const { loading: loadingPrices, error: errorPrices, data: dataPrices } = useQuery(listPricesList);
 
     if (loadingPrices) {
         return (
@@ -178,7 +178,7 @@ export default function PricesListTable({prices}) {
                                                 {row.name}
                                             </TableCell>
                                             {
-                                                dataPrices.prices.listPrices.data.map((price) => <InputPriceManual key={Date.now()*Math.random()} priceBase={row.priceBase} percent={price.percent} />)
+                                                dataPrices.prices.listPricesList.data.map((price) => <InputPriceManual key={Date.now()*Math.random()} priceBase={row.priceBase} percent={price.percent} />)
                                             }
                                         </TableRow>
                                     );

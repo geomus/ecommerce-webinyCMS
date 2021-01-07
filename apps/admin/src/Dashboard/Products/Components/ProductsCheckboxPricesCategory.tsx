@@ -8,7 +8,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useQuery } from "@apollo/client";
-import { listPrices } from "../../../graphql/query";
+import { listPricesList } from "../../../graphql/query";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -24,13 +24,13 @@ export default function ProductsCheckboxPricesCategory({
     statePrices,
     setStatePrices
 }) {
-    const { loading, error, data } = useQuery(listPrices);
+    const { loading, error, data } = useQuery(listPricesList);
     const classes = useStyles();
 
     useEffect(() => {
         if (!loading && data) {
             const objectForStatePrices = {};
-            data.prices.listPrices.data.forEach((price) => {
+            data.pricesList.listPricesList.data.forEach((price) => {
                 const idStatePrices = price.id
                 objectForStatePrices[idStatePrices] = false;
             });
@@ -60,9 +60,7 @@ export default function ProductsCheckboxPricesCategory({
 
     return (
         <FormControl className={classes.formControl}>
-            {data.prices.listPrices.data.map((category, i) => {
-                console.log(statePrices);
-
+            {data.pricesList.listPricesList.data.map((category, i) => {
                 return (
                     <FormGroup row key={category.id}>
                         <FormControlLabel
