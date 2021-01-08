@@ -467,10 +467,11 @@ export const listPricesList = gql`
 `;
 
 export const createPriceList = gql`
-    mutation createPriceList($data: PriceInput!) {
-        prices {
+    mutation createPriceList($data: PriceListInput!) {
+        pricesList {
             createPriceList(data: $data) {
                 data {
+                    id
                     name
                     percent
                     isDefaultOnSite
@@ -705,6 +706,21 @@ export const createPrices = gql`
                         id
                     }
                     value
+                }
+            }
+        }
+    }
+`;
+
+export const listProductsByPrices = gql`
+    query listProducts {
+        products {
+            listProducts {
+                data {
+                    id 
+                    prices {
+                        id
+                    }
                 }
             }
         }

@@ -15,8 +15,12 @@ const ProductsTableHead = ({ classes, order, orderBy, onRequestSort, prices }) =
     return (
         <TableHead>
             <TableRow>
-                <TableCell
+            <TableCell
                     align="center"
+                    padding="default"
+                >
+                </TableCell>
+                <TableCell
                     padding="default"
                 >
                     Producto

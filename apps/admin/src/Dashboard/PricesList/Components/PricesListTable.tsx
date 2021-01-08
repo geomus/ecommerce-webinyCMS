@@ -9,12 +9,10 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { useQuery } from "@apollo/client";
-import { listPricesList, products } from "../../../graphql/query";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import PricesListTableToolbar from "./PricesListTableToolbar";
 import PricesListTableHead from "./PricesListTableHead";
 import InputPriceManual from "./InputPriceManual";
+import ProductsPricesEditBtn from "./ProductsPricesEditBtn";
 
 
 function descendingComparator(a, b, orderBy) {
@@ -78,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function PricesListTable({prices}) {
+export default function PricesListTable({ products }) {
     const classes = useStyles();
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
@@ -87,24 +85,9 @@ export default function PricesListTable({prices}) {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const { loading, error, data } = useQuery(products);
-
-    if (loading) {
-        return (
-            <h1>
-                {" "}
-                <LinearProgress />{" "}
-            </h1>
-        );
-    }
-
-    if (error) {
-        console.dir(error);
-        return <h1> error </h1>;
-    }
 
     const rows = [];
-    data.products.listProducts.data.map((product) => rows.push(product));
+    products.map((product) => rows.push(product));
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
@@ -160,10 +143,17 @@ export default function PricesListTable({prices}) {
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                             <TableCell component="th" scope="row">
+                                                <ProductsPricesEditBtn product={row} />
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
                                                 {row.name}
                                             </TableCell>
                                             {
-                                                row.prices.map((price) => <InputPriceManual key={Date.now()*Math.random()} priceValue={price.value} />)
+                                                row.prices.map((price) =>
+                                                    <TableCell component="th" align="center" scope="row" key={Date.now() * Math.random()}>
+                                                        ${price.value}
+                                                    </TableCell>
+                                                )
                                             }
                                         </TableRow>
                                     );

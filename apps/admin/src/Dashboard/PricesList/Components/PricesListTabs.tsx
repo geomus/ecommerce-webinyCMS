@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import { listPricesList } from "../../../graphql/query";
+import { listPricesList, products } from "../../../graphql/query";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { useQuery } from "@apollo/client";
 import PricesListTable from "./PricesListTable";
@@ -73,8 +73,9 @@ export default function PricesTabsListPrices() {
     const classes = useStyles();
 
     const { loading, error, data } = useQuery(listPricesList);
+    const { loading: productsLoading, error: productsError, data: productsData } = useQuery(products);
 
-    if (loading) {
+    if (loading || productsLoading) {
         return (
             <h1>
                 {" "}
@@ -83,10 +84,11 @@ export default function PricesTabsListPrices() {
         );
     }
 
-    if (error) {
+    if (error || productsError) {
         console.dir(error);
         return <h1> error </h1>;
     }
+
 
 
     return (
@@ -96,7 +98,7 @@ export default function PricesTabsListPrices() {
                     Listas de precios
                 </Typography>
                 <br />
-                <PricesCategoryBtnCreate className={classes.btnPricesCategoryCreate} />
+                <PricesCategoryBtnCreate className={classes.btnPricesCategoryCreate} productsData={productsData.products.listProducts.data} />
                 <br />
                 <TableContainer className={classes.table} component={Paper} >
                     <Table aria-label="simple table" size="small">
@@ -105,7 +107,7 @@ export default function PricesTabsListPrices() {
                                 <TableCell>Lista</TableCell>
                                 <TableCell align="right"></TableCell>
                                 <TableCell align="right"></TableCell>
-                                <TableCell align="left">Porcentaje</TableCell>
+                                <TableCell align="center">Porcentaje</TableCell>
                                 <TableCell align="right"></TableCell>
                                 <TableCell align="right"></TableCell>
                             </TableRow>
@@ -117,19 +119,10 @@ export default function PricesTabsListPrices() {
                                         {row.name}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <TableCell component="th" className={classes.inputPercent} align="right" scope="row">
-                                            <Input
-                                                type="number"
-                                                id="standard-required"
-                                                aria-label="Percent"
-                                                defaultValue={row.percent}
-                                                endAdornment={<InputAdornment position="end">%</InputAdornment>}
-
-                                            />
-                                        </TableCell>
+                                            {row.percent}%
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button variant="outlined" color="primary" size="small">Recalcular</Button>
+                                        <Button variant="outlined" color="primary" size="small">Editar</Button>
                                     </TableCell>
                                     <TableCell align="right">
                                         <PricesListDelete row={row} />
@@ -139,7 +132,7 @@ export default function PricesTabsListPrices() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <PricesListTable prices={data.pricesList.listPricesList.data}/>
+                <PricesListTable products={productsData.products.listProducts.data}/>
             </Container>
         </div>
     );

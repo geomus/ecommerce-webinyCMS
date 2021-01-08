@@ -6,7 +6,8 @@ import {
     deleteFile,
     getFile,
     createFile,
-    products
+    products,
+    createPrices
 } from "../../../graphql/query";
 import FileUploadButton from "./FileUploadButton";
 import {
@@ -31,6 +32,7 @@ import Tag from "@material-ui/icons/LocalOffer";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsCheckboxPricesCategory from "./ProductsCheckboxPricesCategory";
 import SelectProperty from "./SelectProperty";
+import ProductListPrices from "./ProductListPrices";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -99,7 +101,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const [isLoading, setIsLoading] = useState(false);
     const [openSuccess, setOpenSuccess] = useState(false);
     const [openError, setOpenError] = useState(false);
-
+    const [prices, setPrices] = useState(0)
     const [name, setName] = useState(product.name);
     const [description, setDescription] = useState(product.description);
     const [priceBase, setPriceBase] = useState<Number>(product.priceBase);
@@ -108,6 +110,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const [tags, setTags] = useState(product.tags);
 
     const [idPrices, setIdPrices] = useState({});
+    const [addPrices] = useMutation(createPrices)
 
     const [productVariants, setProductVariants] = useState([]);
     useEffect(() => {
@@ -198,7 +201,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     };
 
     const handleIdPrices = (event) => {
-        setIdPrices({...idPrices, [event.currentTarget.id] : event.target.checked})
+        setIdPrices({ ...idPrices, [event.currentTarget.id]: event.target.checked })
     };
     const handleChangeCategories = (event) => {
         setCategories(event.target.value);
@@ -245,11 +248,23 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
             });
         });
 
+        const arrayPrices = []
+        for (const key in prices) {
+            const pricesObject = { list: {}, value: 0 }
+            pricesObject.list = { id: key }
+            pricesObject.value = Number(prices[key])
+            arrayPrices.push(pricesObject)
+        }
+        const result = await addPrices({ variables: { data: arrayPrices } })
+        const pricesProduct = []
+        result.data.prices.createPrices.data.forEach(price => pricesProduct.push({ id: price.id }))
+
+
         const product = {
             name: name,
             description: description,
             priceBase: priceBase,
-            prices: Object.keys(idPrices),
+            prices: pricesProduct,
             categories: categoriesProd,
             images: imagesKeys,
             tags: tags,
@@ -355,12 +370,14 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                 <InputLabel className={classes.formControl}>
                                     Listas de precios
                                 </InputLabel>
-                                <ProductsCheckboxPricesCategory
+                                {/* <ProductsCheckboxPricesCategory
                                     handleIdPrices={handleIdPrices}
                                     productPrices={product.prices}
                                     statePrices={idPrices}
                                     setStatePrices={setIdPrices}
-                                />
+                                /> */}
+                                <ProductListPrices priceBase={product.priceBase} prices={prices} setPrices={setPrices} />
+
                             </Grid>
                         </Grid>
                         <Grid item lg={4}>

@@ -18,8 +18,8 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createPrices, listPricesList } from "../../../graphql/query";
-import { useMutation } from "@apollo/client";
+import { createPriceList, createPrices, listPricesList, listProductsByPrices, products } from "../../../graphql/query";
+import { useMutation, useQuery } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,7 +47,7 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog({ className }) {
+export default function FullScreenDialog({ className, productsData }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -55,11 +55,25 @@ export default function FullScreenDialog({ className }) {
     const [name, setName] = useState("");
     const [percent, setPercent] = useState(null);
     const [defaultPrice, setDefaultPrice] = useState(false);
-
-    const [addPricesCategory] = useMutation(createPrices, {
-        refetchQueries: () => [{ query: listPricesList }]
+    const [addPrices] = useMutation(createPrices)
+    const [addPriceList] = useMutation(createPriceList, {
+        refetchQueries: () => [{ query: listPricesList }, { query: products }]
     });
 
+    const {loading, error, data} = useQuery(listProductsByPrices)
+
+    if (loading) {
+        return (
+            <h1>
+                loading
+            </h1>
+        );
+    }
+
+    if (error) {
+        console.dir(error);
+        return <h1> error </h1>;
+    }
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -85,12 +99,34 @@ export default function FullScreenDialog({ className }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const pricesCategory = {
+        const priceList = {
             name: name,
             percent: Number(percent),
-            default: defaultPrice
         };
-        await addPricesCategory({ variables: { data: pricesCategory } });
+        const priceListResult = await addPriceList({ variables: { data: priceList } });
+        // console.log(data);
+        // const products = [...data.products.listProducts.data]
+
+        // const arrayPrices=[]
+        // for (let i = 0; i < products.length; i++) {
+        //     const prices = {
+        //         list: {
+        //             id: priceListResult.data.pricesList.createPriceList.data.id
+        //         },
+        //         value: products[i].priceBase * (Number(percent) / 100 + 1)
+        //     }
+        //     arrayPrices.push(prices)
+        // }
+        // const result = await addPrices({ variables: { data: arrayPrices } })
+
+        // for (let j = 0; j < products.length; j++) {
+        //    const newPrices = [...products[j].prices,{__typename: "Price", id:result.data.prices.createPrices.data[j].id}]
+        //    delete products[j].prices 
+        // }
+        // console.log(products);
+        
+       
+
         setTimeout(function () {
             handleClose();
         }, 1200);
@@ -144,7 +180,7 @@ export default function FullScreenDialog({ className }) {
                                 onBlur={handlePercent}
                             />
                         </FormGroup>
-                        <FormGroup>
+                        {/* <FormGroup>
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -155,7 +191,7 @@ export default function FullScreenDialog({ className }) {
                                 }
                                 label="Categoria por defecto"
                             />
-                        </FormGroup>
+                        </FormGroup> */}
                         <Button variant="contained" color="primary" type="submit">
                             {" "}
                             GUARDAR

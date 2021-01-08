@@ -11,6 +11,7 @@ import {
 } from "@webiny/commodo-graphql";
 
 import resolveBulkImport from "./resolveBulkImport";
+import resolveBulkUpdate from "./resolveBulkUpdate";
 
 const productFetcher = (ctx) => ctx.models.Product;
 const priceListFetcher = (ctx) => ctx.models.PriceList;
@@ -458,6 +459,7 @@ const plugin: GraphQLSchemaPlugin = {
                 createProduct(data: ProductInput!): ProductResponse
                 createProducts(data: [ProductInput!]!): ProductListResponse
                 updateProduct(id: ID!, data: ProductInput!): ProductResponse
+                updateProducts(id: [ID!]!, data: [ProductInput!]!): ProductListResponse
                 deleteProduct(id: ID!): ProductDeleteResponse
             }
             type PriceListMutation {
@@ -563,6 +565,7 @@ const plugin: GraphQLSchemaPlugin = {
                 createProduct: hasScope("products:create")(resolveCreate(productFetcher)),
                 createProducts: hasScope("products:create")(resolveBulkImport(productFetcher)),
                 updateProduct: hasScope("products:update")(resolveUpdate(productFetcher)),
+                updateProducts: hasScope("products:update")(resolveBulkUpdate(productFetcher)),
                 deleteProduct: hasScope("products:delete")(resolveDelete(productFetcher))
             },
             PriceListMutation: {
