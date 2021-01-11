@@ -15,9 +15,13 @@ export default ({ createBase, context }) => {
             slug: string(),
             description: string({ validation: validation.create("maxLength:500") }),
             priceBase: number(),
-            manualPrices:number({list:true}),
-            prices: string({
-                list: true
+            prices: ref({
+                list: true,
+                instanceOf: context.models.Price
+            }),
+            discounts: ref({
+                list:true,
+                instanceOf: context.models.SaleDiscount
             }),
             categories: fields({ list: true, instanceOf: context.models.Category }),
             images: string({ list: true }),
@@ -28,7 +32,7 @@ export default ({ createBase, context }) => {
             variants: ref({
                 list: true, 
                 instanceOf: context.models.ProductVariant
-            }) 
+            }),
         })),
         withProps({
             get shortDescription() {

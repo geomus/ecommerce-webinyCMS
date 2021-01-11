@@ -22,7 +22,29 @@ const authLink = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache({
+        typePolicies: {
+          Mutation: {
+            fields: {
+              prices: {
+                merge(existing = [], incoming: any) {
+                  return { ...existing, ...incoming };
+                }
+              },
+              files: {
+                merge(existing = [], incoming: any) {
+                  return { ...existing, ...incoming };
+                }
+              },
+              products: {
+                merge(existing = [], incoming: any) {
+                  return { ...existing, ...incoming };
+                }
+              }
+            }
+          }
+        }
+      })
 });
 
 

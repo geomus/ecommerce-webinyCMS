@@ -5,7 +5,8 @@ import {
     uploadFile,
     createFile,
     products,
-    listPrices
+    listPricesList,
+    createPrices
 } from "../../../graphql/query";
 import FileUploadButton from "./FileUploadButton";
 import {
@@ -33,6 +34,7 @@ import Tag from "@material-ui/icons/LocalOffer";
 import { makeStyles } from "@material-ui/core/styles";
 import ProductsCheckboxPricesCategory from "./ProductsCheckboxPricesCategory";
 import SelectProperty from "./SelectProperty";
+import ProductListPrices from "./ProductListPrices";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -92,6 +94,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     const [addProduct] = useMutation(createProduct, {
         refetchQueries: () => [{ query: products }]
     });
+    const [addPrices] = useMutation(createPrices)
 
     const [isLoading, setIsLoading] = useState(false);
     const [openSuccess, setOpenSuccess] = useState(false);
@@ -99,7 +102,8 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [price, setPrice] = useState<Number>(1);
+    const [price, setPrice] = useState(0);
+    const [prices, setPrices] = useState(0)
     const [categories, setCategories] = useState([]);
     const [imagesKeys, setImagesKeys] = useState([]);
     const [tags, setTags] = useState([]);
@@ -206,6 +210,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         setIsLoading(true);
         e.preventDefault();
         e.persist();
+        
 
         const categoriesProd = [];
         categories.forEach((category) => {
@@ -221,11 +226,23 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
             imagesKeys.push(imageKey);
             setImagesKeys(imagesKeys);
         }
+
+        const arrayPrices = []
+        for (const key in prices) {
+            const pricesObject = { list: {}, value: 0 }
+            pricesObject.list = { id: key }
+            pricesObject.value = Number(prices[key])
+            arrayPrices.push(pricesObject)
+        }
+        const result = await addPrices({ variables: { data: arrayPrices } })
+        const pricesProduct = []
+        result.data.prices.createPrices.data.forEach(price => pricesProduct.push({ id: price.id }))
+
         const product = {
             name: name,
             description: description,
             priceBase: price,
-            prices: Object.keys(idPrices),
+            prices: pricesProduct,
             categories: categoriesProd,
             images: imagesKeys,
             tags: tags,
@@ -247,10 +264,10 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         }
     };
 
-    const { loading: pricesLoading, error: pricesError, data: pricesData } = useQuery(listPrices);
+    const { loading: pricesLoading, error: pricesError, data: pricesData } = useQuery(listPricesList);
     useEffect(() => {
         if (!pricesLoading && pricesData) {
-            const objectForStatePrices = pricesData.prices.listPrices.data.map((price) => {
+            const objectForStatePrices = pricesData.pricesList.listPricesList.data.map((price) => {
                 const idStatePrices = price.id + "state";
                 const objectForStatePrices = { [idStatePrices]: false };
                 return objectForStatePrices;
@@ -275,7 +292,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         <Container maxWidth="lg" className={classes.layout}>
             <React.Fragment>
                 <form onSubmit={onSubmit}>
-                    <FormControl>
+                    <FormControl size="medium">
                         {!isLoading ? (
                             <Button
                                 variant="contained"
@@ -294,7 +311,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                     <Grid container spacing={3}>
                         <Grid item lg={4}>
                             <Grid item xs={12}>
-                                <FormControl>
+                                <FormControl size="medium">
                                     <InputLabel htmlFor="name">Nombre</InputLabel>
                                     <Input
                                         required
@@ -312,7 +329,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
+                                <FormControl size="medium" className={classes.formControl}>
                                     <InputLabel htmlFor="description">Descripción</InputLabel>
                                     <Input
                                         required
@@ -330,7 +347,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
+                                <FormControl size="medium" className={classes.formControl}>
                                     <InputLabel htmlFor="price">Precio</InputLabel>
                                     <Input
                                         required
@@ -353,16 +370,11 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 <InputLabel className={classes.formControl}>
                                     Listas de precios
                                 </InputLabel>
-                                <ProductsCheckboxPricesCategory
-                                    handleIdPrices={handleIdPrices}
-                                    productPrices={[]}
-                                    statePrices={idPrices}
-                                    setStatePrices={setIdPrices}
-                                />
+                                <ProductListPrices priceBase={price} prices={prices} setPrices={setPrices} />
                             </Grid>
                         </Grid>
                         <Grid item lg={4}>
-                            <FormControl className={classes.formControl}>
+                            <FormControl size="medium" className={classes.formControl}>
                                 <InputLabel id="categories">Categorías</InputLabel>
                                 <Select
                                     labelId="categories"
@@ -408,7 +420,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                         </Grid>
                         <Grid item lg={4}>
                             <Grid item xs={12}>
-                                <FormControl className={classes.formControl}>
+                                <FormControl size="medium" className={classes.formControl}>
                                     <FormHelperText id="variants-helper">
                                         Selecciona las variantes del producto. (Separadas por comas)
                                     </FormHelperText>
@@ -419,7 +431,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <FormControl className={classes.formControl}>
+                                <FormControl size="medium" className={classes.formControl}>
                                     <Autocomplete
                                         multiple
                                         id="tags"

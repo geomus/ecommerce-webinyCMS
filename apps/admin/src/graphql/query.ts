@@ -10,7 +10,15 @@ export const products = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -46,7 +54,15 @@ export const product = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -82,7 +98,15 @@ export const productsFilter = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -119,7 +143,11 @@ export const createProduct = gql`
                     slug
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                        }
+                    }
                     categories {
                         id
                         name
@@ -158,7 +186,15 @@ export const searchProducts = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -415,29 +451,30 @@ export const updateOrder = gql`
     }
 `;
 
-export const listPrices = gql`
-    query listPrices {
-        prices {
-            listPrices {
+export const listPricesList = gql`
+    query listPricesList {
+        pricesList {
+            listPricesList {
                 data {
                     id
                     name
                     percent
-                    default
+                    isDefaultOnSite
                 }
             }
         }
     }
 `;
 
-export const createPrice = gql`
-    mutation createPrice($data: PriceInput!) {
-        prices {
-            createPrice(data: $data) {
+export const createPriceList = gql`
+    mutation createPriceList($data: PriceListInput!) {
+        pricesList {
+            createPriceList(data: $data) {
                 data {
+                    id
                     name
                     percent
-                    default
+                    isDefaultOnSite
                 }
             }
         }
@@ -648,11 +685,67 @@ export const updateCategory = gql`
 
 export const deleteCategoryPrice = gql`
     mutation deletePrice($id: ID!) {
-        prices {
-            deletePrice(id: $id) {
+        pricesList {
+            deletePriceList(id: $id) {
                 data
                 error {
                     message
+                }
+            }
+        }
+    }
+`;
+
+export const createPrices = gql`
+    mutation createPrices($data: [PriceInput!]!) {
+        prices {
+            createPrices(data: $data) {
+                data {
+                    id
+                    list {
+                        id
+                    }
+                    value
+                }
+            }
+        }
+    }
+`;
+
+export const listProductsByPrices = gql`
+    query listProducts {
+        products {
+            listProducts {
+                data {
+                    id
+                    prices {
+                        id
+                    }
+                }
+            }
+        }
+    }
+`;
+
+export const updatePriceList = gql`
+    mutation updatePriceList($data: PriceListInput!, $id: ID!) {
+        pricesList {
+            updatePriceList(id: $id, data: $data) {
+                data {
+                    name
+                    percent
+                }
+            }
+        }
+    }
+`;
+
+export const updatePriceListIsDefault = gql`
+    mutation updatePriceList($data: PriceListInput!, $id: ID!) {
+        pricesList {
+            updatePriceList(id: $id, data: $data) {
+                data {
+                    isDefaultOnSite
                 }
             }
         }

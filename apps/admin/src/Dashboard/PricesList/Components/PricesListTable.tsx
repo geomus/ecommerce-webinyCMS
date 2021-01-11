@@ -9,12 +9,10 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { useQuery } from "@apollo/client";
-import { searchProducts } from "../../../graphql/query";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import PricesListTableToolbar from "./PricesListTableToolbar";
 import PricesListTableHead from "./PricesListTableHead";
 import InputPriceManual from "./InputPriceManual";
+import ProductsPricesEditBtn from "./ProductsPricesEditBtn";
 
 
 function descendingComparator(a, b, orderBy) {
@@ -78,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function PricesListTable({ searchQuery, percent }) {
+export default function PricesListTable({ products }) {
     const classes = useStyles();
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("calories");
@@ -87,30 +85,9 @@ export default function PricesListTable({ searchQuery, percent }) {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const searchVariable = {
-        query: searchQuery,
-        fields: "prices",
-        operator: "eq"
-    };
-
-    const { loading, error, data } = useQuery(searchProducts, { variables: { searchVariable } });
-
-    if (loading) {
-        return (
-            <h1>
-                {" "}
-                <LinearProgress />{" "}
-            </h1>
-        );
-    }
-
-    if (error) {
-        console.dir(error);
-        return <h1> error </h1>;
-    }
 
     const rows = [];
-    data.products.listProducts.data.map((price) => rows.push(price));
+    products.map((product) => rows.push(product));
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === "asc";
@@ -137,10 +114,7 @@ export default function PricesListTable({ searchQuery, percent }) {
     };
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-    const priceListCalculator = (priceBase, percent) => {
-        const finalPrice = priceBase * (percent / 100 + 1);
-        return finalPrice;
-    };
+
     return (
         <div className={classes.root}>
             <Paper className={classes.paper}>
@@ -160,6 +134,7 @@ export default function PricesListTable({ searchQuery, percent }) {
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
+                            prices={rows[0].prices}
                         />
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
@@ -168,18 +143,18 @@ export default function PricesListTable({ searchQuery, percent }) {
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                             <TableCell component="th" scope="row">
+                                                <ProductsPricesEditBtn product={row} />
+                                            </TableCell>
+                                            <TableCell component="th" scope="row">
                                                 {row.name}
                                             </TableCell>
-                                            <TableCell component="th" align="center" scope="row">
-                                                ${row.priceBase}
-                                            </TableCell>
-                                            <TableCell component="th" align="center" scope="row">
-                                                {percent}%
-                                            </TableCell>
-                                            {/* <TableCell component="th" align="center" scope="row">
-                                                ${priceListCalculator(row.priceBase, percent)}
-                                            </TableCell> */}
-                                            <InputPriceManual row={row} percent={percent}/>
+                                            {
+                                                row.prices.map((price) =>
+                                                    <TableCell component="th" align="center" scope="row" key={Date.now() * Math.random()}>
+                                                        ${price.value}
+                                                    </TableCell>
+                                                )
+                                            }
                                         </TableRow>
                                     );
                                 })}

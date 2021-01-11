@@ -4,10 +4,9 @@ import { validation } from "@webiny/validation";
 
 export default ({ createBase, context }) =>
     pipe(
-        withName("Price"),
+        withName("SaleDiscount"),
         withFields(() => ({
-            list: ref({instanceOf: context.models.PriceList}),
+            list: ref({instanceOf: context.models.SaleDiscountList}),
             value: number({value:0}),
-            product: ref({instanceOf: context.models.Product})
         }))
     )(createBase());
