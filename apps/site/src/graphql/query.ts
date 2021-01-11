@@ -11,7 +11,15 @@ export const products = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -47,7 +55,15 @@ export const product = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -83,7 +99,15 @@ export const productsFilter = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -223,7 +247,15 @@ export const searchProducts = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     variants {
@@ -300,7 +332,15 @@ export const listProductsSite = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {

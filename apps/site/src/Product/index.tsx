@@ -53,6 +53,8 @@ export default function Product(props) {
     });
     const classes = useStyles();
 
+    const priceDefault = props.prices.find(price => price.list.isDefaultOnSite === true)
+
     return (
         <Card className={classes.root} key={props.id} elevation={0}>
             <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
@@ -72,15 +74,22 @@ export default function Product(props) {
                     <Typography gutterBottom variant="body2" color="textSecondary" className={classes.productName}>
                         {props.name}
                     </Typography>
-                    <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
-                        ${props.priceBase}
-                    </Typography>
+                    {priceDefault ?
+                        <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
+                            ${priceDefault.value}
+                        </Typography>
+                        :
+                        <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
+                            ${props.priceBase}
+                        </Typography>
+                    }
+
                     {props.isFeatured && <RbNew className={classes.ribbonNew} />}
                 </CardContent>
             </CardActionArea>
             <CardActions>
                 <Button variant="contained" href={`/wonder-slug/product-detail?id=${props.id}`}>COMPRAR</Button>
-                <QuickView {...props}/>
+                <QuickView {...props} />
             </CardActions>
         </Card>
     );

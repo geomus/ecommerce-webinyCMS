@@ -59,6 +59,7 @@ export default function Cart() {
         });
     };
 
+
     return (
         <TableContainer>
             <Table className={classes.table} aria-label="cart" size="small">
@@ -68,92 +69,97 @@ export default function Cart() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {cart.map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell padding="none" align="left" size="small">
-                                <Button
-                                    value={row.id}
-                                    id={row.id}
-                                    onClick={deleteItemCart}
-                                    className={classes.IconDelete}
+                    {cart.map((row) => {
+                        const priceDefault = row.prices.find(price => price.list.isDefaultOnSite === true)
+
+                        return (
+                            <TableRow key={row.id}>
+                                <TableCell padding="none" align="left" size="small">
+                                    <Button
+                                        value={row.id}
+                                        id={row.id}
+                                        onClick={deleteItemCart}
+                                        className={classes.IconDelete}
+                                    >
+                                        <HighlightOffIcon className={classes.IconDelete} />
+                                    </Button>
+                                </TableCell>
+                                <TableCell
+                                    colSpan={2}
+                                    padding="none"
+                                    className={classes.cellImgProduct}
                                 >
-                                    <HighlightOffIcon className={classes.IconDelete} />
-                                </Button>
-                            </TableCell>
-                            <TableCell
-                                colSpan={2}
-                                padding="none"
-                                className={classes.cellImgProduct}
-                            >
-                                {row.images ? (
-                                    <img
-                                        src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}?width=800`}
-                                        className={classes.imgProduct}
-                                        alt="Foto producto"
-                                    />
-                                ) : (
+
+                                    {row.images ? (
                                         <img
-                                            src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                            src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}?width=800`}
                                             className={classes.imgProduct}
                                             alt="Foto producto"
                                         />
-                                    )}
-                            </TableCell>
-                            <TableCell colSpan={3} padding="none" size="small">
-                                {row.name}
-                            </TableCell>
-                            <TableCell padding="none" size="small">
-                            {propertyKeys &&
-                                propertyKeys.map((variantProperty, i) => (
-                                    <div key={`${i}variant`}>
-                                        <Typography variant="caption" className={classes.titleVariant}>{variantProperty}</Typography>
-                                        <select>
-                                            {Object.entries(
-                                                row.listVariants[i][propertyKeys[i]]
-                                            ).map(
-                                                ([key, value], j) => (
-                                                    row.variantsSelected[i][propertyKeys[i]] != value
-                                                        ?
-                                                        <option
-                                                            key={`${key}val${j}`}
-                                                            value={state[`${value}`]}
-                                                            id={`${value}`}
-                                                            onChange={handleChange}
-                                                        >
-                                                            {value}
-                                                        </option>
-                                                        :
-                                                        <option
-                                                            key={`${key}val${j}`}
-                                                            value={state[`${value}`]}
-                                                            id={`${value}`}
-                                                            onChange={handleChange}
-                                                            selected
-                                                        >
-                                                            {value}
-                                                        </option>
-
-                                                )
-                                                //
-                                            )}
-                                        </select>
-                                    </div>
-                                ))}
+                                    ) : (
+                                            <img
+                                        src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                        className={classes.imgProduct}
+                                        alt="Foto producto"
+                                    />
+                                        )}
                                 </TableCell>
-                            <TableCell colSpan={1}>
-                                <TextField
-                                    id={row.id}
-                                    value={row.quantity}
-                                    label="Qty."
-                                    type="number"
-                                    onChange={updateQtyItem}
-                                />
-                            </TableCell>
-                            <TableCell colSpan={1} padding="none" align="left">
-                                ${row.quantity * row.priceBase}
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                                <TableCell colSpan={3} padding="none" size="small">
+                                    {row.name}
+                                </TableCell>
+                                <TableCell padding="none" size="small">
+                                    {propertyKeys &&
+                                        propertyKeys.map((variantProperty, i) => (
+                                            <div key={`${i}variant`}>
+                                                <Typography variant="caption" className={classes.titleVariant}>{variantProperty}</Typography>
+                                                <select>
+                                                    {Object.entries(
+                                                        row.listVariants[i][propertyKeys[i]]
+                                                    ).map(
+                                                        ([key, value], j) => (
+                                                            row.variantsSelected[i][propertyKeys[i]] != value
+                                                                ?
+                                                                <option
+                                                                    key={`${key}val${j}`}
+                                                                    value={state[`${value}`]}
+                                                                    id={`${value}`}
+                                                                    onChange={handleChange}
+                                                                >
+                                                                    {value}
+                                                                </option>
+                                                                :
+                                                                <option
+                                                                    key={`${key}val${j}`}
+                                                                    value={state[`${value}`]}
+                                                                    id={`${value}`}
+                                                                    onChange={handleChange}
+                                                                    selected
+                                                                >
+                                                                    {value}
+                                                                </option>
+
+                                                        )
+                                                        //
+                                                    )}
+                                                </select>
+                                            </div>
+                                        ))}
+                                </TableCell>
+                                <TableCell colSpan={1}>
+                                    <TextField
+                                        id={row.id}
+                                        value={row.quantity}
+                                        label="Qty."
+                                        type="number"
+                                        onChange={updateQtyItem}
+                                    />
+                                </TableCell>
+                                <TableCell colSpan={1} padding="none" align="left">
+                                    ${row.quantity * priceDefault}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
 
                     <TableRow>
                         <TableCell padding="none" colSpan={2}>
