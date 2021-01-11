@@ -209,7 +209,8 @@ const ProductDetail = () => {
         }
         setLimitVariants(false);
     };
-console.log(limitVariants);
+
+    const priceDefault = data.products.getProduct.data.prices.find(price => price.list.isDefaultOnSite === true)
 
     return (
         <Container>
@@ -250,9 +251,15 @@ console.log(limitVariants);
                     <Typography variant="h5" gutterBottom>
                         {data.products.getProduct.data.name}
                     </Typography>
-                    <Typography variant="h5" gutterBottom>
-                        ${data.products.getProduct.data.priceBase}
-                    </Typography>
+                    {priceDefault ?
+                        <Typography gutterBottom variant="h6" color="textPrimary">
+                            ${priceDefault.value}
+                        </Typography>
+                        :
+                        <Typography gutterBottom variant="h6" color="textPrimary">
+                            ${data.products.getProduct.data.priceBase}
+                        </Typography>
+                    }
                     <Typography variant="body1" gutterBottom>
                         {data.products.getProduct.data.description}
                     </Typography>

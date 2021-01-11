@@ -197,6 +197,7 @@ const QuickViewContent = (props) => {
 
     console.log(limitVariants);
 
+    const priceDefault = props.prices.find(price => price.list.isDefaultOnSite === true)
 
     return (
         <Container>
@@ -233,9 +234,15 @@ const QuickViewContent = (props) => {
                     <Typography variant="h6" gutterBottom>
                         {props.name}
                     </Typography>
-                    <Typography className={classes.lineHeight} variant="h5" gutterBottom>
-                        ${props.priceBase}
-                    </Typography>
+                    {priceDefault ?
+                        <Typography gutterBottom variant="h6" color="textPrimary">
+                            ${priceDefault.value}
+                        </Typography>
+                        :
+                        <Typography gutterBottom variant="h6" color="textPrimary">
+                            ${props.priceBase}
+                        </Typography>
+                    }
                     <Typography className={classes.lineHeight} variant="body1" gutterBottom>
                         {props.description}
                     </Typography>
