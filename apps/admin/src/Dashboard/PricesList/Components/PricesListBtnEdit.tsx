@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
-import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 import {
     Checkbox,
     FormControlLabel,
@@ -18,8 +18,8 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createPriceList, createPrices, listPricesList, listProductsByPrices, products } from "../../../graphql/query";
-import { useMutation, useQuery } from "@apollo/client";
+import { listPricesList, products, updatePriceList } from "../../../graphql/query";
+import { useMutation } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -47,33 +47,16 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog({ className, productsData }) {
+export default function FullScreenDialog({ priceList }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [checked, setChecked] = useState(false);
     const [name, setName] = useState("");
     const [percent, setPercent] = useState(null);
-    const [defaultPrice, setDefaultPrice] = useState(false);
-    const [addPrices] = useMutation(createPrices)
-    const [addPriceList] = useMutation(createPriceList, {
+    const [editPriceList] = useMutation(updatePriceList, {
         refetchQueries: () => [{ query: listPricesList }, { query: products }]
     });
 
-    const {loading, error, data} = useQuery(listProductsByPrices)
-
-    if (loading) {
-        return (
-            <h1>
-                loading
-            </h1>
-        );
-    }
-
-    if (error) {
-        console.dir(error);
-        return <h1> error </h1>;
-    }
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -92,41 +75,15 @@ export default function FullScreenDialog({ className, productsData }) {
     const handlePercent = (e) => {
         setPercent(e.target.value);
     };
-    const handleChangeCheckbox = (e) => {
-        setChecked(e.target.checked);
-        setDefaultPrice(e.target.checked);
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const priceList = {
-            name: name,
-            percent: Number(percent),
+        const newPriceList = {
+            name: name || priceList.name,
+            percent: Number(percent) || priceList.percent,
         };
-        const priceListResult = await addPriceList({ variables: { data: priceList } });
-        // console.log(data);
-        // const products = [...data.products.listProducts.data]
 
-        // const arrayPrices=[]
-        // for (let i = 0; i < products.length; i++) {
-        //     const prices = {
-        //         list: {
-        //             id: priceListResult.data.pricesList.createPriceList.data.id
-        //         },
-        //         value: products[i].priceBase * (Number(percent) / 100 + 1)
-        //     }
-        //     arrayPrices.push(prices)
-        // }
-        // const result = await addPrices({ variables: { data: arrayPrices } })
-
-        // for (let j = 0; j < products.length; j++) {
-        //    const newPrices = [...products[j].prices,{__typename: "Price", id:result.data.prices.createPrices.data[j].id}]
-        //    delete products[j].prices 
-        // }
-        // console.log(products);
-        
-       
-
+        await editPriceList({ variables: { data: newPriceList, id: priceList.id } });
         setTimeout(function () {
             handleClose();
         }, 1200);
@@ -139,13 +96,13 @@ export default function FullScreenDialog({ className, productsData }) {
     return (
         <div>
             <Button
-                variant="contained"
+                variant="outlined"
                 color="primary"
-                startIcon={<AddIcon />}
-                className={className}
+                startIcon={<EditIcon />}
                 onClick={handleClickOpen}
+                size="small"
             >
-                NUEVA
+                EDITAR
             </Button>
             <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
@@ -159,7 +116,7 @@ export default function FullScreenDialog({ className, productsData }) {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            Nueva lista de precios
+                            Editar lista de precios
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -170,6 +127,8 @@ export default function FullScreenDialog({ className, productsData }) {
                                 id="namePriceCategory"
                                 label="Nombre"
                                 onChange={handleName}
+                                defaultValue={priceList.name}
+                                fullWidth
                             />
                         </FormGroup>
                         <FormGroup>
@@ -178,24 +137,16 @@ export default function FullScreenDialog({ className, productsData }) {
                                 label="Porcentaje"
                                 type="number"
                                 onBlur={handlePercent}
+                                defaultValue={priceList.percent}
+                                fullWidth
                             />
                         </FormGroup>
-                        {/* <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={checked}
-                                        onBlur={handleChangeCheckbox}
-                                        name="defaultPriceCategory"
-                                    />
-                                }
-                                label="Categoria por defecto"
-                            />
-                        </FormGroup> */}
-                        <Button variant="contained" color="primary" type="submit">
-                            {" "}
-                            GUARDAR
+                        <br/>
+                        <FormGroup>
+                            <Button variant="contained" color="primary" type="submit">
+                                GUARDAR
                         </Button>
+                        </FormGroup>
                     </form>
                 </Grid>
                 <Snackbar

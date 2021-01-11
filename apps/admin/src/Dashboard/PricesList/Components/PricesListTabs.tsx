@@ -17,9 +17,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Button from "@material-ui/core/Button";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Input from "@material-ui/core/Input";
+import PriceListBtnEdit from './PricesListBtnEdit'
 
 
 
@@ -122,7 +120,7 @@ export default function PricesTabsListPrices() {
                                             {row.percent}%
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button variant="outlined" color="primary" size="small">Editar</Button>
+                                        <PriceListBtnEdit priceList={row}/>
                                     </TableCell>
                                     <TableCell align="right">
                                         <PricesListDelete row={row} />

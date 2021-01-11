@@ -717,10 +717,35 @@ export const listProductsByPrices = gql`
         products {
             listProducts {
                 data {
-                    id 
+                    id
                     prices {
                         id
                     }
+                }
+            }
+        }
+    }
+`;
+
+export const updatePriceList = gql`
+    mutation updatePriceList($data: PriceListInput!, $id: ID!) {
+        pricesList {
+            updatePriceList(id: $id, data: $data) {
+                data {
+                    name
+                    percent
+                }
+            }
+        }
+    }
+`;
+
+export const updatePriceListIsDefault = gql`
+    mutation updatePriceList($data: PriceListInput!, $id: ID!) {
+        pricesList {
+            updatePriceList(id: $id, data: $data) {
+                data {
+                    isDefaultOnSite
                 }
             }
         }
