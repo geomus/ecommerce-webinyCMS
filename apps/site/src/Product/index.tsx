@@ -59,7 +59,7 @@ export default function Product(props) {
                 {props.images ?
                     <CardMedia
                     className={classes.media}
-                    image={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}`}
+                    image={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}?width=800`}
                     title="Producto"
                 /> :
                 <CardMedia

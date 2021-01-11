@@ -197,7 +197,7 @@ export default function ProductSearch({ mobile }) {
                                 {item.images ? (
                                     <img
                                         className={classes.imgProductInline}
-                                        src={`${process.env.REACT_APP_API_URL}/files/${item.images[0]}`}
+                                        src={`${process.env.REACT_APP_API_URL}/files/${item.images[0]}?width=800`}
                                         alt="producto"
                                         width={50}
                                     />
@@ -254,7 +254,7 @@ export default function ProductSearch({ mobile }) {
                                             {item.images ? (
                                                 <img
                                                     className={classes.imgProductInline}
-                                                    src={`${process.env.REACT_APP_API_URL}/files/${item.images[0]}`}
+                                                    src={`${process.env.REACT_APP_API_URL}/files/${item.images[0]}?width=800`}
                                                     alt="producto"
                                                     width={50}
                                                 />

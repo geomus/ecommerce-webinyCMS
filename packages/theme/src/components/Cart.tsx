@@ -69,7 +69,7 @@ export default function Cart() {
                             >
                                 {row.images ? (
                                     <img
-                                        src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
+                                        src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}?width=800`}
                                         className={classes.imgProduct}
                                         alt="Foto producto"
                                     />
