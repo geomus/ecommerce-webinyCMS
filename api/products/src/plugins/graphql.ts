@@ -11,6 +11,7 @@ import {
 } from "@webiny/commodo-graphql";
 
 import resolveBulkImport from "./resolveBulkImport";
+import resolveCategoryFilter from "./resolveCategoryFilter";
 
 const productFetcher = (ctx) => ctx.models.Product;
 const priceFetcher = (ctx) => ctx.models.Price;
@@ -375,6 +376,7 @@ const plugin: GraphQLSchemaPlugin = {
             },
             ProductQuery: {
                 getProduct: hasScope("products:get")(resolveGet(productFetcher)),
+                listProducts: hasScope("products:list")(resolveList(productFetcher)),
                 listProducts: hasScope("products:list")(resolveList(productFetcher))
             },
             PriceQuery: {

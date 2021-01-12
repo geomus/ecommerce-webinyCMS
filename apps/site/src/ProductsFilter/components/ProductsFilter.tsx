@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { products } from "../../graphql/query";
 import { searchProducts } from "../../graphql/query";
 import { useLocation } from "react-router-dom";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
@@ -39,7 +38,11 @@ const ProductsFilter = () => {
     const searchQuery = location.search.split("=")[1];
 
     let searchVariable;
-    let queryGQL;
+
+    const [
+        getFilteredProducts,
+        { called, loading: loadingFilteredProducts, data: dataFilteredProducts }
+    ] = useLazyQuery(searchProducts);
 
     if (searchQuery) {
         searchVariable = {
@@ -47,15 +50,21 @@ const ProductsFilter = () => {
             fields: "name",
             operator: "regex"
         };
-        queryGQL = searchProducts;
     } else {
         searchVariable = null;
-        queryGQL = products;
     }
 
-    const { loading, error, data } = useQuery(queryGQL, { variables: { searchVariable } });
+    const { loading, error, data } = useQuery(searchProducts, { variables: { searchVariable } });
+    useEffect(() => {
+        console.log(categoriesFilter);
 
-    if (loading) {
+        getFilteredProducts({
+            variables: { query: [categoriesFilter], fields: "categories", operator: "regex" }
+        });
+        console.log(dataFilteredProducts);
+    }, [categoriesFilter]);
+
+    if (loading || (loadingFilteredProducts && called)) {
         return (
             <React.Fragment>
                 <Grid container wrap="nowrap">
@@ -81,7 +90,7 @@ const ProductsFilter = () => {
 
     const handleClear = () => {
         setFiltersState([]);
-        setCategoriesFilter("")
+        setCategoriesFilter("");
     };
 
     return (
@@ -110,7 +119,10 @@ const ProductsFilter = () => {
                                     <Typography className={classes.heading}>Categories</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <CategoriesFilter categoriesFilter={setCategoriesFilter} categoriesFilterState={categoriesFilter} />
+                                    <CategoriesFilter
+                                        categoriesFilter={setCategoriesFilter}
+                                        categoriesFilterState={categoriesFilter}
+                                    />
                                 </AccordionDetails>
                             </Accordion>
                             <Accordion defaultExpanded>
