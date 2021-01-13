@@ -12,11 +12,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { useQuery } from "@apollo/client";
 import { listOrders } from '../../../graphql/query'
-import { LinearProgress, NativeSelect } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import OrdersTableToolbar from './OrdersTableToolbar';
 import OrdersTableHead from './OrdersTableHead';
 import OrdersBtnView from './OrdersBtnView';
 import OrdersBtnDisable from './OrdersBtnDelete';
+import green from '@material-ui/core/colors/green';
+import StatusShipping from './StatusShipping';
+import StatusPayments from './StatusPayments';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -77,7 +80,10 @@ const useStyles = makeStyles((theme) => ({
     marginTags: {
         marginRight: "0.5rem"
     },
-    selectStatus: {textTransform: "capitalize", fontWeight:500}
+    selectStatus: { textTransform: "capitalize", fontWeight: 500 },
+    btnSendMsg: {
+        color: green[500]
+    }
 }));
 
 export default function OrdersTable() {
@@ -102,8 +108,6 @@ export default function OrdersTable() {
             }
             setOrderStatus(arrayStatusOrders)
         }
-        console.log(orderStatus);
-
     }, [loading, data]);
 
     if (loading) {
@@ -120,23 +124,16 @@ export default function OrdersTable() {
         return <h1> error </h1>;
     }
 
-    const status = [
-        {
-            name: 'intent',
-            icon: "🔵"
-        },
-        {
-            name: 'pending',
-            icon: "🟡"
-        },
-        {
-            name: 'success',
-            icon: "🟢"
-        },
-        {
-            name: 'failure',
-            icon: "🔴"
-        }]
+
+
+    const formatDate = function formatDate(date) {
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = d.getMonth();
+        const day = d.getDate();
+        const monthNames = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+        return `${day}-${monthNames[month]}-${year}`
+    };
 
     const rows = []
     data.orders.listOrders.data.map(order => rows.push(order))
@@ -164,6 +161,7 @@ export default function OrdersTable() {
         setPage(newPage);
     };
 
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
@@ -173,16 +171,8 @@ export default function OrdersTable() {
         setDense(event.target.checked);
     };
 
-    const handleChangeStatus = (event) => {
-        const name = event.currentTarget.id;
-        setOrderStatus({
-            ...orderStatus,
-            [name]: event.target.value
-        });
-
-    };
-
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
 
     return (
         <div className={classes.root}>
@@ -210,17 +200,18 @@ export default function OrdersTable() {
                                 .map((row, j) => {
                                     const cart = JSON.parse(row.cart)
                                     const totalCart = totalCalculator(cart)
+
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                                            <TableCell align="center" component="th" scope="row">
-                                                {row.name}
+                                            <TableCell component="th" scope="row">
+                                                {j + 1}
                                             </TableCell>
                                             <TableCell align="center" component="th" scope="row">
-                                                {row.lastName}
+                                                {row.name + ' ' + row.lastName}
                                             </TableCell>
                                             <TableCell align="center">
                                                 <Typography variant="body2" component="span">
-                                                    {row.createdOn}
+                                                    {formatDate(row.createdOn)}
                                                 </Typography>
                                             </TableCell>
                                             <TableCell align="center">
@@ -230,34 +221,14 @@ export default function OrdersTable() {
                                             </TableCell>
                                             <TableCell align="center">
                                                 <Typography variant="body2" component="span">
-                                                    {row.pay}
-                                                </Typography>
-                                            </TableCell>
-                                            <TableCell align="center">
-                                                <Typography variant="body2" component="span">
                                                     {row.shipping}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell align="center" padding="none">
-                                                <NativeSelect
-                                                    onChange={handleChangeStatus}
-                                                    className={classes.selectStatus}
-                                                    defaultValue={orderStatus[row.id]}
-                                                >
-                                                    {
-                                                        
-                                                        status.map((item, i) =>
-                                                        orderStatus[row.id] != item.name ?
-                                                            <option key={`statusOrder${i}`} value={item.name} id={row.id} style={{ textTransform: "capitalize" }}>
-                                                                {item.icon} {item.name}
-                                                            </option>
-                                                            :
-                                                            <option key={`statusOrder${i}`} value={item.name} id={row.id} style={{ textTransform: "capitalize" }} selected>
-                                                            {item.icon} {item.name}
-                                                        </option>
-                                                        )
-                                                    }
-                                                </NativeSelect>
+                                            <TableCell align="center">
+                                                <StatusShipping orderStatus={orderStatus} orderId={row.id} orderPhone={row.phone} orderUser={row.name}/>
+                                            </TableCell>
+                                            <TableCell align="center" padding="none">                                               
+                                                <StatusPayments orderStatus={orderStatus} orderId={row.id} orderPhone={row.phone} orderUser={row.name} />                                            
                                             </TableCell>
                                             <TableCell align="center">
                                                 <OrdersBtnView cart={cart} />

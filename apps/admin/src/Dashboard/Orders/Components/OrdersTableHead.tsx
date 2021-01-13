@@ -4,19 +4,14 @@ import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/cor
 
 
 const headCells = [
-    { id: 'name', disablePadding: false, disableSort: false, label: 'Nombre' },
-    { id: 'lastName', disablePadding: false, disableSort: false, label: 'Apellido' },
+    { id: 'id', disablePadding: false, disableSort: false, label: '#' },
+    { id: 'name', disablePadding: false, disableSort: false, label: 'Nombre Completo' },
     { id: 'createdOn', disablePadding: false, disableSort: false, label: 'Fecha' },
     { id: 'totalOrder', disablePadding: false, disableSort: false, label: 'Total' },
-    // { id: 'phone', disablePadding: false, disableSort: false, label: 'Telefono' },
-    // { id: 'address', disablePadding: false, disableSort: false, label: 'Direccion' },
-    // { id: 'state', disablePadding: false, disableSort: false, label: 'Provincia' },
-    // { id: 'city', disablePadding: false, disableSort: false, label: 'Ciudad' },
-    // { id: 'zip', disablePadding: false, disableSort: false, label: 'C.P.' },
-    { id: 'pay', disablePadding: false, disableSort: false, label: 'Pago' },
     { id: 'shipping', disablePadding: false, disableSort: false, label: 'Envío' },
-    { id: 'status', disablePadding: false, disableSort: false, label: 'Estado' },
-    { id: 'cart', disablePadding: false, disableSort: true, label: 'Ver Productos' },
+    { id: 'status', disablePadding: false, disableSort: false, label: 'Entrega' },
+    { id: 'status', disablePadding: false, disableSort: false, label: 'Pago' },
+    { id: 'cart', disablePadding: false, disableSort: true, label: 'Ver Detalle' },
     // { id: 'delete', disablePadding: false, disableSort: true, label: 'Ocultar' }
 ];
 const ProductsTableHead = (props) => {
