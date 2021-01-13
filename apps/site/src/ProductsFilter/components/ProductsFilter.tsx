@@ -12,8 +12,11 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import IconButton from "@material-ui/core/IconButton";
+import Input from "@material-ui/core/Input";
 import CategoriesFilter from "./CategoriesFilter";
 import ProductsList from "./ProductsList";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
         heading: {
             fontSize: theme.typography.pxToRem(15),
             fontWeight: theme.typography.fontWeightRegular
+        },
+        input: {
+            width: 70
         }
     })
 );
@@ -35,6 +41,7 @@ const ProductsFilter = () => {
     const location = useLocation();
     const [categoriesFilter, setCategoriesFilter] = useState("");
     const [filtersState, setFiltersState] = useState([]);
+    const [priceFilter, setPriceFilter] = useState<number[]>([1, 99999]);
     const searchQuery = location.search.split("=")[1];
 
     let searchVariable;
@@ -56,12 +63,9 @@ const ProductsFilter = () => {
 
     const { loading, error, data } = useQuery(searchProducts, { variables: { searchVariable } });
     useEffect(() => {
-        console.log(categoriesFilter);
-
         getFilteredProducts({
             variables: { query: [categoriesFilter], fields: "categories", operator: "regex" }
         });
-        console.log(dataFilteredProducts);
     }, [categoriesFilter]);
 
     if (loading || (loadingFilteredProducts && called)) {
@@ -91,6 +95,23 @@ const ProductsFilter = () => {
     const handleClear = () => {
         setFiltersState([]);
         setCategoriesFilter("");
+    };
+
+    const handleChangePriceInputMIN = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const priceArrayNew =
+            event.target.value === ""
+                ? [0, priceFilter[1]]
+                : [Number(event.target.value), priceFilter[1]];
+
+        setPriceFilter(priceArrayNew);
+    };
+
+    const handleChangePriceInputMAX = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const priceArrayNew =
+            event.target.value === ""
+                ? [priceFilter[0], 99999]
+                : [priceFilter[0], Number(event.target.value)];
+        setPriceFilter(priceArrayNew);
     };
 
     return (
@@ -128,17 +149,48 @@ const ProductsFilter = () => {
                             <Accordion defaultExpanded>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="variants"
-                                    id="variants"
+                                    aria-controls="price"
+                                    id="price"
                                 >
-                                    <Typography className={classes.heading}>Variants</Typography>
+                                    <Typography className={classes.heading}>Price</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <Typography>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                        Suspendisse malesuada lacus ex, sit amet blandit leo
-                                        lobortis eget.
-                                    </Typography>
+                                    <Grid item container>
+                                        <Grid item xs={6}>
+                                            <Input
+                                                className={classes.input}
+                                                value={priceFilter[0]}
+                                                margin="dense"
+                                                onChange={handleChangePriceInputMIN}
+                                                inputProps={{
+                                                    step: 1000,
+                                                    min: 0,
+                                                    max: 99999,
+                                                    type: "number",
+                                                    "aria-labelledby": "input-slider"
+                                                }}
+                                            />
+                                            -
+                                        </Grid>
+                                        <Grid item xs={6}>
+                                            <Input
+                                                className={classes.input}
+                                                value={priceFilter[1]}
+                                                margin="dense"
+                                                onChange={handleChangePriceInputMAX}
+                                                inputProps={{
+                                                    step: 1000,
+                                                    min: 0,
+                                                    max: 99999,
+                                                    type: "number",
+                                                    "aria-labelledby": "input-slider"
+                                                }}
+                                            />
+                                        </Grid>
+                                        <IconButton aria-label="cart">
+                                            <ArrowRightIcon />
+                                        </IconButton>
+                                    </Grid>
                                 </AccordionDetails>
                             </Accordion>
                         </div>

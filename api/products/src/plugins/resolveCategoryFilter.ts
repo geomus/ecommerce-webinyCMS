@@ -1,36 +1,31 @@
 // @ts-ignore
-import { WithFieldsError } from "@webiny/commodo";
-import { ListResponse, ErrorResponse } from "@webiny/graphql";
-import InvalidFieldsError from "./InvalidFieldsError";
+import { ListResponse } from "@webiny/graphql";
+import parseBoolean from "./parseBoolean";
 
 export default function resolveCategoryFilter(getModel) {
     return async (root, args, context) => {
         const Model: any = getModel(context);
-        const arrayModels = [];
-        for (let i = 0; i < args.data.length; i++) {
-            try {
-                const model = new Model();
-                await model.populate(args.data[i]).save()
-                arrayModels.push(model)
-            } catch (e) {
-                if (
-                    e instanceof WithFieldsError &&
-                    e.code === WithFieldsError.VALIDATION_FAILED_INVALID_FIELDS
-                ) {
-                    const fieldError = InvalidFieldsError.from(e);
-                    return new ErrorResponse({
-                        code: WithFieldsError.VALIDATION_FAILED_INVALID_FIELDS,
-                        message: fieldError.code,
-                        data: fieldError.data
-                    });
-                }
-                return new ErrorResponse({
-                    code: e.code,
-                    message: e.message,
-                    data: e.data
-                });
-            }
+
+        parseBoolean(args);
+        const query = { ...args.where };
+        const find: any = {
+            query,
+            limit: args.limit,
+            after: args.after,
+            before: args.before,
+            sort: args.sort
+        };
+
+        if (args.search && args.search.query) {
+            find.search = {
+                query: args.search.query,
+                fields: args.search.fields,
+                operator: args.search.operator || "or"
+            };
         }
-        return new ListResponse(arrayModels);
+
+        const data = await Model.find(find);
+
+        return new ListResponse(data, data.getMeta());
     };
 }

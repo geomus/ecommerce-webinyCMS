@@ -117,6 +117,7 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 parent: Category
                 enabled: Boolean
+                products:[Product]
                 isEnabledInHierarchy: Boolean
             }
 
@@ -377,7 +378,7 @@ const plugin: GraphQLSchemaPlugin = {
             ProductQuery: {
                 getProduct: hasScope("products:get")(resolveGet(productFetcher)),
                 listProducts: hasScope("products:list")(resolveList(productFetcher)),
-                listProducts: hasScope("products:list")(resolveList(productFetcher))
+                listProductsFilter: hasScope("products:list")(resolveCategoryFilter(productFetcher))
             },
             PriceQuery: {
                 getPrice: hasScope("prices:get")(resolveGet(priceFetcher)),
