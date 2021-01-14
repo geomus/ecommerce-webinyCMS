@@ -52,7 +52,9 @@ const useStyles = makeStyles(() => ({
     },
     autocomplete: {
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: "center",
+
     },
     textField: {
         borderRadius: 20,
@@ -166,8 +168,26 @@ export default function StatusShipping({ stateShipping, orderId, orderPhone, ord
                 id="controllable-state-shipping"
                 options={shippings}
                 disableClearable={true}
-                renderInput={(params) => <TextField {...params} size="small" margin="dense" variant="standard" className={classes.textField} style={{ backgroundColor: shippingColor }} />}
-
+                //renderInput={(params) => <TextField {...params} size="small" margin="dense" variant="standard" className={classes.textField} style={{ backgroundColor: shippingColor }} />}
+                renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                        <input readOnly style={{
+                            borderRadius: 20,
+                            textAlign: "center",
+                            boxShadow: "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)",
+                            fontWeight: 600,
+                            color:"#fff",
+                            padding: 5,
+                            width: 100,
+                            borderBottom: 'none',
+                            backgroundColor: shippingColor,
+                            border: 0,
+                            textTransform: "capitalize",
+                            cursor: "pointer",
+                            outline:" -webkit-focus-ring-color auto 0px"
+                        }} type="text" {...params.inputProps} />
+                    </div>
+                )}
             />
             { isLoading ?
                 <CircularProgress size={30} />

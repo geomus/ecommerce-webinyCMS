@@ -19,6 +19,7 @@ import { listOrders, updateStatusOrderPayment } from '../../../graphql/query';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+
 const statusPayment = [
     {
         id: "th741258AGfe",
@@ -52,7 +53,8 @@ const useStyles = makeStyles(() => ({
     },
     autocomplete: {
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: "center",
     },
     textField: {
         borderRadius: 20,
@@ -64,8 +66,13 @@ const useStyles = makeStyles(() => ({
         width: 130,
         borderBottom: 'none',
         color: "#fff"
+    },
+    root: {
+        color: "#fff"
     }
 }));
+
+
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -73,7 +80,7 @@ function Alert(props: AlertProps) {
 
 export default function StatusPayments({ statePayment, orderId, orderPhone, orderUser }) {
     const [payment, setPayment] = React.useState('');
-    const [shippingColor, setShippingColor] = React.useState('');
+    const [paymentColor, setPaymentColor] = React.useState('');
     const [inputValue, setInputValue] = React.useState('');
     const [openSuccess, setOpenSuccess] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false)
@@ -120,7 +127,7 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
     }
     const handleColor = (newInputValue) => {
         const status = statusPayment.find(ship => ship.name == newInputValue)
-        setShippingColor(status.color)
+        setPaymentColor(status.color)
     }
     const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === "clickaway") {
@@ -166,10 +173,26 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
                 id="controllable-state-shipping"
                 options={payments}
                 disableClearable={true}
-                renderInput={(params) => <TextField {...params} size="small" margin="dense" className={classes.textField} style={{ backgroundColor: shippingColor + 'aa' }}
-                />}
-
-
+                //renderInput={(params) => <StyledTextField {...params} size="small" classes={{root: classes.root}} margin="dense" className={classes.textField} style={{ backgroundColor: paymentColor + 'aa' }}
+                renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                        <input readOnly style={{
+                            borderRadius: 20,
+                            textAlign: "center",
+                            boxShadow: "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)",
+                            fontWeight: 600,
+                            padding: 5,
+                            color:"#fff",
+                            width: 100,
+                            borderBottom: 'none',
+                            backgroundColor: paymentColor,
+                            border: 0,
+                            textTransform: "capitalize",
+                            cursor: "pointer",
+                            outline:" -webkit-focus-ring-color auto 0px"
+                        }} type="text" {...params.inputProps} />
+                    </div>
+                )}
             />
             { isLoading ?
                 <CircularProgress size={30} />
