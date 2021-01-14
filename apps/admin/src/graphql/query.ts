@@ -755,12 +755,26 @@ export const updatePriceListIsDefault = gql`
     }
 `;
 
-export const updateStatusOrder = gql`
+export const updateStatusOrderShipping = gql`
     mutation updateOrder($id: ID!, $data: OrderInput!) {
         orders {
             updateOrder(id: $id, data: $data) {
                 data {
                     statusShipping
+                }
+                error {
+                    data
+                }
+            }
+        }
+    }
+`;
+
+export const updateStatusOrderPayment = gql`
+    mutation updateOrder($id: ID!, $data: OrderInput!) {
+        orders {
+            updateOrder(id: $id, data: $data) {
+                data {
                     statusPayment
                 }
                 error {

@@ -8,7 +8,14 @@ import { green } from '@material-ui/core/colors';
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Snackbar from '@material-ui/core/Snackbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import { useMutation } from '@apollo/client/react';
+import { listOrders, updateStatusOrderPayment } from '../../../graphql/query';
 
 const statusPayment = [
     {
@@ -43,7 +50,7 @@ const useStyles = makeStyles(() => ({
     },
     autocomplete: {
         display: "flex",
-        justifyContent: "space-between"
+        justifyContent: "center"
     },
     textField: {
         borderRadius: 20,
@@ -69,10 +76,13 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
     const [openSuccess, setOpenSuccess] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false)
     const [openError, setOpenError] = React.useState(false);
-
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [aceptDialog, setAceptDialog] = React.useState('')
     const classes = useStyles()
-    const payments = statusPayment.map(state => state.name)
 
+    const [patchOrderStatus] = useMutation(updateStatusOrderPayment, {
+        refetchQueries: () => [{ query: listOrders }]
+    })
     React.useEffect(() => {
         if (statePayment[orderId] != undefined) {
             setPayment(statePayment[orderId]);
@@ -80,12 +90,17 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
 
     }, [statePayment, orderId]);
 
+    const payments = statusPayment.map(state => state.name)
+
     const handleSendMessage = async () => {
         setIsLoading(true)
+        const status = statusPayment.find(pay => pay.name == payment)
+
         const response = await fetch(
             `${process.env.REACT_APP_API_URL}/whatsapp/webhook`,
             {
                 method: "POST",
+                body: JSON.stringify({ message: status.message, phone: orderPhone, orderId: orderId, user: orderUser })
             }
         );
         const body = await response
@@ -102,20 +117,34 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
         const status = statusPayment.find(ship => ship.name == newInputValue)
         setShippingColor(status.color)
     }
-    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === "clickaway") {
             return;
         }
         setOpenSuccess(false);
         setOpenError(false);
     };
+    const handleClickOpenDialog = (newValue) => {
+        setOpenDialog(true);
+        setAceptDialog(newValue)
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
+    const handleAceptDialog = () => {
+        setPayment(aceptDialog);
+        patchOrderStatus({ variables: { id: orderId, data: { statusPayment: aceptDialog } } })
+        setOpenDialog(false);
+    }
 
     return (
         <div className={classes.autocomplete}>
             <Autocomplete
                 value={payment}
                 onChange={(event, newValue) => {
-                    setPayment(newValue);
+                    handleClickOpenDialog(newValue)
                 }}
                 inputValue={inputValue}
                 onInputChange={(event, newInputValue) => {
@@ -125,7 +154,7 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
                 id="controllable-state-shipping"
                 options={payments}
                 disableClearable={true}
-                renderInput={(params) => <TextField {...params} size="small" margin="dense" className={classes.textField}  style={{ backgroundColor: shippingColor + 'aa' }} 
+                renderInput={(params) => <TextField {...params} size="small" margin="dense" className={classes.textField} style={{ backgroundColor: shippingColor + 'aa' }}
                 />}
 
 
@@ -137,27 +166,48 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
                     <MessageIcon fontSize="inherit" className={classes.btnSendMsg} />
                 </IconButton>
             }
-      
+
             <Snackbar
                 open={openSuccess}
                 autoHideDuration={3000}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                onClose={handleClose}
+                onClose={handleCloseAlert}
             >
-                <Alert onClose={handleClose} severity="success">
-                ¡Mensaje enviado!
+                <Alert onClose={handleCloseAlert} severity="success">
+                    ¡Mensaje enviado!
                 </Alert>
             </Snackbar>
             <Snackbar
                 open={openError}
                 autoHideDuration={5000}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                onClose={handleClose}
+                onClose={handleCloseAlert}
             >
-                <Alert onClose={handleClose} severity="error">
-                ¡No se ha podido enviar el mensaje! Revise el numero de telefono
+                <Alert onClose={handleCloseAlert} severity="error">
+                    ¡No se ha podido enviar el mensaje! Revise el numero de telefono
                 </Alert>
             </Snackbar>
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">¿Desea confirmar la accion?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Si confirma la accion, se procedera a enviar y modificar informacion sensible.
+          </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Cancelar
+          </Button>
+                    <Button onClick={handleAceptDialog} color="primary" autoFocus>
+                        Aceptar
+          </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

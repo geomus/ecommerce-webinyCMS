@@ -8,6 +8,14 @@ import { green } from '@material-ui/core/colors';
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Snackbar from '@material-ui/core/Snackbar';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import { useMutation } from '@apollo/client/react';
+import { listOrders, updateStatusOrderShipping } from '../../../graphql/query';
 
 const statusShipping = [
     {
@@ -42,7 +50,7 @@ const useStyles = makeStyles(() => ({
     },
     autocomplete: {
         display: "flex",
-        justifyContent: "space-between"
+        justifyContent: "center"
     },
     textField: {
         borderRadius: 20,
@@ -64,25 +72,34 @@ export default function StatusShipping({ stateShipping, orderId, orderPhone, ord
     const [shipping, setShipping] = React.useState(statusShipping[0].name);
     const [openSuccess, setOpenSuccess] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(false)
-
     const [openError, setOpenError] = React.useState(false);
     const [shippingColor, setShippingColor] = React.useState('');
     const [inputValue, setInputValue] = React.useState('');
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [aceptDialog, setAceptDialog] = React.useState('')
     const classes = useStyles()
+
+    const [patchOrderStatus] = useMutation(updateStatusOrderShipping, {
+        refetchQueries: () => [{ query: listOrders }]
+    })
+    React.useEffect(() => {
+        if (stateShipping[orderId] != undefined) {
+            setShipping(stateShipping[orderId]);
+        }
+
+    }, [stateShipping, orderId]);
 
     const shippings = statusShipping.map(state => state.name)
 
     const handleSendMessage = async () => {
         setIsLoading(true)
-
         const status = statusShipping.find(ship => ship.name == shipping)
-        console.log(status, orderPhone);
 
         const response = await fetch(
             `${process.env.REACT_APP_API_URL}/whatsapp/webhook`,
             {
                 method: "POST",
-                body: JSON.stringify({ message: status.message, phone: "+5493416460725", orderId: orderId, user: orderUser })
+                body: JSON.stringify({ message: status.message, phone: orderPhone, orderId: orderId, user: orderUser })
             }
         );
         const body = await response
@@ -95,25 +112,38 @@ export default function StatusShipping({ stateShipping, orderId, orderPhone, ord
             setIsLoading(false)
         }
     }
-
     const handleColor = (newInputValue) => {
         const status = statusShipping.find(ship => ship.name == newInputValue)
         setShippingColor(status.color)
     }
-    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === "clickaway") {
             return;
         }
         setOpenSuccess(false);
         setOpenError(false);
     };
+    const handleClickOpenDialog = (newValue) => {
+        setOpenDialog(true);
+        setAceptDialog(newValue)
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
+    const handleAceptDialog = () => {
+        setShipping(aceptDialog);
+        patchOrderStatus({ variables: { id: orderId, data: { statusShipping: aceptDialog } } })
+        setOpenDialog(false);
+    }
 
     return (
         <div className={classes.autocomplete}>
             <Autocomplete
                 value={shipping}
                 onChange={(event, newValue) => {
-                    setShipping(newValue);
+                    handleClickOpenDialog(newValue)
                 }}
                 inputValue={inputValue}
                 onInputChange={(event, newInputValue) => {
@@ -137,9 +167,9 @@ export default function StatusShipping({ stateShipping, orderId, orderPhone, ord
                 open={openSuccess}
                 autoHideDuration={3000}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                onClose={handleClose}
+                onClose={handleCloseAlert}
             >
-                <Alert onClose={handleClose} severity="success">
+                <Alert onClose={handleCloseAlert} severity="success">
                     ¡Mensaje enviado!
                 </Alert>
             </Snackbar>
@@ -147,12 +177,33 @@ export default function StatusShipping({ stateShipping, orderId, orderPhone, ord
                 open={openError}
                 autoHideDuration={5000}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                onClose={handleClose}
+                onClose={handleCloseAlert}
             >
-                <Alert onClose={handleClose} severity="error">
+                <Alert onClose={handleCloseAlert} severity="error">
                     ¡No se ha podido enviar el mensaje! Revise el numero de telefono
                 </Alert>
             </Snackbar>
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">¿Desea confirmar la accion?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Si confirma la accion, se procedera a enviar y modificar informacion sensible.
+          </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Cancelar
+          </Button>
+                    <Button onClick={handleAceptDialog} color="primary" autoFocus>
+                        Aceptar
+          </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }
