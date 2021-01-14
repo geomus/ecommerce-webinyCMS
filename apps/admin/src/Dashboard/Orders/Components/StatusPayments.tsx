@@ -16,6 +16,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import { useMutation } from '@apollo/client/react';
 import { listOrders, updateStatusOrderPayment } from '../../../graphql/query';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const statusPayment = [
     {
@@ -78,6 +80,8 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
     const [openError, setOpenError] = React.useState(false);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [aceptDialog, setAceptDialog] = React.useState('')
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
     const classes = useStyles()
 
     const [patchOrderStatus] = useMutation(updateStatusOrderPayment, {
@@ -93,6 +97,7 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
     const payments = statusPayment.map(state => state.name)
 
     const handleSendMessage = async () => {
+        setAnchorEl(null);
         setIsLoading(true)
         const status = statusPayment.find(pay => pay.name == payment)
 
@@ -138,6 +143,13 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
         patchOrderStatus({ variables: { id: orderId, data: { statusPayment: aceptDialog } } })
         setOpenDialog(false);
     }
+    const handleOpenMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCloseMenu = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <div className={classes.autocomplete}>
@@ -160,11 +172,22 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
 
             />
             { isLoading ?
-                <CircularProgress size={35} />
+                <CircularProgress size={30} />
                 :
-                <IconButton aria-label="send message" size="medium" onClick={() => handleSendMessage()}>
-                    <MessageIcon fontSize="inherit" className={classes.btnSendMsg} />
-                </IconButton>
+                <div>
+                    <IconButton aria-label="send message" size="medium" onClick={handleOpenMenu}>
+                        <MessageIcon fontSize="inherit" className={classes.btnSendMsg} />
+                    </IconButton>
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleCloseMenu}
+                    >
+                        <MenuItem onClick={() => handleSendMessage()}>Enviar Whatsapp</MenuItem>
+                    </Menu>
+                </div>
             }
 
             <Snackbar
