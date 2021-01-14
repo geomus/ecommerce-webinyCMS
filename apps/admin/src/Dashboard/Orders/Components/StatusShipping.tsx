@@ -18,6 +18,7 @@ import { useMutation } from '@apollo/client/react';
 import { listOrders, updateStatusOrderShipping } from '../../../graphql/query';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const statusShipping = [
     {
@@ -186,6 +187,7 @@ export default function StatusShipping({ stateShipping, orderId, orderPhone, ord
                             cursor: "pointer",
                             outline:" -webkit-focus-ring-color auto 0px"
                         }} type="text" {...params.inputProps} />
+                        <FormHelperText>Click actualizar estado</FormHelperText>
                     </div>
                 )}
             />

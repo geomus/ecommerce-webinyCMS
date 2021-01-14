@@ -1,7 +1,7 @@
 import React from 'react'
-import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import MessageIcon from '@material-ui/icons/Message';
+import ArrowDropDownIcon from '@material-ui/icons/Message';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
@@ -18,6 +18,7 @@ import { useMutation } from '@apollo/client/react';
 import { listOrders, updateStatusOrderPayment } from '../../../graphql/query';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 
 const statusPayment = [
@@ -173,25 +174,27 @@ export default function StatusPayments({ statePayment, orderId, orderPhone, orde
                 id="controllable-state-shipping"
                 options={payments}
                 disableClearable={true}
-                //renderInput={(params) => <StyledTextField {...params} size="small" classes={{root: classes.root}} margin="dense" className={classes.textField} style={{ backgroundColor: paymentColor + 'aa' }}
+                openOnFocus={true}
+                popupIcon={<ArrowDropDownIcon />}
                 renderInput={(params) => (
-                    <div ref={params.InputProps.ref}>
-                        <input readOnly style={{
-                            borderRadius: 20,
-                            textAlign: "center",
-                            boxShadow: "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)",
-                            fontWeight: 600,
-                            padding: 5,
-                            color:"#fff",
-                            width: 100,
-                            borderBottom: 'none',
-                            backgroundColor: paymentColor,
-                            border: 0,
-                            textTransform: "capitalize",
-                            cursor: "pointer",
-                            outline:" -webkit-focus-ring-color auto 0px"
-                        }} type="text" {...params.inputProps} />
-                    </div>
+                        <div ref={params.InputProps.ref}>
+                            <input readOnly style={{
+                                borderRadius: 20,
+                                textAlign: "center",
+                                boxShadow: "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)",
+                                fontWeight: 600,
+                                padding: 5,
+                                color: "#fff",
+                                width: 100,
+                                borderBottom: 'none',
+                                backgroundColor: paymentColor,
+                                border: 0,
+                                textTransform: "capitalize",
+                                cursor: "pointer",
+                                outline: " -webkit-focus-ring-color auto 0px"
+                            }} type="text" {...params.inputProps} />
+                            <FormHelperText>Click actualizar estado</FormHelperText>
+                        </div>
                 )}
             />
             { isLoading ?

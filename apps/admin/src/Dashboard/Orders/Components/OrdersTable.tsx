@@ -236,7 +236,7 @@ console.log(statusPayment,statusShipping);
                                                 <StatusPayments statePayment={statusPayment} orderId={row.id} orderPhone={row.phone} orderUser={row.name} />                                            
                                             </TableCell>
                                             <TableCell align="center">
-                                                <OrdersBtnView cart={cart} />
+                                                <OrdersBtnView cart={cart} order={row}/>
                                             </TableCell>
                                             {/* <TableCell align="center">
                                                 <OrdersBtnDisable row={row} />
