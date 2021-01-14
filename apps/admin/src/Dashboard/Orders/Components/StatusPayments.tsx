@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Snackbar from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const statusPayment = [
@@ -61,24 +62,26 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function StatusPayments({ orderStatus, orderId, orderPhone, orderUser }) {
+export default function StatusPayments({ statePayment, orderId, orderPhone, orderUser }) {
     const [payment, setPayment] = React.useState('');
     const [shippingColor, setShippingColor] = React.useState('');
     const [inputValue, setInputValue] = React.useState('');
     const [openSuccess, setOpenSuccess] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false)
     const [openError, setOpenError] = React.useState(false);
 
     const classes = useStyles()
     const payments = statusPayment.map(state => state.name)
 
     React.useEffect(() => {
-        if (orderStatus[orderId] != undefined) {
-            setPayment(orderStatus[orderId]);
+        if (statePayment[orderId] != undefined) {
+            setPayment(statePayment[orderId]);
         }
 
-    }, [orderStatus, orderId]);
+    }, [statePayment, orderId]);
 
     const handleSendMessage = async () => {
+        setIsLoading(true)
         const response = await fetch(
             `${process.env.REACT_APP_API_URL}/whatsapp/webhook`,
             {
@@ -88,8 +91,10 @@ export default function StatusPayments({ orderStatus, orderId, orderPhone, order
         const body = await response
         if (body) {
             console.log(body);
+            setIsLoading(false)
             setOpenSuccess(true);
         } else {
+            setIsLoading(false)
             setOpenError(true);
         }
     }
@@ -125,9 +130,14 @@ export default function StatusPayments({ orderStatus, orderId, orderPhone, order
 
 
             />
-            <IconButton aria-label="send message" size="medium" onClick={() => handleSendMessage()}>
-                <MessageIcon fontSize="inherit" className={classes.btnSendMsg} />
-            </IconButton>
+            { isLoading ?
+                <CircularProgress size={35} />
+                :
+                <IconButton aria-label="send message" size="medium" onClick={() => handleSendMessage()}>
+                    <MessageIcon fontSize="inherit" className={classes.btnSendMsg} />
+                </IconButton>
+            }
+      
             <Snackbar
                 open={openSuccess}
                 autoHideDuration={3000}

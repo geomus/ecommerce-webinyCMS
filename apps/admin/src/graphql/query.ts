@@ -365,7 +365,8 @@ export const createOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                 }
                 error {
@@ -415,7 +416,8 @@ export const listOrders = gql`
                     zip
                     pay
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                     createdOn
                 }
@@ -440,7 +442,8 @@ export const updateOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                 }
                 error {
@@ -746,6 +749,22 @@ export const updatePriceListIsDefault = gql`
             updatePriceList(id: $id, data: $data) {
                 data {
                     isDefaultOnSite
+                }
+            }
+        }
+    }
+`;
+
+export const updateStatusOrder = gql`
+    mutation updateOrder($id: ID!, $data: OrderInput!) {
+        orders {
+            updateOrder(id: $id, data: $data) {
+                data {
+                    statusShipping
+                    statusPayment
+                }
+                error {
+                    data
                 }
             }
         }

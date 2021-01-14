@@ -138,7 +138,7 @@ export default function FormCheckout() {
         const order = {
             name: name,
             lastName: lastName,
-            phone: phone,
+            phone: `+54${phone.replace(/ /g,"")}`,
             address: address,
             state: state,
             city: city,
@@ -158,8 +158,8 @@ export default function FormCheckout() {
             //createOrder
             await executePayment(preferenceData.init_point, order);
         } else {
-             await executePayment('https://dsc5kyynzacr1.cloudfront.net/wonder-slug/pending', order)
-            //await executePayment("http://localhost:3000/wonder-slug/pending", order);
+             //await executePayment('https://dsc5kyynzacr1.cloudfront.net/wonder-slug/pending', order)
+            await executePayment("http://localhost:3000/wonder-slug/pending", order);
         }
     };
 
@@ -193,6 +193,7 @@ export default function FormCheckout() {
                         id="phone"
                         name="phone"
                         label="Telefono"
+                        placeholder="Ej: 3415000000"
                         onChange={handleChangePhone}
                     />
                 </Grid>

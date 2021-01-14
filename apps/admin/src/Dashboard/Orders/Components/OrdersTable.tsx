@@ -95,18 +95,22 @@ export default function OrdersTable() {
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [orderStatus, setOrderStatus] = React.useState({});
+    const [statusPayment, setStatusPayment] = React.useState({});
+    const [statusShipping, setStatusShipping] = React.useState({});
 
     const { loading, error, data } = useQuery(listOrders);
 
     useEffect(() => {
         if (!loading && data) {
             const orders = data.orders.listOrders.data
-            const arrayStatusOrders = {}
+            const objectStatusPayment = {}
+            const objectStatusShipping = {}
             for (const order of orders) {
-                arrayStatusOrders[order.id] = order.status
+                objectStatusPayment[order.id] = order.statusPayment
+                objectStatusShipping[order.id] = order.statusShipping
             }
-            setOrderStatus(arrayStatusOrders)
+            setStatusPayment(objectStatusPayment)
+            setStatusShipping(objectStatusShipping)
         }
     }, [loading, data]);
 
@@ -124,6 +128,7 @@ export default function OrdersTable() {
         return <h1> error </h1>;
     }
 
+console.log(statusPayment,statusShipping);
 
 
     const formatDate = function formatDate(date) {
@@ -225,10 +230,10 @@ export default function OrdersTable() {
                                                 </Typography>
                                             </TableCell>
                                             <TableCell align="center">
-                                                <StatusShipping orderStatus={orderStatus} orderId={row.id} orderPhone={row.phone} orderUser={row.name}/>
+                                                <StatusShipping stateShipping={statusShipping} orderId={row.id} orderPhone={row.phone} orderUser={row.name}/>
                                             </TableCell>
                                             <TableCell align="center" padding="none">                                               
-                                                <StatusPayments orderStatus={orderStatus} orderId={row.id} orderPhone={row.phone} orderUser={row.name} />                                            
+                                                <StatusPayments statePayment={statusPayment} orderId={row.id} orderPhone={row.phone} orderUser={row.name} />                                            
                                             </TableCell>
                                             <TableCell align="center">
                                                 <OrdersBtnView cart={cart} />

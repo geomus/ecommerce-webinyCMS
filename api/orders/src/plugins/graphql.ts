@@ -60,7 +60,8 @@ const plugin: GraphQLSchemaPlugin = {
                 pay: String
                 idPreference: String
                 shipping: String
-                status: String
+                statusPayment: String
+                statusShipping: String
                 cart:String
                 totalOrder: Int
                 createdOn: DateTime
@@ -78,7 +79,8 @@ const plugin: GraphQLSchemaPlugin = {
                 pay: String
                 idPreference: String
                 shipping: String
-                status: String
+                statusPayment: String
+                statusShipping: String
                 cart:String
                 totalOrder: Int
             }
@@ -92,7 +94,8 @@ const plugin: GraphQLSchemaPlugin = {
                 pay: String
                 idPreference: String
                 shipping: String
-                status: String
+                statusPayment: String
+                statusShipping: String
                 totalOrder: Int
                 createdOn: DateTime
             }
@@ -104,7 +107,8 @@ const plugin: GraphQLSchemaPlugin = {
                 city: String
                 pay: String
                 shipping: String
-                status: String
+                statusPayment: String
+                statusShipping: String
                 totalOrder: Int
                 idPreference: String
                 createdOn: Int

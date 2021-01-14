@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import Snackbar from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const statusShipping = [
     {
@@ -59,9 +60,11 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function StatusShipping({ orderStatus, orderId, orderPhone, orderUser }) {
+export default function StatusShipping({ stateShipping, orderId, orderPhone, orderUser }) {
     const [shipping, setShipping] = React.useState(statusShipping[0].name);
     const [openSuccess, setOpenSuccess] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false)
+
     const [openError, setOpenError] = React.useState(false);
     const [shippingColor, setShippingColor] = React.useState('');
     const [inputValue, setInputValue] = React.useState('');
@@ -70,9 +73,11 @@ export default function StatusShipping({ orderStatus, orderId, orderPhone, order
     const shippings = statusShipping.map(state => state.name)
 
     const handleSendMessage = async () => {
+        setIsLoading(true)
+
         const status = statusShipping.find(ship => ship.name == shipping)
         console.log(status, orderPhone);
-        
+
         const response = await fetch(
             `${process.env.REACT_APP_API_URL}/whatsapp/webhook`,
             {
@@ -84,8 +89,10 @@ export default function StatusShipping({ orderStatus, orderId, orderPhone, order
         if (body) {
             console.log(body);
             setOpenSuccess(true);
+            setIsLoading(false)
         } else {
             setOpenError(true);
+            setIsLoading(false)
         }
     }
 
@@ -119,9 +126,13 @@ export default function StatusShipping({ orderStatus, orderId, orderPhone, order
                 renderInput={(params) => <TextField {...params} size="small" margin="dense" variant="standard" className={classes.textField} style={{ backgroundColor: shippingColor }} />}
 
             />
-            <IconButton aria-label="send message" size="medium" onClick={() => handleSendMessage()}>
-                <MessageIcon fontSize="inherit" className={classes.btnSendMsg} />
-            </IconButton>
+            { isLoading ?
+                <CircularProgress size={35} />
+                :
+                <IconButton aria-label="send message" size="medium" onClick={() => handleSendMessage()}>
+                    <MessageIcon fontSize="inherit" className={classes.btnSendMsg} />
+                </IconButton>
+            }
             <Snackbar
                 open={openSuccess}
                 autoHideDuration={3000}
