@@ -8,7 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 const headCells = [
     { id: "image", disablePadding: false, disableSort: true, label: "Imagen" },
     { id: "name", disablePadding: false, disableSort: false, label: "Producto" },
-    { id: "price", disablePadding: false, disableSort: false, label: "Precio" },
+    { id: "priceBase", disablePadding: false, disableSort: false, label: "Precio Base" },
     { id: "stock", disablePadding: false, disableSort: false, label: "Stock" },
     { id: "tags", disablePadding: false, disableSort: true, label: "Tags" },
     { id: "categories", disablePadding: false, disableSort: false, label: "Categorías" },
