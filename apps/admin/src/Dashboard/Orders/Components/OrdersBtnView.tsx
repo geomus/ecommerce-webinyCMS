@@ -24,7 +24,6 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Divider from "@material-ui/core/Divider";
 import Box from "@material-ui/core/Box";
-import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,6 +44,59 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+const statusPayment = [
+    {
+        id: "th741258AGfe",
+        name: 'intent',
+        message: 'Estamos procesando su pedido.',
+        color: '#90caf9'
+    },
+    {
+        id: "qw654753POiu",
+        name: 'pending',
+        message: 'Su pedido se encuentra pendiente de pago.',
+        color: '#ffee58'
+    },
+    {
+        id: "qa225886XYlo",
+        name: 'failure',
+        message: 'Ha fallado el pago de su pedido.',
+        color: '#ef5350'
+    },
+    {
+        id: "xc139854ÑDfv",
+        name: 'success',
+        message: 'Su pedido fue abonado.',
+        color: '#66bb6a'
+    }
+]
+const statusShipping = [
+    {
+        id: "ab123789ZXyw",
+        name: 'recived',
+        message: 'Pedido recibido.',
+        color: '#90caf9'
+    },
+    {
+        id: "er987654MNio",
+        name: 'preparing',
+        message: 'Pedido en preparacion.',
+        color: '#2196f3'
+    },
+    {
+        id: "vb125489ÑLpo",
+        name: 'sending',
+        message: 'Pedido enviado.',
+        color: '#81c784'
+    },
+    {
+        id: "rt963258LKju",
+        name: 'delivered',
+        message: 'Pedido entregado.',
+        color: '#43a047'
+    }
+]
+
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & { children?: React.ReactElement },
     ref: React.Ref<unknown>
@@ -55,6 +107,15 @@ const Transition = React.forwardRef(function Transition(
 export default function FullScreenDialog({ cart, order, totalOrder }) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [shippingColor, setShippingColor] = React.useState('')
+    const [paymentColor, setPaymentColor] = React.useState('')
+
+    React.useEffect(() => {
+        const shipping = statusShipping.find(ship => ship.name == order.statusShipping)
+        setShippingColor(shipping.color)
+        const payment = statusPayment.find(pay => pay.name == order.statusPayment)
+        setPaymentColor(payment.color)
+    },[])
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -200,7 +261,15 @@ export default function FullScreenDialog({ cart, order, totalOrder }) {
                                             <Typography variant="subtitle2">
                                                 Estado de Envio:
                                     </Typography>
-                                    <Typography color="primary" variant="subtitle2" style={{fontWeight: 600, textTransform: "uppercase", marginLeft: 10}}>{order.statusShipping}</Typography>
+                                    <Typography color="primary" variant="subtitle2" style={{fontWeight: 600, textTransform: "uppercase", marginLeft: 10, color: shippingColor}}>{order.statusShipping}
+                                    </Typography>
+                                    {
+                                        order.statusShipping == statusShipping[3].name
+                                        ?
+                                        <span>&nbsp;✅</span>
+                                        :
+                                        ''
+                                    }
                                         </Box>
                                     </Grid>
                                     <Grid item xs={12} md={4}>
@@ -208,7 +277,14 @@ export default function FullScreenDialog({ cart, order, totalOrder }) {
                                             <Typography variant="subtitle2">
                                                 Estado de Pago:
                                     </Typography>
-                                    <Typography color="secondary" variant="subtitle2" style={{fontWeight: 600, textTransform: "uppercase", marginLeft: 10}}>{order.statusPayment}</Typography>
+                                    <Typography variant="subtitle2" style={{fontWeight: 600, textTransform: "uppercase", marginLeft: 10, color: paymentColor}}>{order.statusPayment}</Typography>
+                                    {
+                                        order.statusPayment == statusPayment[3].name
+                                        ?
+                                        <span>&nbsp;✅</span>
+                                        :
+                                        ''
+                                    }
                                         </Box>
                                     </Grid>
                                     <Grid item xs={12} md={4}>
