@@ -11,11 +11,13 @@ async function generatePreference(checkoutItems, accessToken) {
 
     const preference = {
         items: products.map((product) => {
+            const priceDefault = product.data.products.getProduct.data.prices.find(price => price.list.isDefaultOnSite === true)
+            console.log(priceDefault)
             return {
                 id: product.data.products.getProduct.data.id,
                 quantity: Number(product.data.products.getProduct.data.quantity),
                 title: product.data.products.getProduct.data.name,
-                unit_price: product.data.products.getProduct.data.priceBase
+                unit_price: Number(priceDefault.value)
             };
         }),
         back_urls: {
@@ -56,7 +58,15 @@ async function getProductDetail(id) {
                 data {
                     id
                     name
-                    priceBase
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                 }
             }
         }

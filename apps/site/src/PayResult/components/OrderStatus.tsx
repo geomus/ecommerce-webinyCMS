@@ -20,14 +20,12 @@ export default function OrderStatus({orderId}) {
                 return state
             }
         }
-        console.log(orderStatus);
-
     }
     useEffect(() => {
         const orderId = localStorage.getItem("orderId").replace(/['"]+/g, "");
         const status = ['pending', 'success', 'failure']
         const state = matchStatus(status)
-        patchOrder({ variables: { id: orderId, data: {status:state} } })
+        patchOrder({ variables: { id: orderId, data: {statusPayment:state} } })
     }, []);
     
 

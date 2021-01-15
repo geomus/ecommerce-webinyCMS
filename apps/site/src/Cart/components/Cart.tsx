@@ -155,7 +155,7 @@ export default function Cart() {
                                     />
                                 </TableCell>
                                 <TableCell colSpan={1} padding="none" align="left">
-                                    ${row.quantity * priceDefault}
+                                    ${row.quantity * priceDefault.value}
                                 </TableCell>
                             </TableRow>
                         )

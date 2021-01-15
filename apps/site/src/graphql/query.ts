@@ -150,7 +150,8 @@ export const getOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                     totalOrder
                 }
@@ -175,7 +176,8 @@ export const createOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                 }
                 error {
@@ -201,7 +203,8 @@ export const orderExternalID = gql`
                     zip
                     pay
                     idPreference
-                    status
+                    statusShipping
+                    statusPayment
                     shipping
                     cart
                     totalOrder
@@ -227,7 +230,8 @@ export const updateOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                 }
                 error {
@@ -315,7 +319,11 @@ export const updateStatusOrder = gql`
         orders {
             updateOrder(id: $id, data: $data) {
                 data {
-                    status
+                    statusShipping
+                    statusPayment
+                }
+                error {
+                    data
                 }
             }
         }
