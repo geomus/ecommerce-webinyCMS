@@ -104,6 +104,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const [prices, setPrices] = useState(0)
     const [name, setName] = useState(product.name);
     const [description, setDescription] = useState(product.description);
+    const [sku, setSku] = useState(product.sku);
     const [priceBase, setPriceBase] = useState<Number>(product.priceBase);
     const [categories, setCategories] = useState([]);
     const [imagesKeys, setImagesKeys] = useState([]);
@@ -195,6 +196,9 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
     const handleChangeDescp = (event) => {
         setDescription(event.target.value);
     };
+    const handleChangeSku = (event) => {
+        setSku(event.target.value);
+    };
     const handleChangePrice = (event) => {
         const priceBase = Number(event.target.value);
         setPriceBase(priceBase);
@@ -263,6 +267,7 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
         const product = {
             name: name,
             description: description,
+            sku: sku,
             priceBase: priceBase,
             prices: pricesProduct,
             categories: categoriesProd,
@@ -342,6 +347,25 @@ export default function ProductFormEdit({ handleCloseDialog, product, enabledCat
                                     />
                                     <FormHelperText id="description-helper">
                                         Breve descripción del producto.
+                                    </FormHelperText>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="description">SKU</InputLabel>
+                                    <Input
+                                        required
+                                        id="sku"
+                                        type="text"
+                                        aria-describedby="description-helper"
+                                        fullWidth
+                                        autoComplete="given-description"
+                                        multiline
+                                        onChange={handleChangeDescp}
+                                        defaultValue={product.sku}
+                                    />
+                                    <FormHelperText id="description-helper">
+                                        SKU del producto.
                                     </FormHelperText>
                                 </FormControl>
                             </Grid>
