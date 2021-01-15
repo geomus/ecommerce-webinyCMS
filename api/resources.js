@@ -26,7 +26,12 @@ const mercadoPagoEnv = {
     GRAPHQL_API_URL: process.env.GRAPHQL_API_URL,
     USER_TOKEN: process.env.USER_TOKEN,
     BACK_URL_MERCADO_PAGO: process.env.BACK_URL_MERCADO_PAGO
-}
+};
+const wspIntegrationEnv = {
+    TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID, 
+    TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
+    TWILIO_PHONE: process.env.TWILIO_PHONE
+};
 
 module.exports = () => ({
     resources: {
@@ -480,6 +485,11 @@ module.exports = () => ({
                         path: "/mercado-pago/generate-preference",
                         method: "ANY",
                         function: "${apiMercadoPagoGeneratePreference.arn}"
+                    },
+                    {
+                        path: "/whatsapp/webhook",
+                        method: "ANY",
+                        function: "${apiWspIntegration.arn}"
                     }
                 ]
             }
@@ -539,7 +549,21 @@ module.exports = () => ({
                                     "DELETE"
                                 ]
                             },
-                            
+                            "/whatsapp/webhook": {
+                                ttl: 0,
+                                forward: {
+                                    headers: ["Accept", "Accept-Language"]
+                                },
+                                allowedHttpMethods: [
+                                    "GET",
+                                    "HEAD",
+                                    "OPTIONS",
+                                    "PUT",
+                                    "POST",
+                                    "PATCH",
+                                    "DELETE"
+                                ]
+                            }
                         }
                     }
                 ]
@@ -599,6 +623,25 @@ module.exports = () => ({
                     handler: "handler.handler",
                     memory: 512,
                     env: apolloServiceEnv
+                }
+            }
+        },
+        apiWspIntegration: {
+            watch: ["./wsp-integration/build"],
+            build: {
+                root: "./wsp-integration",
+                script: "yarn build"
+            },
+            deploy: {
+                component: "@webiny/serverless-function",
+                inputs: {
+                    role: "${lambdaRole.arn}",
+                    description: "Integration with Twilio SMS Whatsapp",
+                    region: process.env.AWS_REGION,
+                    code: "./wsp-integration/build",
+                    handler: "handler.handler",
+                    memory: 512,
+                    env: wspIntegrationEnv
                 }
             }
         }

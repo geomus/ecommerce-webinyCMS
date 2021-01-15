@@ -60,9 +60,10 @@ const plugin: GraphQLSchemaPlugin = {
                 pay: String
                 idPreference: String
                 shipping: String
-                status: String
+                statusPayment: String
+                statusShipping: String
                 cart:String
-                totalOrder: Int
+                totalOrder: Float
                 createdOn: DateTime
             }
 
@@ -78,9 +79,10 @@ const plugin: GraphQLSchemaPlugin = {
                 pay: String
                 idPreference: String
                 shipping: String
-                status: String
+                statusPayment: String
+                statusShipping: String
                 cart:String
-                totalOrder: Int
+                totalOrder: Float
             }
 
             input OrderListWhere {
@@ -92,8 +94,9 @@ const plugin: GraphQLSchemaPlugin = {
                 pay: String
                 idPreference: String
                 shipping: String
-                status: String
-                totalOrder: Int
+                statusPayment: String
+                statusShipping: String
+                totalOrder: Float
                 createdOn: DateTime
             }
 
@@ -104,8 +107,9 @@ const plugin: GraphQLSchemaPlugin = {
                 city: String
                 pay: String
                 shipping: String
-                status: String
-                totalOrder: Int
+                statusPayment: String
+                statusShipping: String
+                totalOrder: Float
                 idPreference: String
                 createdOn: Int
             }

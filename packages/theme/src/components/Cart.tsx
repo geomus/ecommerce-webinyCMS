@@ -52,7 +52,6 @@ export default function Cart() {
                 <TableBody>
                     {cart.map((row) => {
                         const priceDefault = row.prices.find(price => price.list.isDefaultOnSite === true)
-
                         return (
                             <TableRow key={row.id}>
                                 <TableCell padding="none" align="left" size="small">
@@ -111,7 +110,7 @@ export default function Cart() {
                                     />
                                 </TableCell>
                                 <TableCell colSpan={1} padding="none" align="left">
-                                    ${row.quantity * priceDefault}
+                                    ${row.quantity * priceDefault.value}
                                 </TableCell>
                             </TableRow>
                         )
