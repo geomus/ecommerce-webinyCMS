@@ -54,7 +54,11 @@ export const CartProvider = ({ children }) => {
     };
 
     function totalCalculator(items) {
-        return items.map((item) => item.priceBase * item.quantity).reduce((sum, i) => sum + i, 0);
+        return items.map((item) => { 
+            const priceDefault = item.prices.find(price => price.list.isDefaultOnSite === true)
+            return (priceDefault.value * item.quantity)}
+            )
+            .reduce((sum, i) => sum + i, 0);
     }
 
     function totalQtyCalculator(items) {

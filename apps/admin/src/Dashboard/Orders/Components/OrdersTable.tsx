@@ -128,9 +128,6 @@ export default function OrdersTable() {
         return <h1> error </h1>;
     }
 
-console.log(statusPayment,statusShipping);
-
-
     const formatDate = function formatDate(date) {
         const d = new Date(date);
         const year = d.getFullYear();
@@ -144,7 +141,10 @@ console.log(statusPayment,statusShipping);
     data.orders.listOrders.data.map(order => rows.push(order))
 
     function totalCalculator(items) {
-        return items.map((item) => item.priceBase * item.quantity).reduce((sum, i) => sum + i, 0);
+        return items.map((item) => {            
+            return (item.priceDefault * item.quantity)}
+            )
+            .reduce((sum, i) => sum + i, 0);
     }
 
     const handleRequestSort = (event, property) => {
@@ -205,10 +205,13 @@ console.log(statusPayment,statusShipping);
                                 .map((row, j) => {
                                     const cart = JSON.parse(row.cart)
                                     const totalCart = totalCalculator(cart)
+                                    console.log(cart);
+                                    
+                                    // const priceDefault = data.products.getProduct.data.prices.find(price => price.list.isDefaultOnSite === true)
 
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                                            <TableCell component="th" scope="row">
+                                            <TableCell component="th" align="center" scope="row">
                                                 {j + 1}
                                             </TableCell>
                                             <TableCell align="center" component="th" scope="row">
@@ -236,7 +239,7 @@ console.log(statusPayment,statusShipping);
                                                 <StatusPayments statePayment={statusPayment} orderId={row.id} orderPhone={row.phone} orderUser={row.name} />                                            
                                             </TableCell>
                                             <TableCell align="center">
-                                                <OrdersBtnView cart={cart} order={row}/>
+                                                <OrdersBtnView cart={cart} order={row} totalOrder={totalCart}/>
                                             </TableCell>
                                             {/* <TableCell align="center">
                                                 <OrdersBtnDisable row={row} />

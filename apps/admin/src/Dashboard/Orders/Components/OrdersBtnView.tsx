@@ -52,7 +52,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({ cart, order }) {
+export default function FullScreenDialog({ cart, order, totalOrder }) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -110,7 +110,7 @@ export default function FullScreenDialog({ cart, order }) {
                                     <strong>Cliente</strong>
                                 </Typography>
                                 <Typography color="textSecondary">
-                                    {order.name + order.lastName}
+                                    {order.name + ' ' + order.lastName}
                                 </Typography>
                                 <br />
                                 <Divider variant="middle" />
@@ -153,14 +153,14 @@ export default function FullScreenDialog({ cart, order }) {
                         <Card elevation={7}>
                             <CardContent>
                                 <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                    Articulos comprados
+                                    Detalle de la compra
                                  </Typography>
                                 <TableContainer>
                                     <Table aria-label="spanning table">
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell >Detalles</TableCell>
-                                                <TableCell align="center">Variantes</TableCell>
+                                                <TableCell >Articulos</TableCell>
+                                                <TableCell >Variantes</TableCell>
                                                 <TableCell align="center">Qty.</TableCell>
                                                 <TableCell align="center">Precio</TableCell>
                                                 <TableCell align="center">Subtotal</TableCell>
@@ -183,9 +183,9 @@ export default function FullScreenDialog({ cart, order }) {
                                                     <TableCell align="center">
                                                         {row.quantity}
                                                     </TableCell>
-                                                    <TableCell align="center">${row.priceBase}</TableCell>
+                                                    <TableCell align="center">${row.priceDefault}</TableCell>
                                                     <TableCell align="center">
-                                                        ${row.quantity * row.priceBase}
+                                                        ${row.quantity * row.priceDefault}
                                                     </TableCell>
                                                 </TableRow>
                                             ))}
@@ -196,25 +196,25 @@ export default function FullScreenDialog({ cart, order }) {
                             <CardActions>
                                 <Grid container spacing={2} style={{display: "flex", justifyContent: "space-between", alignContent: "center", padding: "0 10px"}}>
                                     <Grid item xs={12} md={4}>
-                                        <Box style={{ display: "flex", justifyContent: "space-between", alignContent: "center" }}>
+                                        <Box style={{ display: "flex", alignContent: "center", textAlign: "center" }}>
                                             <Typography variant="subtitle2">
-                                                Estado de Envio
+                                                Estado de Envio:
                                     </Typography>
-                                            <Chip size="small" color="primary" label={order.statusShipping} />
+                                    <Typography color="primary" variant="subtitle2" style={{fontWeight: 600, textTransform: "uppercase", marginLeft: 10}}>{order.statusShipping}</Typography>
                                         </Box>
                                     </Grid>
                                     <Grid item xs={12} md={4}>
-                                        <Box style={{ display: "flex", justifyContent: "space-between", alignContent: "center" }}>
+                                        <Box style={{ display: "flex", alignContent: "center", textAlign: "center" }}>
                                             <Typography variant="subtitle2">
-                                                Estado de Pago
+                                                Estado de Pago:
                                     </Typography>
-                                            <Chip size="small" color="secondary" label={order.statusPayment} />
+                                    <Typography color="secondary" variant="subtitle2" style={{fontWeight: 600, textTransform: "uppercase", marginLeft: 10}}>{order.statusPayment}</Typography>
                                         </Box>
                                     </Grid>
                                     <Grid item xs={12} md={4}>
-                                        <Box style={{ textAlign: "end" }}>
+                                        <Box style={{ textAlign: "center" }}>
                                             <Typography variant="subtitle2" >
-                                                Total Orden: <strong>$1000</strong>
+                                                Total Orden: <strong style={{fontSize: 18, marginLeft: 10}}>${totalOrder}</strong>
                                             </Typography>
                                         </Box>
                                     </Grid>

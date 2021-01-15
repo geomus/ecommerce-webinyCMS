@@ -126,13 +126,16 @@ export default function FormCheckout() {
         setShipping(event.target.value);
     };
     const refactorCart = (cart) => {
-        const newCart = cart.map((item) => ({
+        const newCart = cart.map((item) => {
+            const priceDefault = item.prices.find(price => price.list.isDefaultOnSite === true)
+
+            return ({
             id: item.id,
             name: item.name,
-            priceBase: item.priceBase,
+            priceDefault: priceDefault.value,
             quantity: item.quantity,
             variantsSelected: item.variantsSelected
-        }));
+        })});
         return JSON.stringify(newCart);
     };
 
