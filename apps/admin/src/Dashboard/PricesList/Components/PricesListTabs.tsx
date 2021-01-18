@@ -166,7 +166,7 @@ export default function PricesTabsListPrices() {
                                         <PriceListBtnEdit priceList={row} />
                                     </TableCell>
                                     <TableCell align="right">
-                                        <PricesListDelete row={row} />
+                                        <PricesListDelete isDefault={selectedValue === row.id} row={row} />
                                     </TableCell>
                                     <TableCell align="center">
                                         <Radio

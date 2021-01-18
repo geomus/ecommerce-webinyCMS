@@ -14,7 +14,7 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const ProductsBtnDelete = ({ row }) => {
+const ProductsBtnDelete = ({ row, isDefault }) => {
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [priceDelete] = useMutation(deleteCategoryPrice, {
@@ -41,6 +41,12 @@ const ProductsBtnDelete = ({ row }) => {
 
         setOpen(false);
     };
+    console.log(isDefault != row.id);
+    console.log(isDefault);
+    console.log(row.id);
+    
+    
+    
     return (
         <Fragment>
             <Button
@@ -52,7 +58,9 @@ const ProductsBtnDelete = ({ row }) => {
             >
                 ELIMINAR
             </Button>
-            <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
+            {
+                !isDefault ?
+                <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         ¿Desea eliminar el grupo de precios?
@@ -73,6 +81,22 @@ const ProductsBtnDelete = ({ row }) => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            :
+            <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-description">
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        <p>No puede eliminar una lista establecida por defecto en el sitio.</p>
+                        <p>Por favor, marque otra lista para que se visualice y luego borre esta misma.</p>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} size="small" variant="contained" color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            }
+           
             {openSnackbar ? (
                 <Snackbar
                     open={openSnackbar}
