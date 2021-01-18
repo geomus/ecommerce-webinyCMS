@@ -45,7 +45,7 @@ export default function Cart() {
 
     const propertyKeys = [];
     for (let i = 0; i < 1; i++) {
-        if (cart[i].listVariants]) {
+        if (cart[i].listVariants) {
             for (let j = 0; j < cart[i].listVariants.length; j++) {
                 const keys = Object.keys(cart[i].listVariants[j]);
                 propertyKeys.push(keys);
