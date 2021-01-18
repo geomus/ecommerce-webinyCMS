@@ -177,6 +177,15 @@ export default function FullScreenDialog({ cart, order, totalOrder }) {
                                 <Divider variant="middle" />
                                 <br />
                                 <Typography color="textSecondary">
+                                    <strong>Telefono</strong>
+                                </Typography>
+                                <Typography color="textSecondary">
+                                    {order.phone}
+                                </Typography>
+                                <br />
+                                <Divider variant="middle" />
+                                <br/>
+                                <Typography color="textSecondary">
                                     <strong>Direccion</strong>
                                 </Typography>
                                 <Typography color="textSecondary">

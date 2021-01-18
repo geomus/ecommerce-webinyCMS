@@ -145,7 +145,7 @@ const ProductDetail = () => {
         return productVariants;
     }
 
-    let options;
+    let options = []
     if (productState) {
         options = generateOptions(productState);
     }

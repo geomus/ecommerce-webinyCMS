@@ -45,9 +45,11 @@ export default function Cart() {
 
     const propertyKeys = [];
     for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < cart[i].listVariants.length; j++) {
-            const keys = Object.keys(cart[i].listVariants[j]);
-            propertyKeys.push(keys);
+        if (cart[i].listVariants]) {
+            for (let j = 0; j < cart[i].listVariants.length; j++) {
+                const keys = Object.keys(cart[i].listVariants[j]);
+                propertyKeys.push(keys);
+            }
         }
     }
 
@@ -98,10 +100,10 @@ export default function Cart() {
                                         />
                                     ) : (
                                             <img
-                                        src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
-                                        className={classes.imgProduct}
-                                        alt="Foto producto"
-                                    />
+                                                src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                                className={classes.imgProduct}
+                                                alt="Foto producto"
+                                            />
                                         )}
                                 </TableCell>
                                 <TableCell colSpan={3} padding="none" size="small">

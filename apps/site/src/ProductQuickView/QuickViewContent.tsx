@@ -107,7 +107,7 @@ const QuickViewContent = (props) => {
         });
     };
 
-    let options;
+    let options = [];
     if (productState) {
         options = generateOptions(productState);
     }

@@ -20,7 +20,7 @@ export default function ShopCartButton(props) {
         ...props,
         quantity: 1,
         variantsSelected,
-        listVariants:listVariants
+        listVariants:listVariants || []
     }
     
 

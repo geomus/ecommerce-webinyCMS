@@ -139,7 +139,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
 
                             <Grid item xs={12}>
                                 <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="price">Precio</InputLabel>
+                                    <InputLabel htmlFor="price">Precio base</InputLabel>
                                     <Input
                                         required
                                         id="price"
@@ -154,7 +154,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                                         defaultValue={product.priceBase}
                                     />
                                     <FormHelperText id="price-helper">
-                                        Precio minorista base.
+                                        Precio base del producto.
                                     </FormHelperText>
                                 </FormControl>
                             </Grid>
