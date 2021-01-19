@@ -31,19 +31,21 @@ export const CartProvider = ({ children }) => {
         return setCart([]);
     };
 
-    const updateQtyItem = (e) => {
+    const updateQtyItem = (e, limitStock) => {
         const id = e.currentTarget.id;
         const newQty = e.target.value;
 
-        const cartModified = cart.map((item) => {
-            if (item.id === id) {
-                item.quantity = newQty;
-            }
-            return item;
-        });
-
-        localStorage.setItem("cart", JSON.stringify(cartModified));
-        return setCart(cartModified);
+        if (newQty <= limitStock) {
+            const cartModified = cart.map((item) => {
+                if (item.id === id) {
+                    item.quantity = newQty;
+                }
+                return item;
+            });
+    
+            localStorage.setItem("cart", JSON.stringify(cartModified));
+            return setCart(cartModified);      
+        }
     };
 
     const deleteItemCart = (e) => {
@@ -58,7 +60,7 @@ export const CartProvider = ({ children }) => {
             const priceDefault = item.prices.find(price => price.list.isDefaultOnSite === true)
             return (priceDefault.value * item.quantity)}
             )
-            .reduce((sum, i) => sum + i, 0);
+            .reduce((sum, i) => sum + i, 0).toFixed(2);
     }
 
     function totalQtyCalculator(items) {

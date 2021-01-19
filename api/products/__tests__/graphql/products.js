@@ -29,13 +29,12 @@ export const LIST_PRODUCTS = /* GraphQL */ `
     query ListProducts(
         $where: ProductListWhere
         $sort: ProductListSort
-        $filter: ProductListFilter
         $limit: Int
         $after: String
         $before: String
     ) {
         products {
-            listProducts(where: $where, sort: $sort, filter: $filter, limit: $limit, after: $after, before: $before) {
+            listProducts(where: $where, sort: $sort, limit: $limit, after: $after, before: $before) {
                 data {
                     id
                     name
