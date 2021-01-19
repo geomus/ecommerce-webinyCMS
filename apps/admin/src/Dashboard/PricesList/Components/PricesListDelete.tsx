@@ -8,7 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { useMutation } from "@apollo/client";
-import { deleteCategoryPrice, listPricesList } from "../../../graphql/query";
+import { deleteCategoryPrice, listPricesList, products } from "../../../graphql/query";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -18,7 +18,7 @@ const ProductsBtnDelete = ({ row, isDefault }) => {
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [priceDelete] = useMutation(deleteCategoryPrice, {
-        refetchQueries: () => [{ query: listPricesList }]
+        refetchQueries: () => [{ query: listPricesList },{ query: products }]
     });
 
     const handleClickOpen = () => {
@@ -40,11 +40,8 @@ const ProductsBtnDelete = ({ row, isDefault }) => {
         }
 
         setOpen(false);
-    };
-    console.log(isDefault != row.id);
-    console.log(isDefault);
+    };   
     console.log(row.id);
-    
     
     
     return (

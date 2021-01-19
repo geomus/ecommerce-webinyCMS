@@ -150,7 +150,7 @@ export default function PricesTabsListPrices() {
                                 <TableCell align="center">Porcentaje</TableCell>
                                 <TableCell align="right"></TableCell>
                                 <TableCell align="right"></TableCell>
-                                <TableCell align="center">Default</TableCell>
+                                <TableCell align="center">Lista principal del sitio</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
