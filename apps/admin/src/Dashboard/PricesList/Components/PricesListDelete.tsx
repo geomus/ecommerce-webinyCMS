@@ -41,7 +41,6 @@ const ProductsBtnDelete = ({ row, isDefault }) => {
 
         setOpen(false);
     };   
-    console.log(row.id);
     
     
     return (

@@ -141,7 +141,6 @@ export default function PricesListTable({ products }) {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     const prices = row.prices.filter(price => price.list != null)
-                                    console.log(prices);
                                     
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>

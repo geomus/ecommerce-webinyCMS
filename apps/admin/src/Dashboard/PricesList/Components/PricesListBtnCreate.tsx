@@ -18,7 +18,7 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createPriceList, createPrices, listPricesList, listProductsByPrices, products } from "../../../graphql/query";
+import { createPriceList, createPrice, listPricesList, listProductsByPrices, products, updateProductPrices } from "../../../graphql/query";
 import { useMutation, useQuery } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
@@ -55,12 +55,15 @@ export default function FullScreenDialog({ className, productsData }) {
     const [name, setName] = useState("");
     const [percent, setPercent] = useState(null);
     const [defaultPrice, setDefaultPrice] = useState(false);
-    const [addPrices] = useMutation(createPrices)
+    const [addPrices] = useMutation(createPrice)
     const [addPriceList] = useMutation(createPriceList, {
         refetchQueries: () => [{ query: listPricesList }, { query: products }]
     });
+    const [updateProduct] = useMutation(updateProductPrices, {
+        refetchQueries: () => [, { query: products }]
+    });
 
-    const {loading, error, data} = useQuery(listProductsByPrices)
+    const { loading, error, data } = useQuery(listProductsByPrices)
 
     if (loading) {
         return (
@@ -104,29 +107,24 @@ export default function FullScreenDialog({ className, productsData }) {
             percent: Number(percent),
         };
         const priceListResult = await addPriceList({ variables: { data: priceList } });
-        // console.log(data);
-        // const products = [...data.products.listProducts.data]
 
-        // const arrayPrices=[]
-        // for (let i = 0; i < products.length; i++) {
-        //     const prices = {
-        //         list: {
-        //             id: priceListResult.data.pricesList.createPriceList.data.id
-        //         },
-        //         value: products[i].priceBase * (Number(percent) / 100 + 1)
-        //     }
-        //     arrayPrices.push(prices)
-        // }
-        // const result = await addPrices({ variables: { data: arrayPrices } })
+        const products = [...data.products.listProducts.data]
 
-        // for (let j = 0; j < products.length; j++) {
-        //    const newPrices = [...products[j].prices,{__typename: "Price", id:result.data.prices.createPrices.data[j].id}]
-        //    delete products[j].prices 
-        // }
-        // console.log(products);
-        
-       
-
+        for (let i = 0; i < products.length; i++) {
+            const prices = {
+                list: {
+                    id: priceListResult.data.pricesList.createPriceList.data.id
+                },
+                value: Number((products[i].priceBase * (Number(percent) / 100 + 1)).toFixed(2))
+            }
+            const { data } = await addPrices({ variables: { data: prices } })
+            const productPrices = products[i].prices.map(price => {
+                const obj = { id: price.id }
+                return obj
+            })
+            const newPrices = [...productPrices, { id: data.prices.createPrice.data.id }]
+            await updateProduct({ variables: { id: products[i].id, data: {prices: newPrices} } })
+        }
         setTimeout(function () {
             handleClose();
         }, 1200);

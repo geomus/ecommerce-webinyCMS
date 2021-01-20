@@ -53,22 +53,26 @@ export default function Product(props) {
     });
     const classes = useStyles();
 
-    const priceDefault = props.prices.find(price => price.list.isDefaultOnSite === true)
+    const priceDefault = props.prices.find(price => {
+        if (price.list !== null) {
+            return price.list.isDefaultOnSite === true
+        }
+    })
 
     return (
         <Card className={classes.root} key={props.id} elevation={0}>
             <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
                 {props.images ?
                     <CardMedia
-                    className={classes.media}
-                    image={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}?width=800`}
-                    title="Producto"
-                /> :
-                <CardMedia
-                    className={classes.media}
-                    image="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
-                    title="Producto"
-                />
+                        className={classes.media}
+                        image={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}?width=800`}
+                        title="Producto"
+                    /> :
+                    <CardMedia
+                        className={classes.media}
+                        image="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                        title="Producto"
+                    />
                 }
                 <CardContent>
                     <Typography gutterBottom variant="body2" color="textSecondary" className={classes.productName}>

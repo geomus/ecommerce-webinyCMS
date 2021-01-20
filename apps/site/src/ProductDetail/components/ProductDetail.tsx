@@ -210,7 +210,11 @@ const ProductDetail = () => {
         setLimitVariants(false);
     };
 
-    const priceDefault = data.products.getProduct.data.prices.find(price => price.list.isDefaultOnSite === true)
+    const priceDefault = data.products.getProduct.data.prices.find(price => {
+        if (price.list !== null) {
+            return price.list.isDefaultOnSite === true
+        }
+    })
 
     return (
         <Container>

@@ -715,12 +715,28 @@ export const createPrices = gql`
     }
 `;
 
+export const createPrice = gql`
+    mutation createPrice($data: PriceInput!) {
+        prices {
+            createPrice(data: $data) {
+                data {
+                    id
+                    list {
+                        id
+                    }
+                    value
+                }
+            }
+        }
+    }
+`;
 export const listProductsByPrices = gql`
     query listProducts {
         products {
             listProducts {
                 data {
                     id
+                    priceBase
                     prices {
                         id
                     }
@@ -779,6 +795,20 @@ export const updateStatusOrderPayment = gql`
                 }
                 error {
                     data
+                }
+            }
+        }
+    }
+`;
+
+export const updateProductPrices = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    prices {
+                        id
+                    }
                 }
             }
         }

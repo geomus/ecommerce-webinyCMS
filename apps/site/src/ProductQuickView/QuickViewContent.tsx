@@ -195,9 +195,12 @@ const QuickViewContent = (props) => {
         setLimitVariants(false);
     };
 
-    console.log(limitVariants);
 
-    const priceDefault = props.prices.find(price => price.list.isDefaultOnSite === true)
+    const priceDefault = props.prices.find(price => {
+        if (price.list !== null) {
+            return price.list.isDefaultOnSite === true
+        }
+    })
 
     return (
         <Container>
