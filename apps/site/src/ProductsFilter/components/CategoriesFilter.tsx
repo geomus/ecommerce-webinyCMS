@@ -44,7 +44,7 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
         categoriesFilter(breadcrumbId);
     };
     const handleSelect = (category) => {
-        breadcrumbState.push(category);        
+        breadcrumbState.push(category);
         setBreadcrumbState(breadcrumbState);
         getSubcategories({ variables: { parent: { id: category.id } } });
         categoriesFilter(breadcrumbState[breadcrumbState.length - 1].id);
@@ -76,13 +76,11 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
                     <List component="nav" aria-label="categories">
                         {!called || categoriesFilterState === ""
                             ? dataParents.categories.listCategories.data.map((category) => (
-                                
-                                <ListItem button key={category.id}>
+                                  <ListItem button key={category.id}>
                                       <ListItemText
                                           primary={category.name}
                                           onClick={() => handleSelect(category)}
-                                          />
-                                         { console.log(category.products)}
+                                      />
                                   </ListItem>
                               ))
                             : dataSubcategories.categories.listCategories.data.map((category) => (
@@ -91,7 +89,6 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
                                           primary={category.name}
                                           onClick={() => handleSelect(category)}
                                       />
-                                      { console.log(category.products)}
                                   </ListItem>
                               ))}
                     </List>

@@ -117,7 +117,7 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 parent: Category
                 enabled: Boolean
-                products:[Product]
+                products: [Product]
                 isEnabledInHierarchy: Boolean
             }
 
@@ -288,6 +288,15 @@ const plugin: GraphQLSchemaPlugin = {
                     after: String
                     before: String
                 ): ProductListResponse
+
+                listProductsFilter(
+                    where: ProductListWhere
+                    search: ProductSearchInput
+                    sort: ProductListSort
+                    limit: Int
+                    after: String
+                    before: String
+                ): ProductListResponse
             }
 
             type PriceQuery {
@@ -361,7 +370,7 @@ const plugin: GraphQLSchemaPlugin = {
                 properties: PropertyMutation
                 categories: CategoryMutation
             }
-            `,
+        `,
         resolvers: {
             Query: {
                 products: emptyResolver,

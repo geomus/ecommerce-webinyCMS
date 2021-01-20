@@ -281,7 +281,7 @@ export const updateStockProductVariant = gql`
 export const listCategoriesParentsEnabled = gql`
     query listCategories {
         categories {
-            listCategories(where: {  parent: null }) {
+            listCategories(where: { parent: null }) {
                 data {
                     id
                     name
@@ -315,6 +315,34 @@ export const listSubcategories = gql`
                         enabled
                     }
                     isEnabledInHierarchy
+                }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const listProductsFilter = gql`
+    query listProductsFilter($search: ProductSearchInput) {
+        products {
+            listProductsFilter(search: $search) {
+                data {
+                    id
+                    sku
+                    name
+                    description
+                    priceBase
+                    prices
+                    images
+                    tags
+                    categories {
+                        name
+                        id
+                    }
+                    isFeatured
+                    isPublished
                 }
                 error {
                     message

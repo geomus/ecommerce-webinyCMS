@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { searchProducts } from "../../graphql/query";
-import { useLocation } from "react-router-dom";
+import { searchProducts, listProductsFilter } from "../../graphql/query";
+// import { useLocation } from "react-router-dom";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -38,54 +38,36 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const ProductsFilter = () => {
     const classes = useStyles();
-    const location = useLocation();
+    // const location = useLocation();
     const [categoriesFilter, setCategoriesFilter] = useState("");
     const [filtersState, setFiltersState] = useState([]);
     const [priceFilter, setPriceFilter] = useState<number[]>([1, 99999]);
-    const searchQuery = location.search.split("=")[1];
+    // const searchQuery = location.search.split("=")[1];
 
-    let searchVariable;
+    const searchVariable = null;
 
     const [
         getFilteredProducts,
         { called, loading: loadingFilteredProducts, data: dataFilteredProducts }
-    ] = useLazyQuery(searchProducts);
+    ] = useLazyQuery(listProductsFilter);
 
-    if (searchQuery) {
-        searchVariable = {
-            query: searchQuery,
-            fields: "name",
-            operator: "regex"
-        };
-    } else {
-        searchVariable = null;
-    }
+    // if (searchQuery) {
+    //     searchVariable = {
+    //         query: searchQuery,
+    //         fields: "name",
+    //         operator: "regex"
+    //     };
+    // } else {
+    // searchVariable = null;
+    // }
 
     const { loading, error, data } = useQuery(searchProducts, { variables: { searchVariable } });
+
     useEffect(() => {
         getFilteredProducts({
-            variables: { query: [categoriesFilter], fields: "categories", operator: "regex" }
+            variables: { search: { query: categoriesFilter } }
         });
     }, [categoriesFilter]);
-
-    if (loading || (loadingFilteredProducts && called)) {
-        return (
-            <React.Fragment>
-                <Grid container wrap="nowrap">
-                    {Array.from(new Array(4)).map((index) => (
-                        <Box key={index} width={210} marginRight={0.5} my={5}>
-                            <Skeleton variant="rect" width={200} height={200} />
-                            <Box pt={0.5}>
-                                <Skeleton width={150} /> <br />
-                                <Skeleton width={100} />
-                                <Skeleton variant="rect" width={100} height={50} />
-                            </Box>
-                        </Box>
-                    ))}
-                </Grid>
-            </React.Fragment>
-        );
-    }
 
     if (error) {
         console.dir(error);
@@ -197,7 +179,26 @@ const ProductsFilter = () => {
                     </Grid>
                 </Grid>
                 <Divider orientation="vertical" light flexItem className={classes.dividers} />
-                <ProductsList products={data.products.listProducts.data} />
+                {loading || (loadingFilteredProducts && called) ? (
+                    <React.Fragment>
+                        {Array.from(new Array(3)).map((index) => (
+                            <Box key={index} width={210} marginRight={0.5} my={5}>
+                                <Skeleton variant="rect" width={200} height={200} />
+                                <Box pt={0.5}>
+                                    <Skeleton width={150} /> <br />
+                                    <Skeleton width={100} />
+                                    <Skeleton variant="rect" width={100} height={50} />
+                                </Box>
+                            </Box>
+                        ))}
+                    </React.Fragment>
+                ) : !called || categoriesFilter == "" ? (
+                    <ProductsList products={data.products.listProducts.data} />
+                ) : (
+                    <ProductsList
+                        products={dataFilteredProducts.products.listProductsFilter.data}
+                    />
+                )}
             </Grid>
         </React.Fragment>
     );
