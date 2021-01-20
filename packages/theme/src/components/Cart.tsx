@@ -41,6 +41,41 @@ export default function Cart() {
 
     const totalCart = totalCalculator(cart);
 
+    function objectEquals(obj1, obj2) {
+        for (const i in obj1) {
+            if (obj1.hasOwnProperty(i)) {
+                if (!obj2.hasOwnProperty(i)) {
+                    return false;
+                }
+                if (obj1[i] != obj2[i]) {
+                    return false;
+                }
+            }
+        }
+        for (const i in obj2) {
+            if (obj2.hasOwnProperty(i)) {
+                if (!obj1.hasOwnProperty(i)) {
+                    return false;
+                }
+                if (obj1[i] != obj2[i]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    const stockCalculator = (variantsSelected, variantsProduct) => {
+        const objectVariantsSelected = Object.assign({},variantsSelected[0],variantsSelected[1])
+        for (let i = 0; i < variantsProduct.length; i++) {
+            const propertyValues = JSON.parse(variantsProduct[i].propertyValues);
+            const result = objectEquals(objectVariantsSelected, propertyValues)
+            if (result) {
+                return variantsProduct[i].stock
+            }
+        }
+    }
+
     return (
         <TableContainer>
             <Table className={classes.table} aria-label="cart" size="small">
@@ -52,6 +87,8 @@ export default function Cart() {
                 <TableBody>
                     {cart.map((row) => {
                         const priceDefault = row.prices.find(price => price.list.isDefaultOnSite === true)
+                        const limitStock = stockCalculator(row.variantsSelected, row.variants)
+                        
                         return (
                             <TableRow key={row.id}>
                                 <TableCell padding="none" align="left" size="small">
@@ -65,7 +102,7 @@ export default function Cart() {
                                     </Button>
                                 </TableCell>
                                 <TableCell
-                                    colSpan={2}
+                                    colSpan={1}
                                     padding="none"
                                     className={classes.cellImgProduct}
                                 >
@@ -83,10 +120,10 @@ export default function Cart() {
                                     />
                                 )}
                             </TableCell>
-                            <TableCell colSpan={3} padding="none" size="small">
+                            <TableCell colSpan={2} padding="none" size="small">
                                 {row.name}
                             </TableCell>
-                            <TableCell colSpan={2} padding="none" size="small">
+                            <TableCell colSpan={1} padding="none" size="small">
                                 {row.variantsSelected &&
                                     row.variantsSelected.map((variant, i) =>
                                         Object.entries(variant).map(([key, value]) => (
@@ -106,8 +143,10 @@ export default function Cart() {
                                         value={row.quantity}
                                         label="Qty."
                                         type="number"
-                                        onChange={updateQtyItem}
+                                        onChange={(e) => updateQtyItem(e, limitStock)}
+                                        helperText={`Stock disponible ${limitStock}`}
                                     />
+                                    
                                 </TableCell>
                                 <TableCell colSpan={1} padding="none" align="left">
                                     ${row.quantity * priceDefault.value}

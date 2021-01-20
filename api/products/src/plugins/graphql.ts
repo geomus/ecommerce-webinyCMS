@@ -266,7 +266,7 @@ const plugin: GraphQLSchemaPlugin = {
             input ProductInput {
                 id: ID
                 sku: String
-                name: String
+                name: String!
                 slug: String
                 description: String
                 priceBase: Int
