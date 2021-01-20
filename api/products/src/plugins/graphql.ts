@@ -291,7 +291,9 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
             }
             input PriceWhere {
-                value: Int
+                id: ID
+                value: Float
+                list: RefInput
             }
             input PropertyListWhere {
                 name: String
@@ -341,6 +343,11 @@ const plugin: GraphQLSchemaPlugin = {
                 operator: String
             }
             input CategorySearchInput {
+                query: String
+                fields: [String]
+                operator: String
+            }
+            input PriceSearchInput {
                 query: String
                 fields: [String]
                 operator: String
@@ -425,11 +432,15 @@ const plugin: GraphQLSchemaPlugin = {
             }
             type PriceListQuery {
                 getPriceList(id: ID): PriceListResponse
-                listPricesList(where: PriceListWhere): PricesListResponse
+                listPricesList(
+                    where: PriceListWhere
+                    ): PricesListResponse
             }
             type PriceQuery {
                 getPrice(id: ID): PriceResponse
-                listPrices(where: PriceWhere): PricesResponse
+                listPrices(
+                    where: PriceWhere
+                    search: PriceSearchInput): PricesResponse
             }
             type SaleDiscountListQuery {
                 getSaleDiscountList(id: ID): SaleDiscountListResponse

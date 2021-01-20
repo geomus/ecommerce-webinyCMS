@@ -134,12 +134,15 @@ export default function PricesListTable({ products }) {
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
-                            prices={rows[0].prices}
+                            prices={rows[0].prices.filter(price => price.list != null)}
                         />
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
+                                    const prices = row.prices.filter(price => price.list != null)
+                                    console.log(prices);
+                                    
                                     return (
                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                             <TableCell component="th" scope="row">
@@ -149,7 +152,7 @@ export default function PricesListTable({ products }) {
                                                 {row.name}
                                             </TableCell>
                                             {
-                                                row.prices.map((price) =>
+                                                prices.map((price) =>
                                                     <TableCell component="th" align="center" scope="row" key={Date.now() * Math.random()}>
                                                         ${price.value}
                                                     </TableCell>
