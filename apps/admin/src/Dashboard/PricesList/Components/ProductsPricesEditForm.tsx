@@ -47,22 +47,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductFormEdit({ handleCloseDialog, product }) {
     const productId = product.id;
-
-    const [editProduct] = useMutation(updateProduct, {
-        refetchQueries: () => [{ query: products }]
-    });
-
     const classes = useStyles();
     const [isLoading, setIsLoading] = useState(false);
     const [openSuccess, setOpenSuccess] = useState(false);
     const [openError, setOpenError] = useState(false);
     const [prices, setPrices] = useState(0)
     const [priceBase, setPriceBase] = useState<Number>(product.priceBase);
-    const [idPrices, setIdPrices] = useState({});
     const [addPrices] = useMutation(createPrices, {
-        refetchQueries: () => [{ query: listPricesList }, { query: products }]
+        refetchQueries: () => [{ query: listPricesList }]
     })
-
+    const [editProduct] = useMutation(updateProduct, {
+        refetchQueries: () => [{ query: products }]
+    });
 
     const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === "clickaway") {
@@ -77,15 +73,11 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
         setPriceBase(priceBase);
     };
 
-    const handleIdPrices = (event) => {
-        setIdPrices({ ...idPrices, [event.currentTarget.id]: event.target.checked })
-    };
-
     const onSubmit = async (e) => {
-        setIsLoading(true);
         e.preventDefault();
         e.persist();
-
+        setIsLoading(true);
+        
         const arrayPrices = []
         for (const key in prices) {
             const pricesObject = { list: {}, value: 0 }
@@ -97,7 +89,6 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
         const pricesProduct = []
         result.data.prices.createPrices.data.forEach(price => pricesProduct.push({ id: price.id }))
 
-
         const product = {
             priceBase: priceBase,
             prices: pricesProduct,
@@ -105,7 +96,6 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
 
         try {
             await editProduct({ variables: { id: productId, data: product } });
-
             setOpenSuccess(true);
             setTimeout(function () {
                 handleCloseDialog(false);
@@ -125,7 +115,6 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                         <Grid item xs={12}>
                             NOMBRE: {product.name}
                         </Grid>
-
                         <Grid item xs={12}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="price">Precio base</InputLabel>
@@ -151,9 +140,7 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                             <InputLabel className={classes.formControl}>
                                 Listas de precios
                                 </InputLabel>
-
                             <ProductListPrices priceBase={product.priceBase} prices={prices} setPrices={setPrices} />
-
                         </Grid>
                     </Grid>
                     <br />
@@ -173,7 +160,6 @@ export default function ProductFormEdit({ handleCloseDialog, product }) {
                             )}
                     </FormControl>
                     <br />
-
                 </form>
             </React.Fragment>
             <Snackbar open={openSuccess} autoHideDuration={3000} onClose={handleClose}>

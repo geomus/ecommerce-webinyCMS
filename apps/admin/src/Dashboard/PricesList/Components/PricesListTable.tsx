@@ -11,8 +11,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import PricesListTableToolbar from "./PricesListTableToolbar";
 import PricesListTableHead from "./PricesListTableHead";
-import InputPriceManual from "./InputPriceManual";
 import ProductsPricesEditBtn from "./ProductsPricesEditBtn";
+
 
 
 function descendingComparator(a, b, orderBy) {
@@ -85,7 +85,6 @@ export default function PricesListTable({ products }) {
     const [dense, setDense] = React.useState(true);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-
     const rows = [];
     products.map((product) => rows.push(product));
 
@@ -134,7 +133,6 @@ export default function PricesListTable({ products }) {
                             onSelectAllClick={handleSelectAllClick}
                             onRequestSort={handleRequestSort}
                             rowCount={rows.length}
-                            prices={rows[0].prices.filter(price => price.list != null)}
                         />
                         <TableBody>
                             {stableSort(rows, getComparator(order, orderBy))

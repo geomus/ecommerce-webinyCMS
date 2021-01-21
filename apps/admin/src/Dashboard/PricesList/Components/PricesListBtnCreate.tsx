@@ -21,6 +21,9 @@ import {
 import { createPriceList, createPrice, listPricesList, listProductsByPrices, products, updateProductPrices } from "../../../graphql/query";
 import { useMutation, useQuery } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,6 +36,10 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         dialog: {
             padding: 20
+        },
+        spinner: {
+            color: "#fff",
+            marginLeft: 10
         }
     })
 );
@@ -51,10 +58,11 @@ export default function FullScreenDialog({ className, productsData }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [checked, setChecked] = useState(false);
     const [name, setName] = useState("");
     const [percent, setPercent] = useState(null);
-    const [defaultPrice, setDefaultPrice] = useState(false);
+    const [forAllProducts, setForAllProducts] = useState(false);
+    const [openBackdrop, setOpenBackdrop] = React.useState(false);
+
     const [addPrices] = useMutation(createPrice)
     const [addPriceList] = useMutation(createPriceList, {
         refetchQueries: () => [{ query: listPricesList }, { query: products }]
@@ -96,35 +104,46 @@ export default function FullScreenDialog({ className, productsData }) {
         setPercent(e.target.value);
     };
     const handleChangeCheckbox = (e) => {
-        setChecked(e.target.checked);
-        setDefaultPrice(e.target.checked);
+        setForAllProducts(e.target.checked);
     };
+    const handleCloseBackdrop = () => {
+        setOpen(false);
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setOpenBackdrop(true)
+
         const priceList = {
             name: name,
             percent: Number(percent),
         };
         const priceListResult = await addPriceList({ variables: { data: priceList } });
 
-        const products = [...data.products.listProducts.data]
-
-        for (let i = 0; i < products.length; i++) {
-            const prices = {
-                list: {
-                    id: priceListResult.data.pricesList.createPriceList.data.id
-                },
-                value: Number((products[i].priceBase * (Number(percent) / 100 + 1)).toFixed(2))
+        if (forAllProducts) {
+            const products = [...data.products.listProducts.data]
+            for (let i = 0; i < products.length; i++) {
+                const prices = {
+                    list: {
+                        id: priceListResult.data.pricesList.createPriceList.data.id
+                    },
+                    value: Number((products[i].priceBase * (Number(percent) / 100 + 1)).toFixed(2))
+                }
+                const { data } = await addPrices({ variables: { data: prices } })
+                const productPrices = products[i].prices.map(price => {
+                    const obj = { id: price.id }
+                    return obj
+                })
+                const newPrices = [...productPrices, { id: data.prices.createPrice.data.id }]
+                await updateProduct({ variables: { id: products[i].id, data: { prices: newPrices } } })
             }
-            const { data } = await addPrices({ variables: { data: prices } })
-            const productPrices = products[i].prices.map(price => {
-                const obj = { id: price.id }
-                return obj
-            })
-            const newPrices = [...productPrices, { id: data.prices.createPrice.data.id }]
-            await updateProduct({ variables: { id: products[i].id, data: {prices: newPrices} } })
+            setTimeout(function () {
+                setOpenBackdrop(false)
+                handleClose();
+            }, 1500);
         }
+
         setTimeout(function () {
             handleClose();
         }, 1200);
@@ -178,21 +197,28 @@ export default function FullScreenDialog({ className, productsData }) {
                                 onBlur={handlePercent}
                             />
                         </FormGroup>
-                        {/* <FormGroup>
+                        <FormGroup>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={checked}
-                                        onBlur={handleChangeCheckbox}
-                                        name="defaultPriceCategory"
+                                        checked={forAllProducts}
+                                        onChange={handleChangeCheckbox}
+                                        name="forAllProducts"
                                     />
                                 }
-                                label="Categoria por defecto"
+                                label="¿Aplica a todos los productos?"
                             />
-                        </FormGroup> */}
+                            <FormHelperText> Esta operación puede demorar algunos minutos</FormHelperText>
+                        </FormGroup>
+                        <br />
+
                         <Button variant="contained" color="primary" type="submit">
-                            {" "}
                             GUARDAR
+                            
+                            {
+                                openBackdrop &&
+                                <CircularProgress className={classes.spinner} size={20} />
+                            }
                         </Button>
                     </form>
                 </Grid>
