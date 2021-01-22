@@ -11,6 +11,7 @@ import {
 } from "@webiny/commodo-graphql";
 
 import resolveBulkImport from "./resolveBulkImport";
+import resolveCategoryFilter from "./resolveCategoryFilter";
 import resolveBulkUpdate from "./resolveBulkUpdate";
 
 const productFetcher = (ctx) => ctx.models.Product;
@@ -191,6 +192,7 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 parent: Category
                 enabled: Boolean
+                products: [Product]
                 isEnabledInHierarchy: Boolean
             }
             type Product {
@@ -285,7 +287,7 @@ const plugin: GraphQLSchemaPlugin = {
                 name: String
                 isPublished: Boolean
                 sku: String
-                categories: [CategoryInput]
+                categories: [RefInput]
             }
             input PriceListWhere {
                 name: String
@@ -429,6 +431,15 @@ const plugin: GraphQLSchemaPlugin = {
                     after: String
                     before: String
                 ): ProductListResponse
+
+                listProductsFilter(
+                    where: ProductListWhere
+                    search: ProductSearchInput
+                    sort: ProductListSort
+                    limit: Int
+                    after: String
+                    before: String
+                ): ProductListResponse
             }
             type PriceListQuery {
                 getPriceList(id: ID): PriceListResponse
@@ -546,7 +557,8 @@ const plugin: GraphQLSchemaPlugin = {
             },
             ProductQuery: {
                 getProduct: hasScope("products:get")(resolveGet(productFetcher)),
-                listProducts: hasScope("products:list")(resolveList(productFetcher))
+                listProducts: hasScope("products:list")(resolveList(productFetcher)),
+                listProductsFilter: hasScope("products:list")(resolveCategoryFilter(productFetcher))
             },
             PriceListQuery: {
                 getPriceList: hasScope("pricesList:get")(resolveGet(priceListFetcher)),

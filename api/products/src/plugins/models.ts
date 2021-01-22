@@ -7,6 +7,7 @@ import price from "./models/price.model";
 import property from "./models/property.model"
 import productVariant from "./models/productVariant.model"
 import category from "./models/category.model";
+import product2category from "./models/product2category.model";
 import saleDiscount from "./models/saleDiscount.model"
 import saleDiscountList from "./models/saleDiscountList.model"
 
@@ -39,6 +40,7 @@ export default () => ({
             Property: property({ createBase  }),
             ProductVariant: productVariant({ createBase, context  }),
             Category: category({ createBase, context }),
+            Product2Category: product2category({ createBase, context }),
             SaleDiscount: saleDiscount({createBase, context}),
             SaleDiscountList: saleDiscountList({createBase, context}),
             createBase

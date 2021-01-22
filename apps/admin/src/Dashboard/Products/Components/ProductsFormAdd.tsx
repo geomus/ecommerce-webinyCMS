@@ -104,7 +104,7 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
     const [description, setDescription] = useState("");
     const [sku, setSku] = useState("");
     const [price, setPrice] = useState(0);
-    const [prices, setPrices] = useState(0)
+    const [prices, setPrices] = useState<any>(0)
     const [categories, setCategories] = useState([]);
     const [imagesKeys, setImagesKeys] = useState([]);
     const [tags, setTags] = useState([]);
@@ -220,10 +220,15 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
         categories.forEach((category) => {
             enabledCategories.map((c) => {
                 if (c.name === category) {
-                    categoriesProd.push(c);
+                    const subCategory = {
+                        id: c.id
+                    };
+                    categoriesProd.push(subCategory);
                 }
             });
         });
+
+        console.log(categoriesProd);
 
         for (const file of files) {
             const imageKey = await uploadImage(file);
@@ -254,6 +259,8 @@ export default function ProductForm({ handleCloseDialog, enabledCategories }) {
             isFeatured: isFeatured,
             variants: productVariants
         };
+
+        console.log(product.categories);
 
         try {
             await addProduct({ variables: { data: product } });
