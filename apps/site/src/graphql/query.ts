@@ -383,12 +383,31 @@ export const listProductsFilter = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
+                    variants {
+                        propertyValues
+                        stock
+                    }
                     categories {
-                        name
                         id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
                     }
                     isFeatured
                     isPublished
