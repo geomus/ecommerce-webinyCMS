@@ -107,7 +107,7 @@ const QuickViewContent = (props) => {
         });
     };
 
-    let options;
+    let options = [];
     if (productState) {
         options = generateOptions(productState);
     }
@@ -195,8 +195,12 @@ const QuickViewContent = (props) => {
         setLimitVariants(false);
     };
 
-    console.log(limitVariants);
 
+    const priceDefault = props.prices.find(price => {
+        if (price.list !== null) {
+            return price.list.isDefaultOnSite === true
+        }
+    })
 
     return (
         <Container>
@@ -204,7 +208,7 @@ const QuickViewContent = (props) => {
                 <Grid item xs={12} md={7}>
                     {props.images ? (
                         <img
-                            src={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}`}
+                            src={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}?width=800`}
                             alt="Product"
                             className={classes.imgFluid}
                         />
@@ -233,9 +237,15 @@ const QuickViewContent = (props) => {
                     <Typography variant="h6" gutterBottom>
                         {props.name}
                     </Typography>
-                    <Typography className={classes.lineHeight} variant="h5" gutterBottom>
-                        ${props.priceBase}
-                    </Typography>
+                    {priceDefault ?
+                        <Typography gutterBottom variant="h6" color="textPrimary">
+                            ${priceDefault.value}
+                        </Typography>
+                        :
+                        <Typography gutterBottom variant="h6" color="textPrimary">
+                            ${props.priceBase}
+                        </Typography>
+                    }
                     <Typography className={classes.lineHeight} variant="body1" gutterBottom>
                         {props.description}
                     </Typography>

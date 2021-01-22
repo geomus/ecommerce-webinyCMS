@@ -145,7 +145,7 @@ const ProductDetail = () => {
         return productVariants;
     }
 
-    let options;
+    let options = []
     if (productState) {
         options = generateOptions(productState);
     }
@@ -209,7 +209,12 @@ const ProductDetail = () => {
         }
         setLimitVariants(false);
     };
-console.log(limitVariants);
+
+    const priceDefault = data.products.getProduct.data.prices.find(price => {
+        if (price.list !== null) {
+            return price.list.isDefaultOnSite === true
+        }
+    })
 
     return (
         <Container>
@@ -217,7 +222,7 @@ console.log(limitVariants);
                 <Grid item xs={12} md={6}>
                     {data.products.getProduct.data.images ? (
                         <img
-                            src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}`}
+                            src={`${process.env.REACT_APP_API_URL}/files/${data.products.getProduct.data.images[0]}?width=800`}
                             alt="Product"
                             className={classes.imgFluid}
                         />
@@ -250,9 +255,15 @@ console.log(limitVariants);
                     <Typography variant="h5" gutterBottom>
                         {data.products.getProduct.data.name}
                     </Typography>
-                    <Typography variant="h5" gutterBottom>
-                        ${data.products.getProduct.data.priceBase}
-                    </Typography>
+                    {priceDefault ?
+                        <Typography gutterBottom variant="h6" color="textPrimary">
+                            ${priceDefault.value}
+                        </Typography>
+                        :
+                        <Typography gutterBottom variant="h6" color="textPrimary">
+                            ${data.products.getProduct.data.priceBase}
+                        </Typography>
+                    }
                     <Typography variant="body1" gutterBottom>
                         {data.products.getProduct.data.description}
                     </Typography>

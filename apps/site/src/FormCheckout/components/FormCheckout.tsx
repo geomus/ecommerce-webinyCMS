@@ -13,6 +13,9 @@ import FormControl from "@material-ui/core/FormControl";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import PaymentIcon from "@material-ui/icons/Payment";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles({
     root: {
@@ -71,8 +74,29 @@ export default function FormCheckout() {
     const [pay, setPay] = useState("");
     const [shipping, setShipping] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [provincias, setProvincias] = useState([])
     const { cart, totalCalculator } = useContext(CartContext);
     const token = "TEST-5883773942845862-062518-c2399b9abe29d3c725aa4049dad03364-153866039";
+
+    React.useEffect(() => {
+        fetch(' https://apis.datos.gob.ar/georef/api/provincias',
+            { method: 'GET' })
+            .then((result) => result.json())
+            .then(data => {
+                setProvincias(data.provincias.sort((a, b) => {
+                    if (a.nombre > b.nombre) {
+                      return 1;
+                    }
+                    if (a.nombre < b.nombre) {
+                      return -1;
+                    }
+                    return 0;
+                  }))
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [])
 
     const handleChangeName = (event) => {
         setName(event.target.value);
@@ -102,13 +126,16 @@ export default function FormCheckout() {
         setShipping(event.target.value);
     };
     const refactorCart = (cart) => {
-        const newCart = cart.map((item) => ({
+        const newCart = cart.map((item) => {
+            const priceDefault = item.prices.find(price => price.list.isDefaultOnSite === true)
+
+            return ({
             id: item.id,
             name: item.name,
-            priceBase: item.priceBase,
+            priceDefault: priceDefault.value,
             quantity: item.quantity,
             variantsSelected: item.variantsSelected
-        }));
+        })});
         return JSON.stringify(newCart);
     };
 
@@ -138,7 +165,7 @@ export default function FormCheckout() {
         const order = {
             name: name,
             lastName: lastName,
-            phone: phone,
+            phone: `+549${phone.replace(/ /g, "")}`,
             address: address,
             state: state,
             city: city,
@@ -158,8 +185,8 @@ export default function FormCheckout() {
             //createOrder
             await executePayment(preferenceData.init_point, order);
         } else {
-            // await executePayment('https://dsc5kyynzacr1.cloudfront.net/wonder-slug/pending', order)
-            await executePayment("http://localhost:3000/wonder-slug/pending", order);
+            await executePayment('https://dsc5kyynzacr1.cloudfront.net/wonder-slug/pending', order)
+            //await executePayment("http://localhost:3000/wonder-slug/pending", order);
         }
     };
 
@@ -193,6 +220,7 @@ export default function FormCheckout() {
                         id="phone"
                         name="phone"
                         label="Telefono"
+                        placeholder="Ej: 3415000000"
                         onChange={handleChangePhone}
                     />
                 </Grid>
@@ -207,14 +235,26 @@ export default function FormCheckout() {
                     />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <TextField
-                        fullWidth
-                        required
-                        id="state"
-                        name="state"
-                        label="Estado"
+                    <FormControl required fullWidth>
+                    <InputLabel id="provincias">Provincia</InputLabel>
+                    <Select
+                        labelId="provincias"
+                        id="select-provincias"
+                        value={state}
+                        placeholder="Provincia"
+                        defaultValue={"Elija una provincia"}
                         onChange={handleChangeState}
-                    />
+                    >
+                        {
+                            provincias != undefined &&
+                            provincias.map(provincia => {
+                                return (
+                                    <MenuItem key={provincia.id} value={provincia.nombre}>{provincia.nombre}</MenuItem>
+                                )
+                            })
+                        }
+                    </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={12} md={4}>
                     <TextField
@@ -287,8 +327,8 @@ export default function FormCheckout() {
                         PAGAR
                     </Button>
                 ) : (
-                    <CircularProgress />
-                )}
+                        <CircularProgress />
+                    )}
             </Grid>
         </form>
     );

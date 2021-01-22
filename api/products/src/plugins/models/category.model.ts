@@ -18,8 +18,8 @@ export default ({ createBase, context }) => {
         withProps({
             async isEnabledInHierarchy() {
                 const parent = await this.parent;
-                if (!this.enabled) return false;
-                if (parent) return parent.isEnabledInHierarchy();
+                if (!this.enabled) {return false;}
+                if (parent) {return parent.isEnabledInHierarchy();}
                 return true;
             }
         })

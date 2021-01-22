@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import {
     orderExternalID,
-    //updateOrder,
     getOrder,
 } from "../../graphql/query";
 import {
@@ -19,6 +18,7 @@ import {
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { useLocation } from "react-router-dom";
 import OrderId from "./OrderId";
+import OrderStatus from "./OrderStatus";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -58,16 +58,6 @@ export default function PayResult(order: Order) {
         setOrderId(orderId);
        
     }, []);
-
-
-    // const [patchOrder] = useMutation(updateOrder);
-
-    // const updateStatus = (order: Order) => {
-    //     console.log(orderId);
-    //     console.log(order);
-
-    //     return patchOrder({ variables: { id: orderId, data: order } });
-    // };
 
     const orderProcess = async () => {
         const queryString = useLocation();
@@ -176,6 +166,7 @@ export default function PayResult(order: Order) {
                                 Monto: ${order.totalOrder}
                             </TableCell>
                         </TableRow>
+                        <OrderStatus orderId={orderId}/>
                     </TableBody>
                 </Table>
             </TableContainer>

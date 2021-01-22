@@ -1,7 +1,7 @@
 import React from "react";
 import Product from "../../Product";
 import { useQuery } from "@apollo/client";
-import { products } from "../../graphql/query";
+import { listProductsSite } from "../../graphql/query";
 import { searchProducts } from "../../graphql/query";
 import { useLocation } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
@@ -24,7 +24,7 @@ const ProductsList = () => {
         queryGQL = searchProducts;
     } else {
         searchVariable = null;
-        queryGQL = products;
+        queryGQL = listProductsSite;
     }
 
     const { loading, error, data } = useQuery(queryGQL, { variables: { searchVariable } });

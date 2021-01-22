@@ -10,7 +10,15 @@ export const products = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -46,7 +54,15 @@ export const product = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -82,7 +98,15 @@ export const productsFilter = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -119,7 +143,11 @@ export const createProduct = gql`
                     slug
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                        }
+                    }
                     categories {
                         id
                         name
@@ -158,7 +186,15 @@ export const searchProducts = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -329,7 +365,8 @@ export const createOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                 }
                 error {
@@ -379,7 +416,8 @@ export const listOrders = gql`
                     zip
                     pay
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                     createdOn
                 }
@@ -404,7 +442,8 @@ export const updateOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                 }
                 error {
@@ -415,29 +454,30 @@ export const updateOrder = gql`
     }
 `;
 
-export const listPrices = gql`
-    query listPrices {
-        prices {
-            listPrices {
+export const listPricesList = gql`
+    query listPricesList {
+        pricesList {
+            listPricesList {
                 data {
                     id
                     name
                     percent
-                    default
+                    isDefaultOnSite
                 }
             }
         }
     }
 `;
 
-export const createPrice = gql`
-    mutation createPrice($data: PriceInput!) {
-        prices {
-            createPrice(data: $data) {
+export const createPriceList = gql`
+    mutation createPriceList($data: PriceListInput!) {
+        pricesList {
+            createPriceList(data: $data) {
                 data {
+                    id
                     name
                     percent
-                    default
+                    isDefaultOnSite
                 }
             }
         }
@@ -457,7 +497,7 @@ export const getHeaderData = gql`
             }
         }
     }
-`
+`;
 export const createProducts = gql`
     mutation createProducts($data: [ProductInput!]!) {
         products {
@@ -488,7 +528,8 @@ export const listProperties = gql`
                 }
             }
         }
-    }`
+    }
+`;
 export const listSubcategories = gql`
     query listCategories($parent: RefInput!) {
         categories {
@@ -522,8 +563,8 @@ export const createProperties = gql`
                 }
             }
         }
-        }
-        `
+    }
+`;
 export const createCategory = gql`
     mutation createCategory($data: CategoryInput!) {
         categories {
@@ -553,7 +594,8 @@ export const deleteProperties = gql`
                 data
             }
         }
-    }`
+    }
+`;
 export const listEnabledCategories = gql`
     query listCategories {
         categories {
@@ -587,7 +629,8 @@ export const updateProperties = gql`
                 }
             }
         }
-    }`
+    }
+`;
 export const listAllCategories = gql`
     query listCategories {
         categories {
@@ -637,6 +680,135 @@ export const updateCategory = gql`
                 }
                 error {
                     message
+                }
+            }
+        }
+    }
+`;
+
+export const deleteCategoryPrice = gql`
+    mutation deletePrice($id: ID!) {
+        pricesList {
+            deletePriceList(id: $id) {
+                data
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
+export const createPrices = gql`
+    mutation createPrices($data: [PriceInput!]!) {
+        prices {
+            createPrices(data: $data) {
+                data {
+                    id
+                    list {
+                        id
+                    }
+                    value
+                }
+            }
+        }
+    }
+`;
+
+export const createPrice = gql`
+    mutation createPrice($data: PriceInput!) {
+        prices {
+            createPrice(data: $data) {
+                data {
+                    id
+                    list {
+                        id
+                    }
+                    value
+                }
+            }
+        }
+    }
+`;
+export const listProductsByPrices = gql`
+    query listProducts {
+        products {
+            listProducts {
+                data {
+                    id
+                    priceBase
+                    prices {
+                        id
+                    }
+                }
+            }
+        }
+    }
+`;
+
+export const updatePriceList = gql`
+    mutation updatePriceList($data: PriceListInput!, $id: ID!) {
+        pricesList {
+            updatePriceList(id: $id, data: $data) {
+                data {
+                    name
+                    percent
+                }
+            }
+        }
+    }
+`;
+
+export const updatePriceListIsDefault = gql`
+    mutation updatePriceList($data: PriceListInput!, $id: ID!) {
+        pricesList {
+            updatePriceList(id: $id, data: $data) {
+                data {
+                    isDefaultOnSite
+                }
+            }
+        }
+    }
+`;
+
+export const updateStatusOrderShipping = gql`
+    mutation updateOrder($id: ID!, $data: OrderInput!) {
+        orders {
+            updateOrder(id: $id, data: $data) {
+                data {
+                    statusShipping
+                }
+                error {
+                    data
+                }
+            }
+        }
+    }
+`;
+
+export const updateStatusOrderPayment = gql`
+    mutation updateOrder($id: ID!, $data: OrderInput!) {
+        orders {
+            updateOrder(id: $id, data: $data) {
+                data {
+                    statusPayment
+                }
+                error {
+                    data
+                }
+            }
+        }
+    }
+`;
+
+export const updateProductPrices = gql`
+    mutation updateProduct($id: ID!, $data: ProductInput!) {
+        products {
+            updateProduct(id: $id, data: $data) {
+                data {
+                    prices {
+                        id
+                    }
                 }
             }
         }

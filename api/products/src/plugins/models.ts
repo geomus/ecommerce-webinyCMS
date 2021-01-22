@@ -2,12 +2,14 @@
 import { withStorage, withCrudLogs, withSoftDelete, withFields, pipe } from "@webiny/commodo";
 import { withUser } from "@webiny/api-security";
 import product from "./models/product.model";
+import priceList from "./models/priceList.model";
 import price from "./models/price.model";
 import property from "./models/property.model"
 import productVariant from "./models/productVariant.model"
 import category from "./models/category.model";
 import product2category from "./models/product2category.model";
-
+import saleDiscount from "./models/saleDiscount.model"
+import saleDiscountList from "./models/saleDiscountList.model"
 
 export default () => ({
     name: "context-models",
@@ -33,11 +35,14 @@ export default () => ({
 
         context.models = {
             Product: product({ createBase, context }),
-            Price: price({ createBase  }),
+            PriceList: priceList({ createBase, context  }),
+            Price: price({ createBase, context }),
             Property: property({ createBase  }),
             ProductVariant: productVariant({ createBase, context  }),
             Category: category({ createBase, context }),
             Product2Category: product2category({ createBase, context }),
+            SaleDiscount: saleDiscount({createBase, context}),
+            SaleDiscountList: saleDiscountList({createBase, context}),
             createBase
         };
     }

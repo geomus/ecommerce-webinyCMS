@@ -11,7 +11,15 @@ export const products = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -47,7 +55,15 @@ export const product = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -83,7 +99,15 @@ export const productsFilter = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     categories {
@@ -97,8 +121,8 @@ export const productsFilter = gql`
                         }
                         isEnabledInHierarchy
                     }
-                    isPublished
                     isFeatured
+                    isPublished
                     variants {
                         stock
                         propertyValues
@@ -126,7 +150,8 @@ export const getOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                     totalOrder
                 }
@@ -151,7 +176,8 @@ export const createOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                 }
                 error {
@@ -177,7 +203,8 @@ export const orderExternalID = gql`
                     zip
                     pay
                     idPreference
-                    status
+                    statusShipping
+                    statusPayment
                     shipping
                     cart
                     totalOrder
@@ -203,7 +230,8 @@ export const updateOrder = gql`
                     pay
                     idPreference
                     shipping
-                    status
+                    statusShipping
+                    statusPayment
                     cart
                 }
                 error {
@@ -223,7 +251,15 @@ export const searchProducts = gql`
                     name
                     description
                     priceBase
-                    prices
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
                     images
                     tags
                     variants {
@@ -278,6 +314,93 @@ export const updateStockProductVariant = gql`
     }
 `;
 
+export const updateStatusOrder = gql`
+    mutation updateOrder($id: ID!, $data: OrderInput!) {
+        orders {
+            updateOrder(id: $id, data: $data) {
+                data {
+                    statusShipping
+                    statusPayment
+                }
+                error {
+                    data
+                }
+            }
+        }
+    }
+`;
+
+export const listProductsSite = gql`
+    query listProducts {
+        products {
+            listProducts(where: { isPublished: true }) {
+                data {
+                    id
+                    sku
+                    name
+                    description
+                    priceBase
+                    prices {
+                        list {
+                            id
+                            name
+                            percent
+                            isDefaultOnSite
+                        }
+                        value
+                    }
+                    images
+                    tags
+                    categories {
+                        id
+                        name
+                        enabled
+                        parent {
+                            id
+                            name
+                            enabled
+                        }
+                        isEnabledInHierarchy
+                    }
+                    isFeatured
+                    isPublished
+                    variants {
+                        stock
+                        propertyValues
+                    }
+                }
+            }
+        }
+    }
+`;
+export const listProductsFilter = gql`
+    query listProductsFilter($search: ProductSearchInput) {
+        products {
+            listProductsFilter(search: $search) {
+                data {
+                    id
+                    sku
+                    name
+                    description
+                    priceBase
+                    prices
+                    images
+                    tags
+                    categories {
+                        name
+                        id
+                    }
+                    isFeatured
+                    isPublished
+                }
+                error {
+                    message
+                }
+            }
+        }
+    }
+`;
+
 export const listCategoriesParentsEnabled = gql`
     query listCategories {
         categories {
@@ -315,34 +438,6 @@ export const listSubcategories = gql`
                         enabled
                     }
                     isEnabledInHierarchy
-                }
-                error {
-                    message
-                }
-            }
-        }
-    }
-`;
-
-export const listProductsFilter = gql`
-    query listProductsFilter($search: ProductSearchInput) {
-        products {
-            listProductsFilter(search: $search) {
-                data {
-                    id
-                    sku
-                    name
-                    description
-                    priceBase
-                    prices
-                    images
-                    tags
-                    categories {
-                        name
-                        id
-                    }
-                    isFeatured
-                    isPublished
                 }
                 error {
                     message

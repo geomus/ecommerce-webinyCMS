@@ -50,37 +50,39 @@ const plugin: GraphQLSchemaPlugin = {
 
             type Order {
                 id: ID
-                name: String!
-                lastName: String!
-                phone: String!
-                address: String!
-                state: String!
-                city: String!
+                name: String
+                lastName: String
+                phone: String
+                address: String
+                state: String
+                city: String
                 zip: String
-                pay: String!
+                pay: String
                 idPreference: String
-                shipping: String!
-                status: String
-                cart:String!
-                totalOrder: Int
+                shipping: String
+                statusPayment: String
+                statusShipping: String
+                cart:String
+                totalOrder: Float
                 createdOn: DateTime
             }
 
             input OrderInput {
                 id: ID
-                name: String!
-                lastName: String!
-                phone: String!
-                address: String!
-                state:String!
-                city: String!
+                name: String
+                lastName: String
+                phone: String
+                address: String
+                state:String
+                city: String
                 zip: String
-                pay: String!
+                pay: String
                 idPreference: String
-                shipping: String!
-                status: String
-                cart:String!
-                totalOrder: Int
+                shipping: String
+                statusPayment: String
+                statusShipping: String
+                cart:String
+                totalOrder: Float
             }
 
             input OrderListWhere {
@@ -92,8 +94,9 @@ const plugin: GraphQLSchemaPlugin = {
                 pay: String
                 idPreference: String
                 shipping: String
-                status: String
-                totalOrder: Int
+                statusPayment: String
+                statusShipping: String
+                totalOrder: Float
                 createdOn: DateTime
             }
 
@@ -104,8 +107,9 @@ const plugin: GraphQLSchemaPlugin = {
                 city: String
                 pay: String
                 shipping: String
-                status: String
-                totalOrder: Int
+                statusPayment: String
+                statusShipping: String
+                totalOrder: Float
                 idPreference: String
                 createdOn: Int
             }

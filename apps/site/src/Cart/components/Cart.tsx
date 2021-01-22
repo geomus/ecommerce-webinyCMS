@@ -45,9 +45,11 @@ export default function Cart() {
 
     const propertyKeys = [];
     for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < cart[i].listVariants.length; j++) {
-            const keys = Object.keys(cart[i].listVariants[j]);
-            propertyKeys.push(keys);
+        if (cart[i].listVariants) {
+            for (let j = 0; j < cart[i].listVariants.length; j++) {
+                const keys = Object.keys(cart[i].listVariants[j]);
+                propertyKeys.push(keys);
+            }
         }
     }
 
@@ -59,6 +61,40 @@ export default function Cart() {
         });
     };
 
+    function objectEquals(obj1, obj2) {
+        for (const i in obj1) {
+            if (obj1.hasOwnProperty(i)) {
+                if (!obj2.hasOwnProperty(i)) {
+                    return false;
+                }
+                if (obj1[i] != obj2[i]) {
+                    return false;
+                }
+            }
+        }
+        for (const i in obj2) {
+            if (obj2.hasOwnProperty(i)) {
+                if (!obj1.hasOwnProperty(i)) {
+                    return false;
+                }
+                if (obj1[i] != obj2[i]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    const stockCalculator = (variantsSelected = [{},{}], variantsProduct = [{propertyValues:'', stock: ''}]) => {
+        const objectVariantsSelected = Object.assign({}, variantsSelected[0], variantsSelected[1])
+        for (let i = 0; i < variantsProduct.length; i++) {
+            const propertyValues = JSON.parse(variantsProduct[i].propertyValues);
+            const result = objectEquals(objectVariantsSelected, propertyValues)
+            if (result) {
+                return variantsProduct[i].stock
+            }
+        }
+    }
+
     return (
         <TableContainer>
             <Table className={classes.table} aria-label="cart" size="small">
@@ -68,92 +104,98 @@ export default function Cart() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {cart.map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell padding="none" align="left" size="small">
-                                <Button
-                                    value={row.id}
-                                    id={row.id}
-                                    onClick={deleteItemCart}
-                                    className={classes.IconDelete}
+                    {cart.map((row) => {
+                        const priceDefault = row.prices.find(price => price.list.isDefaultOnSite === true)
+                        const limitStock = stockCalculator(row.variantsSelected, row.variants)
+                        return (
+                            <TableRow key={row.id}>
+                                <TableCell padding="none" align="left" size="small">
+                                    <Button
+                                        value={row.id}
+                                        id={row.id}
+                                        onClick={deleteItemCart}
+                                        className={classes.IconDelete}
+                                    >
+                                        <HighlightOffIcon className={classes.IconDelete} />
+                                    </Button>
+                                </TableCell>
+                                <TableCell
+                                    colSpan={2}
+                                    padding="none"
+                                    className={classes.cellImgProduct}
                                 >
-                                    <HighlightOffIcon className={classes.IconDelete} />
-                                </Button>
-                            </TableCell>
-                            <TableCell
-                                colSpan={2}
-                                padding="none"
-                                className={classes.cellImgProduct}
-                            >
-                                {row.images ? (
-                                    <img
-                                        src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
-                                        className={classes.imgProduct}
-                                        alt="Foto producto"
-                                    />
-                                ) : (
+                                    {row.images ? (
                                         <img
-                                            src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                            src={`${process.env.REACT_APP_API_URL}/files/${row.images[0]}`}
                                             className={classes.imgProduct}
                                             alt="Foto producto"
                                         />
-                                    )}
-                            </TableCell>
-                            <TableCell colSpan={3} padding="none" size="small">
-                                {row.name}
-                            </TableCell>
-                            <TableCell padding="none" size="small">
-                            {propertyKeys &&
-                                propertyKeys.map((variantProperty, i) => (
-                                    <div key={`${i}variant`}>
-                                        <Typography variant="caption" className={classes.titleVariant}>{variantProperty}</Typography>
-                                        <select>
-                                            {Object.entries(
-                                                row.listVariants[i][propertyKeys[i]]
-                                            ).map(
-                                                ([key, value], j) => (
-                                                    row.variantsSelected[i][propertyKeys[i]] != value
-                                                        ?
-                                                        <option
-                                                            key={`${key}val${j}`}
-                                                            value={state[`${value}`]}
-                                                            id={`${value}`}
-                                                            onChange={handleChange}
-                                                        >
-                                                            {value}
-                                                        </option>
-                                                        :
-                                                        <option
-                                                            key={`${key}val${j}`}
-                                                            value={state[`${value}`]}
-                                                            id={`${value}`}
-                                                            onChange={handleChange}
-                                                            selected
-                                                        >
-                                                            {value}
-                                                        </option>
-
-                                                )
-                                                //
-                                            )}
-                                        </select>
-                                    </div>
-                                ))}
+                                    ) : (
+                                            <img
+                                                src="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                                                className={classes.imgProduct}
+                                                alt="Foto producto"
+                                            />
+                                        )}
                                 </TableCell>
-                            <TableCell colSpan={1}>
-                                <TextField
-                                    id={row.id}
-                                    value={row.quantity}
-                                    label="Qty."
-                                    type="number"
-                                    onChange={updateQtyItem}
-                                />
-                            </TableCell>
-                            <TableCell colSpan={1} padding="none" align="left">
-                                ${row.quantity * row.priceBase}
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                                <TableCell colSpan={3} padding="none" size="small">
+                                    {row.name}
+                                </TableCell>
+                                <TableCell padding="none" size="small">
+                                    {propertyKeys &&
+                                        propertyKeys.map((variantProperty, i) => (
+                                            <div key={`${i}variant`}>
+                                                <Typography variant="caption" className={classes.titleVariant}>{variantProperty}</Typography>
+                                                <select>
+                                                    {Object.entries(
+                                                        row.listVariants[i][propertyKeys[i]]
+                                                    ).map(
+                                                        ([key, value], j) => (
+                                                            row.variantsSelected[i][propertyKeys[i]] != value
+                                                                ?
+                                                                <option
+                                                                    key={`${key}val${j}`}
+                                                                    value={state[`${value}`]}
+                                                                    id={`${value}`}
+                                                                    onChange={handleChange}
+                                                                >
+                                                                    {value}
+                                                                </option>
+                                                                :
+                                                                <option
+                                                                    key={`${key}val${j}`}
+                                                                    value={state[`${value}`]}
+                                                                    id={`${value}`}
+                                                                    onChange={handleChange}
+                                                                    selected
+                                                                >
+                                                                    {value}
+                                                                </option>
+
+                                                        )
+                                                        //
+                                                    )}
+                                                </select>
+                                            </div>
+                                        ))}
+                                </TableCell>
+                                <TableCell colSpan={1}>
+                                    <TextField
+                                        id={row.id}
+                                        value={row.quantity}
+                                        label="Qty."
+                                        type="number"
+                                        onChange={(e) => updateQtyItem(e, limitStock)}
+                                        helperText={limitStock != undefined ? `Stock disponible ${limitStock}` : 'Stock disponible'}
+
+                                    />
+                                </TableCell>
+                                <TableCell colSpan={1} padding="none" align="left">
+                                    ${row.quantity * priceDefault.value}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
 
                     <TableRow>
                         <TableCell padding="none" colSpan={2}>

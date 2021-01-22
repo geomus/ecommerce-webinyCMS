@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import { TransitionProps } from "@material-ui/core/transitions";
-import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 import {
     Checkbox,
     FormControlLabel,
@@ -18,12 +18,9 @@ import {
     Snackbar,
     TextField
 } from "@material-ui/core";
-import { createPriceList, createPrice, listPricesList, listProductsByPrices, products, updateProductPrices } from "../../../graphql/query";
-import { useMutation, useQuery } from "@apollo/client";
+import { listPricesList, products, updatePriceList } from "../../../graphql/query";
+import { useMutation } from "@apollo/client";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,10 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         dialog: {
             padding: 20
-        },
-        spinner: {
-            color: "#fff",
-            marginLeft: 10
         }
     })
 );
@@ -54,37 +47,16 @@ function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function FullScreenDialog({ className, productsData }) {
+export default function FullScreenDialog({ priceList }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [name, setName] = useState("");
     const [percent, setPercent] = useState(null);
-    const [forAllProducts, setForAllProducts] = useState(false);
-    const [openBackdrop, setOpenBackdrop] = React.useState(false);
-
-    const [addPrices] = useMutation(createPrice)
-    const [addPriceList] = useMutation(createPriceList, {
+    const [editPriceList] = useMutation(updatePriceList, {
         refetchQueries: () => [{ query: listPricesList }, { query: products }]
     });
-    const [updateProduct] = useMutation(updateProductPrices, {
-        refetchQueries: () => [, { query: products }]
-    });
 
-    const { loading, error, data } = useQuery(listProductsByPrices)
-
-    if (loading) {
-        return (
-            <h1>
-                loading
-            </h1>
-        );
-    }
-
-    if (error) {
-        console.dir(error);
-        return <h1> error </h1>;
-    }
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -103,47 +75,15 @@ export default function FullScreenDialog({ className, productsData }) {
     const handlePercent = (e) => {
         setPercent(e.target.value);
     };
-    const handleChangeCheckbox = (e) => {
-        setForAllProducts(e.target.checked);
-    };
-    const handleCloseBackdrop = () => {
-        setOpen(false);
-    };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setOpenBackdrop(true)
-
-        const priceList = {
-            name: name,
-            percent: Number(percent),
+        const newPriceList = {
+            name: name || priceList.name,
+            percent: Number(percent) || priceList.percent,
         };
-        const priceListResult = await addPriceList({ variables: { data: priceList } });
 
-        if (forAllProducts) {
-            const products = [...data.products.listProducts.data]
-            for (let i = 0; i < products.length; i++) {
-                const prices = {
-                    list: {
-                        id: priceListResult.data.pricesList.createPriceList.data.id
-                    },
-                    value: Number((products[i].priceBase * (Number(percent) / 100 + 1)).toFixed(2))
-                }
-                const { data } = await addPrices({ variables: { data: prices } })
-                const productPrices = products[i].prices.map(price => {
-                    const obj = { id: price.id }
-                    return obj
-                })
-                const newPrices = [...productPrices, { id: data.prices.createPrice.data.id }]
-                await updateProduct({ variables: { id: products[i].id, data: { prices: newPrices } } })
-            }
-            setTimeout(function () {
-                setOpenBackdrop(false)
-                handleClose();
-            }, 1500);
-        }
-
+        await editPriceList({ variables: { data: newPriceList, id: priceList.id } });
         setTimeout(function () {
             handleClose();
         }, 1200);
@@ -156,13 +96,13 @@ export default function FullScreenDialog({ className, productsData }) {
     return (
         <div>
             <Button
-                variant="contained"
+                variant="outlined"
                 color="primary"
-                startIcon={<AddIcon />}
-                className={className}
+                startIcon={<EditIcon />}
                 onClick={handleClickOpen}
+                size="small"
             >
-                NUEVA
+                EDITAR
             </Button>
             <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
                 <AppBar className={classes.appBar}>
@@ -176,7 +116,7 @@ export default function FullScreenDialog({ className, productsData }) {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            Nueva lista de precios
+                            Editar lista de precios
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -187,6 +127,8 @@ export default function FullScreenDialog({ className, productsData }) {
                                 id="namePriceCategory"
                                 label="Nombre"
                                 onChange={handleName}
+                                defaultValue={priceList.name}
+                                fullWidth
                             />
                         </FormGroup>
                         <FormGroup>
@@ -195,31 +137,16 @@ export default function FullScreenDialog({ className, productsData }) {
                                 label="Porcentaje"
                                 type="number"
                                 onBlur={handlePercent}
+                                defaultValue={priceList.percent}
+                                fullWidth
                             />
                         </FormGroup>
+                        <br/>
                         <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={forAllProducts}
-                                        onChange={handleChangeCheckbox}
-                                        name="forAllProducts"
-                                    />
-                                }
-                                label="¿Aplica a todos los productos?"
-                            />
-                            <FormHelperText> Esta operación puede demorar algunos minutos</FormHelperText>
-                        </FormGroup>
-                        <br />
-
-                        <Button variant="contained" color="primary" type="submit">
-                            GUARDAR
-                            
-                            {
-                                openBackdrop &&
-                                <CircularProgress className={classes.spinner} size={20} />
-                            }
+                            <Button variant="contained" color="primary" type="submit">
+                                GUARDAR
                         </Button>
+                        </FormGroup>
                     </form>
                 </Grid>
                 <Snackbar

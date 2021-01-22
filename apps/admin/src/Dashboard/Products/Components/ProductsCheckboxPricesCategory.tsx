@@ -8,7 +8,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { makeStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useQuery } from "@apollo/client";
-import { listPrices } from "../../../graphql/query";
+import { listPricesList } from "../../../graphql/query";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -20,28 +20,34 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ProductsCheckboxPricesCategory({
     handleIdPrices,
-    checkedPrices,
-    setCheckedPrices
+    productPrices,
+    statePrices,
+    setStatePrices
 }) {
-    const { loading, error, data } = useQuery(listPrices);
+    const { loading, error, data } = useQuery(listPricesList);
     const classes = useStyles();
 
     useEffect(() => {
         if (!loading && data) {
-            const objectForStatePrices = data.prices.listPrices.data.map((price) => {
-                const idStatePrices = price.id + "state";
-                const objectForStatePrices = { [idStatePrices]: false };
-                return objectForStatePrices;
+            const objectForStatePrices = {};
+            data.pricesList.listPricesList.data.forEach((price) => {
+                const idStatePrices = price.id
+                objectForStatePrices[idStatePrices] = false;
             });
-            setCheckedPrices(objectForStatePrices);
+
+            for (const price of productPrices) {
+                objectForStatePrices[price] = true
+            }
+
+            setStatePrices(objectForStatePrices);
+
         }
     }, [loading, data]);
 
     if (loading) {
         return (
             <h1>
-                {" "}
-                <LinearProgress />{" "}
+                <LinearProgress />
             </h1>
         );
     }
@@ -50,23 +56,27 @@ export default function ProductsCheckboxPricesCategory({
         console.dir(error);
         return <h1> error </h1>;
     }
+
+
     return (
         <FormControl className={classes.formControl}>
-            {data.prices.listPrices.data.map((category) => (
-                <FormGroup row key={category.id}>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                onChange={handleIdPrices}
-                                name={category.name}
-                                id={category.id}
-                                checked={checkedPrices.idStatePrices}
-                            />
-                        }
-                        label={<Typography variant="caption">{category.name}</Typography>}
-                    />
-                </FormGroup>
-            ))}
+            {data.pricesList.listPricesList.data.map((category, i) => {
+                return (
+                    <FormGroup row key={category.id}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={handleIdPrices}
+                                    name={category.name}
+                                    id={category.id}
+                                    checked={statePrices[category.id] ? statePrices[category.id] : false }
+                                />
+                            }
+                            label={<Typography variant="caption">{category.name}</Typography>}
+                        />
+                    </FormGroup>
+                )
+            })}
             <FormHelperText id="prices-categories-helper">
                 Elija los tipos de precios del producto
             </FormHelperText>
