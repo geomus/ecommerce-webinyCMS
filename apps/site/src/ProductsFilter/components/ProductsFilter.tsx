@@ -17,6 +17,8 @@ import Input from "@material-ui/core/Input";
 import CategoriesFilter from "./CategoriesFilter";
 import ProductsList from "./ProductsList";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import Chip from "@material-ui/core/Chip";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,6 +34,17 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         input: {
             width: 70
+        },
+        chip: {
+            margin: theme.spacing(0.5)
+        },
+        paper: {
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            listStyle: "none",
+            padding: theme.spacing(0.5),
+            margin: 0
         }
     })
 );
@@ -39,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const ProductsFilter = () => {
     const classes = useStyles();
     // const location = useLocation();
-    const [categoriesFilter, setCategoriesFilter] = useState("");
+    const [categoriesFilter, setCategoriesFilter] = useState<any>("");
     const [filtersState, setFiltersState] = useState([]);
     const [priceFilter, setPriceFilter] = useState<number[]>([1, 99999]);
     // const searchQuery = location.search.split("=")[1];
@@ -60,19 +73,45 @@ const ProductsFilter = () => {
     // } else {
     // searchVariable = null;
     // }
-
+    
+    function coincidence(myArray, searchTerm, property) {
+        for (let i = 0; i < myArray.length; i++) {
+            if (myArray[i][property] === searchTerm) {
+                const value = myArray[i],
+                    index = i;
+                return { value, index };
+            }
+        }
+        return -1;
+    }
     const { loading, error, data } = useQuery(searchProducts, { variables: { searchVariable } });
 
     useEffect(() => {
         getFilteredProducts({
-            variables: { search: { query: categoriesFilter } }
+            variables: { search: { query: categoriesFilter.id } }
         });
+        handleFiltersState(categoriesFilter);
     }, [categoriesFilter]);
 
     if (error) {
         console.dir(error);
         return <h1> error </h1>;
     }
+
+    const handleDeleteFilter = (chipToDelete) => () => {
+        setFiltersState((chips) => chips.filter((chip) => chip.id !== chipToDelete.id));
+    };
+
+    const handleFiltersState = (filter) => {
+        const result: any = coincidence(filtersState, filter.__typename, "__typename");
+        if (!result) {
+            filtersState.push(result.value);
+            setFiltersState(filtersState);
+        } else {
+            filtersState.splice(result.index, 1, filter);
+            setFiltersState(filtersState);
+        }
+    };
 
     const handleClear = () => {
         setFiltersState([]);
@@ -110,6 +149,27 @@ const ProductsFilter = () => {
                             </a>
                         </Grid>
                     </Grid>
+                    {!(filtersState == []) ? (
+                        <Paper component="ul" className={classes.paper}>
+                            <Grid item container>
+                                <Grid item xs={6}>
+                                    {filtersState.map((filter) => {
+                                        return (
+                                            <li key={filter.id}>
+                                                <Chip
+                                                    label={filter.name}
+                                                    onDelete={handleDeleteFilter(filter)}
+                                                    className={classes.chip}
+                                                />
+                                            </li>
+                                        );
+                                    })}
+                                </Grid>
+                            </Grid>
+                        </Paper>
+                    ) : (
+                        ""
+                    )}
                     <Divider variant="middle" className={classes.dividers} />
                     <Grid item container>
                         <div className={classes.root}>
@@ -123,7 +183,7 @@ const ProductsFilter = () => {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <CategoriesFilter
-                                        categoriesFilter={setCategoriesFilter}
+                                        setCategoriesFilter={setCategoriesFilter}
                                         categoriesFilterState={categoriesFilter}
                                     />
                                 </AccordionDetails>
@@ -192,7 +252,7 @@ const ProductsFilter = () => {
                             </Box>
                         ))}
                     </React.Fragment>
-                ) : !called || categoriesFilter == "" ? (
+                ) : !called || categoriesFilter == {} ? (
                     <ProductsList products={data.products.listProducts.data} />
                 ) : (
                     <ProductsList

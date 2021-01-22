@@ -9,14 +9,22 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import CloseIcon from "@material-ui/icons/Close";
 
-const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
+const CategoriesFilter = ({ setCategoriesFilter, categoriesFilterState }) => {
     const [breadcrumbState, setBreadcrumbState] = useState([]);
-    const [subcategories, setSubcategories] = useState([]);
-    // useEffect(() => {
-    //     categoriesFilterState == "" ?? setBreadcrumbState([]);
-    // }, [categoriesFilterState]);
+
+    useEffect(() => {
+        categoriesFilterState == "" ? setBreadcrumbState([]) : "";
+    }, [categoriesFilterState, setCategoriesFilter]);
+
+    function arrayObjectIndexOf(myArray, searchTerm, property) {
+        for (let i = 0; i < myArray.length; i++) {
+            if (myArray[i][property] === searchTerm) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     const { loading: loadingParents, error: errorParents, data: dataParents } = useQuery(
         listCategoriesParentsEnabled
@@ -40,14 +48,17 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
         return <h1> error </h1>;
     }
 
-    const handleBreadcrumb = (breadcrumbId) => {
-        categoriesFilter(breadcrumbId);
+    const handleBreadcrumb = (breadcrumb) => {
+        const i = arrayObjectIndexOf(breadcrumbState, breadcrumb.id, "id");
+        setBreadcrumbState(breadcrumbState.slice(0, i));
+        setCategoriesFilter(breadcrumb);
     };
+
     const handleSelect = (category) => {
         breadcrumbState.push(category);
         setBreadcrumbState(breadcrumbState);
         getSubcategories({ variables: { parent: { id: category.id } } });
-        categoriesFilter(breadcrumbState[breadcrumbState.length - 1].id);
+        setCategoriesFilter(breadcrumbState[breadcrumbState.length - 1]);
     };
 
     return (
@@ -58,13 +69,13 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
                         separator={<NavigateNextIcon fontSize="small" />}
                         aria-label="breadcrumb"
                     >
-                        {breadcrumbState && !(categoriesFilterState === "")
+                        {breadcrumbState && !(categoriesFilterState == "")
                             ? breadcrumbState.map((breadcrumb) => (
                                   <Link
                                       key={breadcrumb.id}
                                       color="inherit"
                                       href="#"
-                                      onClick={() => handleBreadcrumb(breadcrumb.id)}
+                                      onClick={() => handleBreadcrumb(breadcrumb)}
                                   >
                                       {breadcrumb.name}
                                   </Link>
@@ -74,7 +85,7 @@ const CategoriesFilter = ({ categoriesFilter, categoriesFilterState }) => {
                 </Grid>
                 <Grid item container>
                     <List component="nav" aria-label="categories">
-                        {!called || categoriesFilterState === ""
+                        {!called || categoriesFilterState == ""
                             ? dataParents.categories.listCategories.data.map((category) => (
                                   <ListItem button key={category.id}>
                                       <ListItemText
