@@ -4,12 +4,12 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import TableHead from "@material-ui/core/TableHead";
-import { useQuery } from "@apollo/client/react";
+import { useQuery } from "@apollo/client/react"; 
 import { listPricesList} from '../../../graphql/query'
 
 
 const ProductsTableHead = ({ classes, order, orderBy, onRequestSort }) => {
-    const { loading, error, data } = useQuery(listPricesList);
+    const { loading, data } = useQuery(listPricesList);
     const [listPrices, setListPrices] = React.useState([])
 
     React.useEffect(() => {

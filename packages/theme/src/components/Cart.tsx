@@ -65,7 +65,7 @@ export default function Cart() {
         return true;
     }
 
-    const stockCalculator = (variantsSelected, variantsProduct) => {
+    const stockCalculator = (variantsSelected = [{},{}], variantsProduct = [{propertyValues:'', stock: ''}]) => {
         const objectVariantsSelected = Object.assign({},variantsSelected[0],variantsSelected[1])
         for (let i = 0; i < variantsProduct.length; i++) {
             const propertyValues = JSON.parse(variantsProduct[i].propertyValues);
@@ -144,7 +144,7 @@ export default function Cart() {
                                         label="Qty."
                                         type="number"
                                         onChange={(e) => updateQtyItem(e, limitStock)}
-                                        helperText={`Stock disponible ${limitStock}`}
+                                        helperText={limitStock != undefined ? `Stock disponible ${limitStock}` : 'Stock disponible'}
                                     />
                                     
                                 </TableCell>

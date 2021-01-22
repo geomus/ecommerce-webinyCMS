@@ -35,7 +35,20 @@ export const CartProvider = ({ children }) => {
         const id = e.currentTarget.id;
         const newQty = e.target.value;
 
-        if (newQty <= limitStock) {
+        if (limitStock != undefined) {
+            if (newQty <= limitStock) {
+                const cartModified = cart.map((item) => {
+                    if (item.id === id) {
+                        item.quantity = newQty;
+                    }
+                    return item;
+                });
+        
+                localStorage.setItem("cart", JSON.stringify(cartModified));
+                return setCart(cartModified);   
+            }
+
+        } else {
             const cartModified = cart.map((item) => {
                 if (item.id === id) {
                     item.quantity = newQty;
@@ -44,7 +57,7 @@ export const CartProvider = ({ children }) => {
             });
     
             localStorage.setItem("cart", JSON.stringify(cartModified));
-            return setCart(cartModified);      
+            return setCart(cartModified); 
         }
     };
 
