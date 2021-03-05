@@ -48,8 +48,14 @@ import textSetting from "@webiny/app-page-builder/render/plugins/elementSettings
  * Responsive display mode plugins.
  */
 import responsiveMode from "@webiny/app-page-builder/render/plugins/responsiveMode";
+// WonderSlug components
+import ProductCard from '@wonder-slug/product-card/render'
+import IFrame from '@wonder-slug/iframe-element/render'
 
 export default [
+    // WonderSlug
+    IFrame(),
+    ProductCard(),
     linkPreload(),
     // Page elements
     document(),
