@@ -1,18 +1,12 @@
 module.exports = {
-    template: "@webiny/cwp-template-full@4.10.0",
-    projectName: "starter",
+    template: "@webiny/cwp-template-aws@5.0.0-beta.4",
+    projectName: "wonderslug",
     cli: {
         plugins: [
-            require("@webiny/cli-plugin-deploy-components")(),
-            require("@webiny/cwp-template-full/hooks/api")(),
-            require("@webiny/cwp-template-full/hooks/apps")(),
-            require("@webiny/cli-plugin-scaffold"),
-            require("@webiny/cli-plugin-scaffold-graphql-service"),
-            require("@webiny/cli-plugin-scaffold-lambda"),
-            require("@webiny/cli-plugin-scaffold-admin-app-module"),
-            require("@webiny/cli-plugin-scaffold-node-package"),
-            require("@webiny/cli-plugin-scaffold-react-package"),
-            require("@webiny/cli-plugin-scaffold-react-app")
+            require("@webiny/cli-plugin-workspaces")(),
+            require("@webiny/cli-plugin-deploy-pulumi")(),
+            require("@webiny/api-page-builder/cli")(),
+            require("@webiny/cwp-template-aws/cli")()
         ]
     }
 };
