@@ -1,7 +1,7 @@
-import React from 'react'
+import React from "react";
 import { css } from "emotion";
 import { ElementRoot } from "@webiny/app-page-builder/render/components/ElementRoot";
-import ProductCard from '../../admin/components/base/HolaMundo';
+import ProductList from "../../components/ProductsList";
 
 const outerWrapper = css({
     boxSizing: "border-box"
@@ -15,21 +15,25 @@ const innerWrapper = css({
     paddingBottom: 0
 });
 
-const ProductCardRender = ({ element }) => {
+
+
+const IFrameEmbed = props => {
+    const { element } = props;
+
     return (
         <ElementRoot
             className={
-                "webiny-pb-base-page-element-style webiny-pb-page-element-embed-product-card " +
+                "webiny-pb-base-page-element-style webiny-pb-page-element-embed-iframe " +
                 outerWrapper
             }
             element={element}
         >
             <div className={innerWrapper}>
                 <div id={element.id} />
-                <ProductCard/>
+                <ProductList/>
             </div>
         </ElementRoot>
     );
 };
 
-export default ProductCardRender;
+export default IFrameEmbed;

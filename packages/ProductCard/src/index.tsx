@@ -11,8 +11,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
 
-export default function Product() {
-    
+export default function ProductCard(props) {
+
     const theme = useTheme();
     const useStyles = makeStyles({
         root: {
@@ -53,26 +53,32 @@ export default function Product() {
     const classes = useStyles();
 
     return (
-        <Card className={classes.root} elevation={0}>
-            <CardActionArea href="#">
-                <CardMedia
-                    className={classes.media}
-                    image="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
-                    title="Producto"
-                />
-               
+        <Card className={classes.root} key={props.id} elevation={0}>
+            <CardActionArea href={`/wonder-slug/product-detail?id=${props.id}`}>
+                {props.images ?
+                    <CardMedia
+                        className={classes.media}
+                        image={`${process.env.REACT_APP_API_URL}/files/${props.images[0]}?width=800`}
+                        title="Producto"
+                    /> :
+                    <CardMedia
+                        className={classes.media}
+                        image="https://www.chanchao.com.tw/TWSF/kaohsiung/images/default.jpg"
+                        title="Producto"
+                    />
+                }
                 <CardContent>
                     <Typography gutterBottom variant="body2" color="textSecondary" className={classes.productName}>
-                        Product 1
+                        {props.name}
                     </Typography>
                     <Typography gutterBottom variant="h6" color="textPrimary" className={classes.productPrice}>
-                        $1000
+                        ${props.priceBase}
                     </Typography>
-                    <RbNew className={classes.ribbonNew} />
+                    {props.isFeatured && <RbNew className={classes.ribbonNew} />}
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <ShopCartButton/>
+                <ShopCartButton {...props} />
             </CardActions>
         </Card>
     );

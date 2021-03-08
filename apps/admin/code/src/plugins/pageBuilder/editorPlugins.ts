@@ -70,13 +70,13 @@ import { gridPresets } from "@webiny/app-page-builder/editor/plugins/gridPresets
 // event actions
 import actionPlugins from "@webiny/app-page-builder/editor/recoil/actions/plugins";
 // WonderSlug components
-import ProductCard from '@wonder-slug/product-card/admin'
+import ProductList from '@wonder-slug/product-list/admin'
 import Iframe from '@wonder-slug/iframe-element/admin'
 
 export default [
     // WonderSlug
     Iframe(),
-    ProductCard(),
+    ProductList(),
     contentBackground,
     blockEditing,
     // Elements
