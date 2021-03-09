@@ -33,14 +33,8 @@ import margin from "@webiny/app-page-builder/render/plugins/elementSettings/marg
 import textSetting from "@webiny/app-page-builder/render/plugins/elementSettings/text";
 // Responsive mode
 import responsiveMode from "@webiny/app-page-builder/render/plugins/responsiveMode";
-// WonderSlug components
-import ProductList from '@wonder-slug/product-list/render'
-import IFrame from '@wonder-slug/iframe-element/render'
 
 export default [
-    // WonderSlug
-    IFrame(),
-    ProductList(),
     // Elements
     document(),
     grid(),

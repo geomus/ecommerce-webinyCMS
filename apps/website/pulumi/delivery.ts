@@ -6,6 +6,7 @@ class Delivery {
     constructor({ appS3Bucket }: { appS3Bucket: aws.s3.Bucket }) {
         this.bucket = new aws.s3.Bucket("delivery", {
             acl: "public-read",
+            forceDestroy: true,
             website: {
                 indexDocument: "index.html",
                 errorDocument: "_NOT_FOUND_PAGE_/index.html"
@@ -39,6 +40,7 @@ class Delivery {
             ],
             orderedCacheBehaviors: [
                 {
+                    compress: true,
                     allowedMethods: ["GET", "HEAD", "OPTIONS"],
                     cachedMethods: ["GET", "HEAD", "OPTIONS"],
                     forwardedValues: {
@@ -51,11 +53,15 @@ class Delivery {
                     pathPattern: "/static/*",
                     viewerProtocolPolicy: "allow-all",
                     targetOriginId: appS3Bucket.arn,
-                    defaultTtl: 2592000 // 30 days.
+                    // MinTTL <= DefaultTTL <= MaxTTL
+                    minTtl: 0,
+                    defaultTtl: 2592000, // 30 days
+                    maxTtl: 2592000
                 }
             ],
             defaultRootObject: "index.html",
             defaultCacheBehavior: {
+                compress: true,
                 targetOriginId: this.bucket.arn,
                 viewerProtocolPolicy: "redirect-to-https",
                 allowedMethods: ["GET", "HEAD", "OPTIONS"],
@@ -64,7 +70,10 @@ class Delivery {
                     cookies: { forward: "none" },
                     queryString: true
                 },
-                defaultTtl: 30
+                // MinTTL <= DefaultTTL <= MaxTTL
+                minTtl: 0,
+                defaultTtl: 30,
+                maxTtl: 30
             },
             priceClass: "PriceClass_100",
             restrictions: {
