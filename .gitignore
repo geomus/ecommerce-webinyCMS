@@ -2,10 +2,13 @@
 .idea
 .webpack
 .webiny
+.tmp/
 .env
 .env.*
 .npmrc
 .pulumi
+Pulumi.*.yaml
+!Pulumi.yaml
 htpasswd
 npm-debug.log
 node_modules
@@ -17,3 +20,10 @@ build/
 .history
 *.tsbuildinfo
 cypress.json
+# yarn2 files
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
