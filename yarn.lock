@@ -2243,15 +2243,15 @@ __metadata:
   linkType: hard
 
 "@graphql-tools/utils@npm:^7.1.2":
-  version: 7.5.1
-  resolution: "@graphql-tools/utils@npm:7.5.1"
+  version: 7.5.2
+  resolution: "@graphql-tools/utils@npm:7.5.2"
   dependencies:
     "@ardatan/aggregate-error": 0.0.6
     camel-case: 4.1.2
     tslib: ~2.1.0
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
-  checksum: 74a674b6edc01ff213f529fd6aa18bc27c79d1623627f579fec818894b59974d693c9b321b15d012a9cda68e651711d43a0f2b6acfe12c3a57da1f37b981b3d5
+  checksum: 555b2b50f80ab68080c8c52e59b8db18edee73829ddbfcf643c08b3015b5238b5a2c9f6432165727d6327cb82bae1f76083e8705cb36b46f1467bb815c817f0d
   languageName: node
   linkType: hard
 
@@ -4140,23 +4140,23 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:>=6":
-  version: 14.14.32
-  resolution: "@types/node@npm:14.14.32"
-  checksum: ae73f3b668242da660b4f4f2047114fc047f5a6a92b8f9f4ab2f8ca1325c914c08cf13b6f90e6e88016fafb7a662d1963b075a6220d2208651a98a1cb3407221
+  version: 14.14.33
+  resolution: "@types/node@npm:14.14.33"
+  checksum: f269fc728f6547345e000a0d86e1be802b475bb6759493208d7bc1cf8d49e838d3952ae54b8c7cd2ce168f9ef50c30e0d7084064a5f98db87efc833a38d955af
   languageName: node
   linkType: hard
 
 "@types/node@npm:^12.12.22":
-  version: 12.20.4
-  resolution: "@types/node@npm:12.20.4"
-  checksum: 16d002434239f11379819fc3d2a85f0c2652cf9fb0dcaf581e8652b85aef3816bba915552388d7db72f4f6d079822ab0f16a571980eeedb2acceedf2a9e5c940
+  version: 12.20.5
+  resolution: "@types/node@npm:12.20.5"
+  checksum: d94e5418588be39df12ad3088f922d6ce53dec286f69f517dd1c4e39fc64ae84b65c107053a2076c744fefdb5d53c22f30b5ce67665ae040665196b157ccdbd7
   languageName: node
   linkType: hard
 
 "@types/node@npm:^13.7.0":
-  version: 13.13.45
-  resolution: "@types/node@npm:13.13.45"
-  checksum: f168574f1ecb9c9598742b99c55e9b62bfc97aa2ead0e54ea85208c3021e353452944869a8ee6d6f6a9636f777a6fbf474dba5c1afa728fa34001fb38996de66
+  version: 13.13.46
+  resolution: "@types/node@npm:13.13.46"
+  checksum: 3786ac15b21b489c0c807d769edf64f732788b3e8f7f66ac04d63580c658fbafd5c9352c958199a37b2393c6132b16f4bbc43ced25bf4bcb90cbae9d75e61f17
   languageName: node
   linkType: hard
 
@@ -6972,8 +6972,8 @@ __metadata:
   linkType: hard
 
 "aws-sdk@npm:^2.0.0":
-  version: 2.859.0
-  resolution: "aws-sdk@npm:2.859.0"
+  version: 2.861.0
+  resolution: "aws-sdk@npm:2.861.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -6984,7 +6984,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: 2e583debfdd6e567d4290b7a6773e96f9ff928d93619ef26d009c48cd722f2a7985a6c2ffe75f7ad924f3cf8db225c836bf83e67602af878d4275aa92be61528
+  checksum: b8040824ad1439c66e45477fde327b98e19f1ac91a45fee304a100a7a7df6bf8263f906a56054375b25295367dc56ebeddd022d7cbbbfb2e472845c901c38efa
   languageName: node
   linkType: hard
 
@@ -7959,9 +7959,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000981, caniuse-lite@npm:^1.0.30001035, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001181":
-  version: 1.0.30001197
-  resolution: "caniuse-lite@npm:1.0.30001197"
-  checksum: 2c3edb8fbb5396d744ef753917b5219e2de2f43fb239aa880dd3c47cfa8bd337839b50b478e8c7a29967f3bce612810f39981064ee418962f301e3395dba6998
+  version: 1.0.30001198
+  resolution: "caniuse-lite@npm:1.0.30001198"
+  checksum: fe1ac01934933ab2e8db93f68972be9271be3a5505f855cf37e1e1bc716d1cd8e3addeed960a3740ac13d27108bf5492478f7c626d0a237451bdc0d1d6386a26
   languageName: node
   linkType: hard
 
@@ -9451,9 +9451,9 @@ __metadata:
   linkType: hard
 
 "debounce@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "debounce@npm:1.2.0"
-  checksum: 3eb07f76c54f3563d9183aff9a28c61864aa65c3f5f17acc227ce28dc55fb96faa680aebe3c898af17d3e4dfb6cfb92df6179fa9d5566111b129e1de19cfc7e0
+  version: 1.2.1
+  resolution: "debounce@npm:1.2.1"
+  checksum: 04a00c6c45173ac6fb03ad3a7cf742fa4a86f6bf86b22f5b867085f739d0010ad98cbb92e80d60293faf6efb5452c637941092bd8d783cfeabe55c2000b1b07f
   languageName: node
   linkType: hard
 
@@ -10108,13 +10108,13 @@ __metadata:
   linkType: hard
 
 "domutils@npm:^2.4.2":
-  version: 2.4.4
-  resolution: "domutils@npm:2.4.4"
+  version: 2.5.0
+  resolution: "domutils@npm:2.5.0"
   dependencies:
     dom-serializer: ^1.0.1
     domelementtype: ^2.0.1
     domhandler: ^4.0.0
-  checksum: abee29c1aade78506fb9ccb7bd7a2720fb18a87f230a7f7f2e3438458c27dee03b8abad4f3e448ed39da86d2a573e8bc7323d8dd0f2a473f26a455c017e303ce
+  checksum: 92a68066d3abfc821438e0610d656f1a51fe695c993c6b10faf9a4ffa565c23d71907e976c674b83e64d41e2a6c108cfd489a34068a7d9f3d240c44509216670
   languageName: node
   linkType: hard
 
@@ -10242,9 +10242,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.378, electron-to-chromium@npm:^1.3.649":
-  version: 1.3.683
-  resolution: "electron-to-chromium@npm:1.3.683"
-  checksum: 4833a11ee501b8764bfef8207a67c47ec7d80547caef5c8acae829f39124085eb729e4be5107d38b56736004c8147da739582e107ab814716debca7befef94e1
+  version: 1.3.685
+  resolution: "electron-to-chromium@npm:1.3.685"
+  checksum: 469c41eeb243c378a4bc9ecd3939c6dfc71afb17d9942931dcf90f34b37ba75613d14c5c13abf68d92cdb3db363aafa6346034791091c0ff9e4c2bd0ca520f50
   languageName: node
   linkType: hard
 
@@ -16150,6 +16150,54 @@ fsevents@^1.2.7:
   checksum: 315c40f463ec31deee54c5b8779207feb6b63dd4c58fe0f84ad46abdd6dac1ada578d53efde4a47b0ae4d29d453d35bb39ecdd98ee9ebf538929039a3a9945df
   languageName: node
   linkType: hard
+
+"my-new-project@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "my-new-project@workspace:."
+  dependencies:
+    "@babel/cli": ^7.10.4
+    "@babel/core": ^7.10.4
+    "@babel/plugin-proposal-class-properties": ^7.10.4
+    "@babel/plugin-proposal-object-rest-spread": ^7.10.4
+    "@babel/plugin-proposal-throw-expressions": ^7.10.4
+    "@babel/plugin-transform-runtime": ^7.10.4
+    "@babel/preset-env": ^7.10.4
+    "@babel/preset-typescript": ^7.10.4
+    "@types/node": ^12.12.22
+    "@types/react": ^16.9.17
+    "@types/react-dom": ^16.9.4
+    "@typescript-eslint/eslint-plugin": ^4.14.1
+    "@typescript-eslint/parser": ^4.14.1
+    "@webiny/aws-layers": 5.0.0
+    "@webiny/cli": 5.0.0
+    "@webiny/cli-plugin-deploy-pulumi": 5.0.0
+    "@webiny/cli-plugin-scaffold": 5.0.0
+    "@webiny/cli-plugin-scaffold-admin-app-module": 5.0.0
+    "@webiny/cli-plugin-scaffold-graphql-service": 5.0.0
+    "@webiny/cli-plugin-workspaces": 5.0.0
+    "@webiny/cwp-template-aws": 5.0.0
+    "@webiny/project-utils": 5.0.0
+    babel-plugin-dynamic-import-node: ^2.3.3
+    babel-plugin-lodash: ^3.3.4
+    babel-plugin-module-resolver: ^3.2.0
+    babel-plugin-named-asset-import: ^1.0.0-next.154
+    chalk: ^4.1.0
+    eslint: ^7.18.0
+    eslint-config-standard: ^16.0.2
+    eslint-import-resolver-babel-module: ^5.2.0
+    eslint-plugin-import: ^2.22.1
+    eslint-plugin-jest: ^23.1.1
+    eslint-plugin-node: ^11.1.0
+    eslint-plugin-promise: ^4.2.1
+    eslint-plugin-react: ^7.22.0
+    eslint-plugin-standard: ^5.0.0
+    execa: 4.1.0
+    jest: ^26.1.0
+    merge: ^1.2.1
+    prettier: ^1.14.2
+    typescript: 4.1.3
+  languageName: unknown
+  linkType: soft
 
 "nan@npm:^2.12.1, nan@npm:^2.13.2":
   version: 2.14.2
@@ -23240,54 +23288,6 @@ typescript@~3.7.3:
   checksum: ad08761ed753cdd3f7172e9a9efc7d74e7e196623cace2380e5f74ff0abd16196e03223bd4148a34278dcbc653ee3841994635419281cbf303b3f22c589e2ec4
   languageName: node
   linkType: hard
-
-"ws@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "ws@workspace:."
-  dependencies:
-    "@babel/cli": ^7.10.4
-    "@babel/core": ^7.10.4
-    "@babel/plugin-proposal-class-properties": ^7.10.4
-    "@babel/plugin-proposal-object-rest-spread": ^7.10.4
-    "@babel/plugin-proposal-throw-expressions": ^7.10.4
-    "@babel/plugin-transform-runtime": ^7.10.4
-    "@babel/preset-env": ^7.10.4
-    "@babel/preset-typescript": ^7.10.4
-    "@types/node": ^12.12.22
-    "@types/react": ^16.9.17
-    "@types/react-dom": ^16.9.4
-    "@typescript-eslint/eslint-plugin": ^4.14.1
-    "@typescript-eslint/parser": ^4.14.1
-    "@webiny/aws-layers": 5.0.0
-    "@webiny/cli": 5.0.0
-    "@webiny/cli-plugin-deploy-pulumi": 5.0.0
-    "@webiny/cli-plugin-scaffold": 5.0.0
-    "@webiny/cli-plugin-scaffold-admin-app-module": 5.0.0
-    "@webiny/cli-plugin-scaffold-graphql-service": 5.0.0
-    "@webiny/cli-plugin-workspaces": 5.0.0
-    "@webiny/cwp-template-aws": 5.0.0
-    "@webiny/project-utils": 5.0.0
-    babel-plugin-dynamic-import-node: ^2.3.3
-    babel-plugin-lodash: ^3.3.4
-    babel-plugin-module-resolver: ^3.2.0
-    babel-plugin-named-asset-import: ^1.0.0-next.154
-    chalk: ^4.1.0
-    eslint: ^7.18.0
-    eslint-config-standard: ^16.0.2
-    eslint-import-resolver-babel-module: ^5.2.0
-    eslint-plugin-import: ^2.22.1
-    eslint-plugin-jest: ^23.1.1
-    eslint-plugin-node: ^11.1.0
-    eslint-plugin-promise: ^4.2.1
-    eslint-plugin-react: ^7.22.0
-    eslint-plugin-standard: ^5.0.0
-    execa: 4.1.0
-    jest: ^26.1.0
-    merge: ^1.2.1
-    prettier: ^1.14.2
-    typescript: 4.1.3
-  languageName: unknown
-  linkType: soft
 
 "xml-name-validator@npm:^3.0.0":
   version: 3.0.0

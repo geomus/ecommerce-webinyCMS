@@ -1,6 +1,6 @@
 module.exports = {
     template: "@webiny/cwp-template-aws@5.0.0",
-    projectName: "ws",
+    projectName: "my-new-project",
     cli: {
         plugins: [
             require("@webiny/cli-plugin-workspaces")(),
