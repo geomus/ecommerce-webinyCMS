@@ -3,15 +3,15 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"@webiny/aws-layers": "5.0.0",
-		"@webiny/cli": "5.0.0",
-		"@webiny/cli-plugin-deploy-pulumi": "5.0.0",
-		"@webiny/cli-plugin-scaffold": "5.0.0",
-		"@webiny/cli-plugin-scaffold-admin-app-module": "5.0.0",
-		"@webiny/cli-plugin-scaffold-graphql-service": "5.0.0",
-		"@webiny/cli-plugin-workspaces": "5.0.0",
-		"@webiny/cwp-template-aws": "5.0.0",
-		"@webiny/project-utils": "5.0.0"
+		"@webiny/aws-layers": "5.3.0",
+		"@webiny/cli": "5.3.0",
+		"@webiny/cli-plugin-deploy-pulumi": "5.3.0",
+		"@webiny/cli-plugin-scaffold": "5.3.0",
+		"@webiny/cli-plugin-scaffold-admin-app-module": "5.3.0",
+		"@webiny/cli-plugin-scaffold-graphql-service": "5.3.0",
+		"@webiny/cli-plugin-workspaces": "5.3.0",
+		"@webiny/cwp-template-aws": "5.3.0",
+		"@webiny/project-utils": "5.3.0"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.10.4",

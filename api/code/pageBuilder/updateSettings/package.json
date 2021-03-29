@@ -5,11 +5,11 @@
 		"build": "yarn webiny run build"
 	},
 	"dependencies": {
-		"@webiny/api-page-builder": "5.0.0",
-		"@webiny/cli": "5.0.0",
-		"@webiny/db-dynamodb": "5.0.0",
-		"@webiny/handler-aws": "5.0.0",
-		"@webiny/handler-db": "5.0.0",
-		"@webiny/project-utils": "5.0.0"
+		"@webiny/api-page-builder": "5.3.0",
+		"@webiny/cli": "5.3.0",
+		"@webiny/db-dynamodb": "5.3.0",
+		"@webiny/handler-aws": "5.3.0",
+		"@webiny/handler-db": "5.3.0",
+		"@webiny/project-utils": "5.3.0"
 	}
 }
